@@ -1,0 +1,15 @@
+id: spf-cump
+titre: "Santé publique France, page « Quels sont les moyens de soutien médico-psychologique après un attentat ? »"
+libelle_court: "Santé publique France"
+type: page_institutionnelle
+autorite: information_institutionnelle
+editeur: "Santé publique France"
+statut: a_verifier
+url: "https://www.santepubliquefrance.fr/stress-post-traumatique/quels-sont-les-moyens-de-soutien-medico-psychologique-apres-un-attentat"
+url_archive: null
+sha256: null
+consulte_le: null
+reutilisation: null
+a_relever:
+  - "date de publication"
+  - "conditions de réutilisation"

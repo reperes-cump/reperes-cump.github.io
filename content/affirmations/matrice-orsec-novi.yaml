@@ -1,0 +1,22 @@
+id: matrice-orsec-novi
+categorie: matrice
+ordre: 10
+situation: "Plan ORSEC NOVI déclenché"
+fusion:
+  valeur: recommande
+  grade: accord_fort
+  libelle: "Intervention immédiate recommandée systématiquement"
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+critere_explorateur: orsec-novi
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

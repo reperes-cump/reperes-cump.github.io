@@ -1,0 +1,10 @@
+# Encadré « Ce que les textes ne disent pas ».
+elements:
+  - id: seuil-victimes
+    affirmations: [silence-seuil-victimes]
+  - id: enfants
+    affirmations: [silence-enfants]
+  - id: etablissements-scolaires
+    affirmations: [silence-etablissements-scolaires]
+  - id: entre-24-et-48-heures
+    affirmations: [delais-entre-24-et-48-heures]

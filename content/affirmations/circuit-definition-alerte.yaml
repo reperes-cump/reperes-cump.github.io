@@ -1,0 +1,19 @@
+id: circuit-definition-alerte
+categorie: circuit
+ordre: 90
+enonce: "Alerte : information de l'événement donnée au référent sans préjuger de sa réponse."
+verdict:
+  valeur: information
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

@@ -1,0 +1,20 @@
+id: methode-grades
+categorie: methode
+ordre: 10
+enonce: "Méthode HAS du consensus formalisé, cotation de 1 à 9. Accord fort : médiane ≥ 7 et toutes les cotations entre 7 et 9. Accord relatif : médiane ≥ 7 et toutes les cotations entre 5 et 9."
+verdict:
+  valeur: information
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: "« Pas de consensus » et « pas de conclusion » sont des résultats du vote des experts, pas des lacunes du site."
+a_relever:
+  - "vérification dans la section méthodologie"
+verifie_le: null
+verifie_par: null

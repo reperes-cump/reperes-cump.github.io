@@ -1,0 +1,13 @@
+id: csp-r6311
+titre: "Code de la santé publique, articles R6311-25 à R6311-32 (CUMP)"
+libelle_court: "Code de la santé publique"
+type: code
+autorite: reglementaire
+statut: a_verifier
+url: null
+url_archive: null
+sha256: null
+consulte_le: null
+reutilisation: texte_officiel
+a_relever:
+  - "URL Légifrance de chaque article (identifiant LEGIARTI)"

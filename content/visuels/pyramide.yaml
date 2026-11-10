@@ -1,0 +1,17 @@
+# Montée en puissance, de la base au sommet.
+elements:
+  - id: cump-departementale
+    type: niveau
+    affirmations: [montee-cump-departementale]
+  - id: niveau-regional
+    type: niveau
+    affirmations: [montee-niveau-regional]
+  - id: cump-zonale
+    type: niveau
+    affirmations: [montee-cump-zonale]
+  - id: niveau-national
+    type: niveau
+    affirmations: [montee-niveau-national]
+  - id: pump-task-force
+    type: niveau
+    affirmations: [montee-pump-task-force]

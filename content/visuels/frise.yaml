@@ -1,0 +1,26 @@
+# Délais, dans l'ordre chronologique.
+elements:
+  - id: intervention-immediate
+    type: periode
+    libelle: "Intervention immédiate"
+    affirmations: [delais-intervention-immediate]
+  - id: entre-24-et-48-heures
+    type: periode
+    libelle: "Entre 24 et 48 heures"
+    affirmations: [delais-entre-24-et-48-heures]
+  - id: intervention-post-immediate
+    type: periode
+    libelle: "Intervention post-immédiate"
+    affirmations: [delais-intervention-post-immediate]
+  - id: debriefing-collectif
+    type: periode
+    libelle: "Débriefing collectif"
+    affirmations: [delais-debriefing-collectif]
+  - id: apres-post-immediat
+    type: periode
+    libelle: "Après le post-immédiat"
+    affirmations: [cadre-limites-relais]
+  - id: pump-telephonique
+    type: periode
+    libelle: "PUMP téléphonique"
+    affirmations: [delais-pump-telephonique]

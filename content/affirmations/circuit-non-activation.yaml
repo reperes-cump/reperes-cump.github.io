@@ -1,0 +1,20 @@
+id: circuit-non-activation
+categorie: circuit
+ordre: 80
+enonce: "Non-activation : le référent propose des solutions alternatives (conseils, orientation)."
+verdict:
+  valeur: information
+  grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

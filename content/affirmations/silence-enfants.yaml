@@ -1,0 +1,20 @@
+id: silence-enfants
+categorie: silence
+ordre: 20
+enonce: "La reco SFMU précise qu'elle ne traite pas certaines spécificités, dont celles des enfants."
+verdict:
+  valeur: information
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever:
+  - "passage exact"
+verifie_le: null
+verifie_par: null

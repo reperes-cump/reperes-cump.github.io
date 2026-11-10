@@ -1,0 +1,20 @@
+id: delais-intervention-immediate
+categorie: delais
+ordre: 10
+enonce: "Intervention immédiate : débutée dans les 24 heures suivant l'événement, quelle que soit sa durée."
+verdict:
+  valeur: information
+  grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

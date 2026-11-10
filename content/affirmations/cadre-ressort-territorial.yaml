@@ -1,0 +1,19 @@
+id: cadre-ressort-territorial
+categorie: cadre
+ordre: 20
+enonce: "La CUMP intervient dans le ressort territorial du SAMU auquel elle est rattachée."
+verdict:
+  valeur: information
+sources:
+  - source_id: arrete-2014-02-24
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

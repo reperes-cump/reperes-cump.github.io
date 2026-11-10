@@ -1,0 +1,35 @@
+id: cadre-schema-type
+categorie: cadre
+ordre: 50
+enonce: "Un schéma type d'intervention est élaboré localement par l'établissement siège du SAMU avec le psychiatre référent ; il précise notamment les situations de déclenchement."
+verdict:
+  valeur: information
+sources:
+  - source_id: csp-r6311
+    localisation:
+      article: "R6311-26"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: csp-r6311
+    localisation:
+      article: "R6311-27"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: "Chaque département dispose d'un schéma type qui précise localement les situations de déclenchement. Il n'est pas public et n'est pas repris ici."
+a_relever: []
+verifie_le: null
+verifie_par: null

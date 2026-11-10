@@ -1,0 +1,20 @@
+id: circuit-orsec-novi
+categorie: circuit
+ordre: 50
+enonce: "Branche ORSEC NOVI : intervention immédiate de la CUMP recommandée systématiquement."
+verdict:
+  valeur: recommande
+  grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

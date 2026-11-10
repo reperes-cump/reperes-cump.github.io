@@ -1,0 +1,20 @@
+id: circuit-regulateur-24-7
+categorie: circuit
+ordre: 20
+enonce: "Le médecin régulateur peut solliciter la CUMP 24 h/24 et 7 j/7."
+verdict:
+  valeur: information
+  grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

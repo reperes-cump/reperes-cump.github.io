@@ -1,0 +1,16 @@
+id: cog-insee
+titre: "Code officiel géographique de l'INSEE (départements et régions)"
+libelle_court: "COG INSEE"
+type: jeu_de_donnees
+autorite: donnees_publiques
+editeur: "INSEE"
+statut: a_verifier
+url: null
+url_archive: null
+sha256: null
+consulte_le: null
+reutilisation: null
+a_relever:
+  - "millésime"
+  - "URL sur insee.fr"
+  - "conditions de réutilisation"

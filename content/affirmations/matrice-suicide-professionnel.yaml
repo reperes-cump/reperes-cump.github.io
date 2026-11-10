@@ -1,0 +1,33 @@
+id: matrice-suicide-professionnel
+categorie: matrice
+ordre: 90
+situation: "Suicide en milieu professionnel"
+verdicts:
+  alerte:
+    valeur: pas_de_conclusion
+  activation:
+    valeur: pas_de_consensus
+sources:
+  - source_id: sfmu-2017
+    porte_sur: alerte
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: sfmu-2017
+    porte_sur: activation
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+critere_explorateur: suicide-professionnel
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

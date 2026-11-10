@@ -1,0 +1,19 @@
+id: cadre-ars-informee
+categorie: cadre
+ordre: 40
+enonce: "L'ARS est informée systématiquement de toute mobilisation de la CUMP."
+verdict:
+  valeur: information
+sources:
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

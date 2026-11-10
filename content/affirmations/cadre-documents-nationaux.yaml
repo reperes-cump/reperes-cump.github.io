@@ -1,0 +1,19 @@
+id: cadre-documents-nationaux
+categorie: cadre
+ordre: 90
+enonce: "Documents nationaux : fiche patient, certificat médical initial (établi par un médecin), note d'information aux victimes."
+verdict:
+  valeur: information
+sources:
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: "2"
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

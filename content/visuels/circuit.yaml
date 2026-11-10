@@ -1,0 +1,37 @@
+# Circuit d'une demande. Chaque élément affiche une ou plusieurs affirmations sourcées.
+elements:
+  - id: demande
+    type: etape
+    affirmations: [circuit-demande-samu]
+  - id: regulateur-24-7
+    type: etape
+    affirmations: [circuit-regulateur-24-7]
+  - id: premier-filtre
+    type: etape
+    affirmations: [circuit-premier-filtre]
+  - id: suppleant
+    type: etape
+    affirmations: [circuit-suppleant]
+  - id: branche-orsec-novi
+    type: branche
+    affirmations: [circuit-orsec-novi]
+  - id: branche-prefet-ars
+    type: branche
+    affirmations: [circuit-prefet-ars]
+  - id: evaluation-conjointe
+    type: etape
+    affirmations: [circuit-evaluation-conjointe]
+  - id: activation
+    type: issue
+    libelle: "Activation"
+    affirmations:
+      - delais-intervention-immediate
+      - delais-intervention-post-immediate
+      - cadre-ars-informee
+  - id: non-activation
+    type: issue
+    libelle: "Non-activation"
+    affirmations: [circuit-non-activation]
+definitions:
+  - circuit-definition-alerte
+  - circuit-definition-activation

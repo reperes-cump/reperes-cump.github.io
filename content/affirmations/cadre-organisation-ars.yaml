@@ -1,0 +1,27 @@
+id: cadre-organisation-ars
+categorie: cadre
+ordre: 10
+enonce: "L'ARS organise l'urgence médico-psychologique. Une CUMP départementale est constituée dans chaque établissement siège de SAMU. Son champ : les victimes de catastrophes, d'accidents impliquant un grand nombre de victimes, ou d'événements susceptibles d'entraîner d'importantes répercussions psychologiques."
+verdict:
+  valeur: information
+sources:
+  - source_id: csp-r6311
+    localisation:
+      article: "R6311-25"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

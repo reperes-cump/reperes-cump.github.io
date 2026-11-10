@@ -1,0 +1,27 @@
+id: delais-entre-24-et-48-heures
+categorie: delais
+ordre: 20
+enonce: "Entre 24 et 48 heures"
+verdict:
+  valeur: silence
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: "Les définitions de la recommandation couvrent l'avant 24 h et l'après 48 h ; l'intervalle intermédiaire n'y est pas défini."
+a_relever: []
+verifie_le: null
+verifie_par: null

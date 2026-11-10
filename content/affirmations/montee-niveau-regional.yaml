@@ -1,0 +1,19 @@
+id: montee-niveau-regional
+categorie: montee
+ordre: 20
+enonce: "Niveau régional : renfort dans le cadre du volet médico-psychologique d'ORSAN."
+verdict:
+  valeur: information
+sources:
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

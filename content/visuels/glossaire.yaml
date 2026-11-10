@@ -1,0 +1,62 @@
+# Glossaire. Une définition renvoie à une affirmation sourcée ; sinon elle reste à relever.
+termes:
+  - id: pump
+    terme: "PUMP"
+    definition: null
+    a_relever: ["définition"]
+  - id: pma
+    terme: "PMA"
+    definition: null
+    a_relever: ["définition"]
+  - id: orsec-novi
+    terme: "ORSEC NOVI"
+    definition: null
+    a_relever: ["définition"]
+  - id: orsan
+    terme: "ORSAN"
+    definition: null
+    a_relever: ["définition"]
+  - id: sse
+    terme: "SSE"
+    definition: null
+    a_relever: ["définition"]
+  - id: medecin-regulateur
+    terme: "Médecin régulateur"
+    definition: null
+    a_relever: ["définition"]
+  - id: referent-cump
+    terme: "Référent CUMP"
+    definition: null
+    a_relever: ["définition"]
+  - id: cump-departementale
+    terme: "CUMP départementale"
+    definition: null
+    a_relever: ["définition"]
+  - id: cump-regionale
+    terme: "CUMP régionale"
+    definition: null
+    a_relever: ["définition"]
+  - id: cump-renforcee
+    terme: "CUMP renforcée"
+    definition: null
+    a_relever: ["définition"]
+  - id: cump-zonale
+    terme: "CUMP zonale"
+    definition: null
+    a_relever: ["définition"]
+  - id: alerte
+    terme: "Alerte"
+    definition: circuit-definition-alerte
+  - id: activation
+    terme: "Activation"
+    definition: circuit-definition-activation
+  - id: intervention-immediate
+    terme: "Intervention immédiate"
+    definition: delais-intervention-immediate
+  - id: intervention-post-immediate
+    terme: "Intervention post-immédiate"
+    definition: delais-intervention-post-immediate
+  - id: debriefing
+    terme: "Débriefing"
+    definition: null
+    a_relever: ["définition"]

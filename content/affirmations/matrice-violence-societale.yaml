@@ -1,0 +1,35 @@
+id: matrice-violence-societale
+categorie: matrice
+ordre: 120
+situation: "Violence sociétale, mouvements de revendication, négociations"
+verdicts:
+  alerte:
+    valeur: deconseille
+    grade: accord_fort
+  activation:
+    valeur: deconseille
+    grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    porte_sur: alerte
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: sfmu-2017
+    porte_sur: activation
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+critere_explorateur: violence-societale
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

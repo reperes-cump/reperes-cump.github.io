@@ -1,0 +1,20 @@
+id: delais-debriefing-collectif
+categorie: delais
+ordre: 40
+enonce: "Débriefing collectif : au-delà de 48 heures, pour des groupes d'appartenance, avec des participants volontaires."
+verdict:
+  valeur: information
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever:
+  - "grades"
+verifie_le: null
+verifie_par: null

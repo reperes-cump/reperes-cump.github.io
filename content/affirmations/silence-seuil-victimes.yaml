@@ -1,0 +1,19 @@
+id: silence-seuil-victimes
+categorie: silence
+ordre: 10
+enonce: "Aucun seuil chiffré de nombre de victimes : le seul déclencheur lié à l'ampleur dans la reco SFMU est le plan ORSEC NOVI."
+verdict:
+  valeur: information
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

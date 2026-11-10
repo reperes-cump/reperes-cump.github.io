@@ -1,0 +1,20 @@
+id: delais-intervention-post-immediate
+categorie: delais
+ordre: 30
+enonce: "Intervention post-immédiate : débutée au-delà de 48 heures et dans le premier mois."
+verdict:
+  valeur: information
+  grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

@@ -1,0 +1,14 @@
+id: contours-admin
+titre: "Contours administratifs (départements, régions), jeu publié sur data.gouv.fr, dérivé d'ADMIN EXPRESS (IGN)"
+libelle_court: "Contours administratifs"
+type: jeu_de_donnees
+autorite: donnees_publiques
+statut: a_verifier
+url: "https://www.data.gouv.fr/datasets/contours-administratifs"
+url_archive: null
+sha256: null
+consulte_le: null
+reutilisation: null
+a_relever:
+  - "licence"
+  - "millésime"

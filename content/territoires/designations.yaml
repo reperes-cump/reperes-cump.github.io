@@ -1,0 +1,238 @@
+# Désignations de CUMP : annexes 1, 2 et 4 de l'arrêté du 27 décembre 2016, version consolidée
+# en vigueur depuis le 10 avril 2024. Intitulés recopiés tels qu'écrits dans le texte.
+# Annexes 1 et 4 : le texte nomme une région ou une zone, pas un département ; le département
+# est déduit de la commune de l'établissement (departement_deduit: true) et reste à vérifier.
+source_id: arrete-2016-12-27
+releve_le: "2026-11-10"
+verifie_le: null
+verifie_par: null
+annexes:
+  - annexe: "1"
+    designation: regionale
+    entrees:
+      - territoire: "Auvergne-Rhône-Alpes"
+        etablissement: "Hospices civils de Lyon"
+        departement: "69"
+        departement_deduit: true
+      - territoire: "Bourgogne-Franche-Comté"
+        etablissement: "CHU de Dijon"
+        departement: "21"
+        departement_deduit: true
+      - territoire: "Bretagne"
+        etablissement: "CHU de Rennes"
+        departement: "35"
+        departement_deduit: true
+      - territoire: "Centre-Val de Loire"
+        etablissement: "CHR d'Orléans"
+        departement: "45"
+        departement_deduit: true
+      - territoire: "Corse"
+        etablissement: "CH de Bastia"
+        departement: "2B"
+        departement_deduit: true
+      - territoire: "Grand Est"
+        etablissement: "Hospices civils de Strasbourg"
+        departement: "67"
+        departement_deduit: true
+      - territoire: "Guadeloupe"
+        etablissement: "CHU de Pointe-à-Pitre"
+        departement: "971"
+        departement_deduit: true
+      - territoire: "Guyane"
+        etablissement: "CH Cayenne"
+        departement: "973"
+        departement_deduit: true
+      - territoire: "Hauts-de-France"
+        etablissement: "CHRU de Lille"
+        departement: "59"
+        departement_deduit: true
+      - territoire: "Ile-de-France"
+        etablissement: "Assistance publique des hôpitaux de Paris (hôpital Necker-Enfants malades)"
+        departement: "75"
+        departement_deduit: true
+      - territoire: "La Réunion"
+        etablissement: "CHU de La Réunion"
+        departement: "974"
+        departement_deduit: true
+      - territoire: "Martinique"
+        etablissement: "CHU de Martinique"
+        departement: "972"
+        departement_deduit: true
+      - territoire: "Mayotte"
+        etablissement: "CH de Mayotte"
+        departement: "976"
+        departement_deduit: true
+      - territoire: "Normandie"
+        etablissement: "CHU de Caen"
+        departement: "14"
+        departement_deduit: true
+      - territoire: "Nouvelle-Aquitaine"
+        etablissement: "CHU de Bordeaux"
+        departement: "33"
+        departement_deduit: true
+      - territoire: "Occitanie"
+        etablissement: "CHU de Toulouse"
+        departement: "31"
+        departement_deduit: true
+      - territoire: "Pays de la Loire"
+        etablissement: "CHU de Nantes"
+        departement: "44"
+        departement_deduit: true
+      - territoire: "Provence-Alpes-Côte d'Azur"
+        etablissement: "Assistance publique des hôpitaux de Marseille"
+        departement: "13"
+        departement_deduit: true
+  - annexe: "2"
+    designation: renforcee
+    entrees:
+      - territoire: "Auvergne-Rhône-Alpes"
+        etablissement: "CHU de Grenoble"
+        departement: "38"
+        departement_deduit: false
+      - territoire: "Auvergne-Rhône-Alpes"
+        etablissement: "CHU de Clermont-Ferrand"
+        departement: "63"
+        departement_deduit: false
+      - territoire: "Auvergne-Rhône-Alpes"
+        etablissement: "CH de Annecy-Genevois (Site de Annecy)"
+        departement: "74"
+        departement_deduit: false
+      - territoire: "Bourgogne-Franche-Comté"
+        etablissement: "CHU de Besançon"
+        departement: "25"
+        departement_deduit: false
+      - territoire: "Bretagne"
+        etablissement: "CHU de Brest"
+        departement: "29"
+        departement_deduit: false
+      - territoire: "Centre-Val de Loire"
+        etablissement: "CHRU de Tours"
+        departement: "37"
+        departement_deduit: false
+      - territoire: "Grand Est"
+        etablissement: "CHU de Reims"
+        departement: "51"
+        departement_deduit: false
+      - territoire: "Grand Est"
+        etablissement: "CHU de Nancy"
+        departement: "54"
+        departement_deduit: false
+      - territoire: "Grand Est"
+        etablissement: "CHR de Metz-Thionville"
+        departement: "57"
+        departement_deduit: false
+      - territoire: "Grand Est"
+        etablissement: "CH de Mulhouse"
+        departement: "68"
+        departement_deduit: false
+      - territoire: "Hauts-de-France"
+        etablissement: "CH d'Arras"
+        departement: "62"
+        departement_deduit: false
+      - territoire: "Hauts-de-France"
+        etablissement: "CHU d'Amiens"
+        departement: "80"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "CH de Melun"
+        departement: "77"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "CH de Versailles"
+        departement: "78"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "CH Sud Francilien"
+        departement: "91"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "Assistance publique des hôpitaux de Paris (hôpital Raymond Poincaré)"
+        departement: "92"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "Assistance publique des hôpitaux de Paris (hôpital Avicenne)"
+        departement: "93"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "Assistance publique des hôpitaux de Paris (hôpital Henri Mondor)"
+        departement: "94"
+        departement_deduit: false
+      - territoire: "Ile-de-France"
+        etablissement: "CH de Pontoise"
+        departement: "95"
+        departement_deduit: false
+      - territoire: "Normandie"
+        etablissement: "CHU de Rouen"
+        departement: "76"
+        departement_deduit: false
+      - territoire: "Nouvelle-Aquitaine"
+        etablissement: "CHU de Poitiers"
+        departement: "86"
+        departement_deduit: false
+      - territoire: "Nouvelle-Aquitaine"
+        etablissement: "CHU de Limoges"
+        departement: "87"
+        departement_deduit: false
+      - territoire: "Occitanie"
+        etablissement: "CHU de Montpellier"
+        departement: "34"
+        departement_deduit: false
+      - territoire: "Occitanie"
+        etablissement: "CHU de Nîmes"
+        departement: "30"
+        departement_deduit: false
+      - territoire: "Occitanie"
+        etablissement: "CH d'Albi"
+        departement: "81"
+        departement_deduit: false
+      - territoire: "Provence-Alpes-Côte d'Azur"
+        etablissement: "CHU de Nice"
+        departement: "06"
+        departement_deduit: false
+      - territoire: "Provence-Alpes-Côte d'Azur"
+        etablissement: "CHIC de Toulon-La Seyne-sur-Mer"
+        departement: "83"
+        departement_deduit: false
+  - annexe: "4"
+    designation: zonale
+    entrees:
+      - territoire: "Antilles"
+        etablissement: "CHU de Martinique"
+        departement: "972"
+        departement_deduit: true
+      - territoire: "Est"
+        etablissement: "CHU de Nancy"
+        departement: "54"
+        departement_deduit: true
+      - territoire: "Guyane"
+        etablissement: "CH de Cayenne"
+        departement: "973"
+        departement_deduit: true
+      - territoire: "Nord"
+        etablissement: "CHRU de Lille"
+        departement: "59"
+        departement_deduit: true
+      - territoire: "Océan Indien"
+        etablissement: "CHU de La Réunion"
+        departement: "974"
+        departement_deduit: true
+      - territoire: "Ouest"
+        etablissement: "CHU de Rennes"
+        departement: "35"
+        departement_deduit: true
+      - territoire: "Paris"
+        etablissement: "Assistance publique des hôpitaux de Paris (hôpital Necker)"
+        departement: "75"
+        departement_deduit: true
+      - territoire: "Sud"
+        etablissement: "Assistance publique des hôpitaux de Marseille"
+        departement: "13"
+        departement_deduit: true
+      - territoire: "Sud-Est"
+        etablissement: "Hospices civils de Lyon"
+        departement: "69"
+        departement_deduit: true
+      - territoire: "Sud-Ouest"
+        etablissement: "CHU de Bordeaux"
+        departement: "33"
+        departement_deduit: true

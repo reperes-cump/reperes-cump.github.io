@@ -1,0 +1,20 @@
+id: cadre-declenchement
+categorie: cadre
+ordre: 30
+enonce: "L'intervention est déclenchée par le SAMU après évaluation de la situation, l'indication étant posée par le psychiatre référent. Le préfet peut la demander auprès du SAMU (ORSEC), le directeur général de l'ARS dans le cadre d'ORSAN."
+verdict:
+  valeur: information
+sources:
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever:
+  - "formulation exacte"
+verifie_le: null
+verifie_par: null

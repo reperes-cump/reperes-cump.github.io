@@ -1,0 +1,35 @@
+id: matrice-groupe-social
+categorie: matrice
+ordre: 60
+situation: "Déstabilisation d'un groupe social"
+verdicts:
+  alerte:
+    valeur: recommande
+    grade: accord_relatif
+  activation:
+    valeur: recommande
+    grade: accord_relatif
+sources:
+  - source_id: sfmu-2017
+    porte_sur: alerte
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: sfmu-2017
+    porte_sur: activation
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+critere_explorateur: groupe-social
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

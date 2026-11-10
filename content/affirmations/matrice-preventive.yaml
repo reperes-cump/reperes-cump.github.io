@@ -1,0 +1,34 @@
+id: matrice-preventive
+categorie: matrice
+ordre: 160
+situation: "Alerte ou activation préventive (crainte qu'un événement survienne)"
+verdicts:
+  alerte:
+    valeur: pas_de_consensus
+  activation:
+    valeur: deconseille
+    grade: accord_relatif
+sources:
+  - source_id: sfmu-2017
+    porte_sur: alerte
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: sfmu-2017
+    porte_sur: activation
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+critere_explorateur: preventive
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

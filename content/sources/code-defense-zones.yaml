@@ -1,0 +1,14 @@
+id: code-defense-zones
+titre: "Code de la défense, articles fixant la composition des zones de défense et de sécurité"
+libelle_court: "Code de la défense"
+type: code
+autorite: reglementaire
+statut: a_verifier
+url: null
+url_archive: null
+sha256: null
+consulte_le: null
+reutilisation: texte_officiel
+a_relever:
+  - "articles exacts"
+  - "URL Légifrance de chaque article"

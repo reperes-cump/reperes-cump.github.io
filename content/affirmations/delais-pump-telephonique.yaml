@@ -1,0 +1,19 @@
+id: delais-pump-telephonique
+categorie: delais
+ordre: 50
+enonce: "PUMP téléphonique : peut être organisé en lien avec le SAMU."
+verdict:
+  valeur: information
+sources:
+  - source_id: instruction-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

@@ -1,0 +1,34 @@
+id: matrice-impact-secours
+categorie: matrice
+ordre: 30
+situation: "Impact émotionnel jugé inhabituellement fort par les secours"
+verdicts:
+  alerte:
+    valeur: recommande
+    grade: accord_relatif
+  activation:
+    valeur: pas_de_consensus
+sources:
+  - source_id: sfmu-2017
+    porte_sur: alerte
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+  - source_id: sfmu-2017
+    porte_sur: activation
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+critere_explorateur: impact-secours
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

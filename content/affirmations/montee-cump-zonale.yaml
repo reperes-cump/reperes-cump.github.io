@@ -1,0 +1,19 @@
+id: montee-cump-zonale
+categorie: montee
+ordre: 30
+enonce: "CUMP zonale : coordonne la mobilisation des CUMP de la zone de défense en situation sanitaire exceptionnelle."
+verdict:
+  valeur: information
+sources:
+  - source_id: csp-r6311
+    localisation:
+      article: "R6311-30"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

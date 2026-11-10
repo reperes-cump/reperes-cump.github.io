@@ -1,0 +1,21 @@
+id: circuit-evaluation-conjointe
+categorie: circuit
+ordre: 70
+enonce: "Le référent CUMP et le demandeur évaluent ensemble la pertinence d'une intervention immédiate ou différée."
+verdict:
+  valeur: information
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever:
+  - "formulation exacte"
+  - "grade"
+verifie_le: null
+verifie_par: null

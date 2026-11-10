@@ -1,0 +1,20 @@
+id: circuit-demande-samu
+categorie: circuit
+ordre: 10
+enonce: "Toute demande d'intervention de la CUMP est adressée au SAMU-Centre 15."
+verdict:
+  valeur: information
+  grade: accord_fort
+sources:
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null
