@@ -1,7 +1,7 @@
 id: silence-etablissements-scolaires
 categorie: silence
 ordre: 30
-enonce: "Pas de règle spécifique aux établissements scolaires dans la reco SFMU."
+enonce: "Pas de règle spécifique aux établissements scolaires dans la recommandation SFMU."
 verdict:
   valeur: information
 sources:

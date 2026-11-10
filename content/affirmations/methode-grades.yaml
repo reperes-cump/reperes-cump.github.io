@@ -1,7 +1,17 @@
 id: methode-grades
 categorie: methode
 ordre: 10
-enonce: "Méthode HAS du consensus formalisé, cotation de 1 à 9. Accord fort : médiane ≥ 7 et toutes les cotations entre 7 et 9. Accord relatif : médiane ≥ 7 et toutes les cotations entre 5 et 9."
+# Formulation relevée, à vérifier dans la section méthodologie de la recommandation :
+#   Méthode HAS du consensus formalisé, cotation de 1 à 9.
+#   Accord fort : médiane ≥ 7 et toutes les cotations entre 7 et 9.
+#   Accord relatif : médiane ≥ 7 et toutes les cotations entre 5 et 9.
+# Pour l'accord fort, la condition sur la médiane découle de l'autre : elle n'est pas répétée.
+enonce: |-
+  Les recommandations ont été votées par un groupe d'experts (méthode HAS du consensus formalisé). Chaque expert a noté chaque proposition de 1 à 9.
+
+  Accord fort : toutes les notes sont entre 7 et 9.
+
+  Accord relatif : toutes les notes sont entre 5 et 9, et la note médiane est d'au moins 7.
 verdict:
   valeur: information
 sources:
@@ -13,7 +23,7 @@ sources:
       page: null
     lien_profond: null
     extrait: null
-note_publique: "« Pas de consensus » et « pas de conclusion » sont des résultats du vote des experts, pas des lacunes du site."
+note_publique: "« Pas de consensus » et « pas de conclusion » sont aussi des résultats de ce vote, pas des oublis du site."
 a_relever:
   - "vérification dans la section méthodologie"
 verifie_le: null

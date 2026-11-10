@@ -1,7 +1,7 @@
 id: silence-enfants
 categorie: silence
 ordre: 20
-enonce: "La reco SFMU précise qu'elle ne traite pas certaines spécificités, dont celles des enfants."
+enonce: "La recommandation SFMU précise qu'elle ne traite pas certaines spécificités, dont celles des enfants."
 verdict:
   valeur: information
 sources:
