@@ -57,8 +57,7 @@ const v = (valeur: Valeur, grade?: Grade): Verdict =>
 
 export const sourceMatrice: Source = {
   id: 'sfmu-2017',
-  titre:
-    "Organisation et modalités d'intervention des CUMP. Recommandations SFMU / AFORCUMP-SFP",
+  titre: "Organisation et modalités d'intervention des CUMP. Recommandations SFMU / AFORCUMP-SFP",
   reference:
     'Rerbal D, Prieto N, Vaux J, et al. Ann Fr Med Urgence 2017;7:410-424. DOI 10.1007/s13341-017-0804-7',
   libelle_court: 'SFMU 2017',

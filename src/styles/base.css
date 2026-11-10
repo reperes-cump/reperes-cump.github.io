@@ -1,7 +1,7 @@
 @layer reset, jetons, base;
 
-@import './tokens.css';
-@import './verdicts.css';
+@import "./tokens.css";
+@import "./verdicts.css";
 
 @layer reset {
   *,
@@ -94,6 +94,8 @@
     outline-offset: 2px;
   }
 
+  /* Masqué à l'écran, lu par les lecteurs d'écran. !important : doit l'emporter sur tout style local. */
+  /* biome-ignore-start lint/complexity/noImportantStyles: utilitaire d'accessibilité */
   .visuellement-cache {
     position: absolute !important;
     width: 1px !important;
@@ -105,6 +107,7 @@
     white-space: nowrap !important;
     border: 0 !important;
   }
+  /* biome-ignore-end lint/complexity/noImportantStyles: utilitaire d'accessibilité */
 
   .page {
     width: 100%;

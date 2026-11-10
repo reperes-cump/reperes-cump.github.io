@@ -28,7 +28,7 @@
 
     /* Typographie */
     /* Provisoire : serif du système, en attendant la vérification de la licence de Source Serif 4. */
-    --police-source: ui-serif, Georgia, 'Times New Roman', serif;
+    --police-source: ui-serif, Georgia, "Times New Roman", serif;
     --taille--1: 0.8rem;
     --taille-0: 1rem; /* 17 px, voir base.css */
     --taille-1: 1.25rem;
@@ -62,7 +62,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='clair']) {
+    :root:not([data-theme="clair"]) {
       color-scheme: dark;
       --encre: #e6edf3;
       --encre-2: #a9b6c3;
@@ -80,7 +80,7 @@
     }
   }
 
-  :root[data-theme='sombre'] {
+  :root[data-theme="sombre"] {
     color-scheme: dark;
     --encre: #e6edf3;
     --encre-2: #a9b6c3;

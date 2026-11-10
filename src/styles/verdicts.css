@@ -12,17 +12,17 @@
     print-color-adjust: exact;
   }
 
-  .rendu[data-valeur='recommande'] {
+  .rendu[data-valeur="recommande"] {
     background-color: var(--recommande);
     color: var(--sur-aplat);
   }
 
-  .rendu[data-valeur='deconseille'] {
+  .rendu[data-valeur="deconseille"] {
     background-color: var(--deconseille);
     color: var(--sur-aplat);
   }
 
-  .rendu[data-valeur='pas_de_consensus'] {
+  .rendu[data-valeur="pas_de_consensus"] {
     border-color: var(--encre);
     border-width: var(--trait);
     background-color: var(--papier);
@@ -34,17 +34,17 @@
     color: var(--encre);
   }
 
-  .rendu[data-valeur='pas_de_consensus'] .plaque {
+  .rendu[data-valeur="pas_de_consensus"] .plaque {
     background-color: var(--papier);
   }
 
-  .rendu[data-valeur='pas_de_conclusion'] {
+  .rendu[data-valeur="pas_de_conclusion"] {
     border: var(--trait-fort) dotted var(--encre);
     background-color: transparent;
     color: var(--encre);
   }
 
-  .rendu[data-valeur='silence'] {
+  .rendu[data-valeur="silence"] {
     background-color: transparent;
     color: var(--encre-2);
   }
