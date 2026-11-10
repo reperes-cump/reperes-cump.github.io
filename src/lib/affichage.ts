@@ -1,4 +1,4 @@
-import type { Affirmation, Source } from '../../schemas/index.ts';
+import type { Affirmation, InfosContenu, Source } from '../../schemas/index.ts';
 
 type Reference = Affirmation['sources'][number];
 type Localisation = Reference['localisation'];
@@ -99,3 +99,27 @@ export function dateLisible(iso: string): string {
 /** Identifiant de panneau, unique dans la page. */
 export const idPanneau = (affirmation: string, sourceId: string, colonne?: Colonne | 'fusion') =>
   ['panneau', affirmation, colonne, sourceId].filter(Boolean).join('-');
+
+/** Date de publication, complète ou partielle : « 7 janvier 2013 », « janvier 2013 », « 2017 ». */
+export function datePublication(date: string): string {
+  if (/^\d{4}$/.test(date)) return date;
+  if (/^\d{4}-\d{2}$/.test(date)) {
+    return new Intl.DateTimeFormat('fr-FR', {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(`${date}-01T00:00:00Z`));
+  }
+  return dateLisible(date);
+}
+
+/** État du contenu, affiché sur chaque page. */
+export function etatContenu(infos: InfosContenu | null): string {
+  return infos?.version && infos.derniere_verification
+    ? `Version ${infos.version} du contenu, vérifiée le ${dateLisible(infos.derniere_verification)}.`
+    : 'Contenu en brouillon, pas encore vérifié.';
+}
+
+/** Accord en nombre : « 1 information », « 3 informations ». */
+export const nombre = (n: number, singulier: string, pluriel = `${singulier}s`) =>
+  `${n} ${n > 1 ? pluriel : singulier}`;

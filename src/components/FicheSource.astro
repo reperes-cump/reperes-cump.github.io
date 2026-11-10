@@ -1,0 +1,295 @@
+---
+/** Fiche d'une source sur la page Sources : identité, statut, vérification, informations qui la citent. */
+import type { Source } from '../../schemas/index.ts';
+import {
+  dateLisible,
+  datePublication,
+  estPdf,
+  hote,
+  nombre,
+  typographie,
+} from '../lib/affichage.ts';
+import { chemin } from '../lib/chemins.ts';
+import type { Citation } from '../lib/citations.ts';
+import {
+  libellesCategorie,
+  libellesReutilisation,
+  libellesStatutFiche,
+  ordreCategories,
+} from '../lib/libelles.ts';
+
+interface Props {
+  source: Source;
+  citations: Citation[];
+  /** Nombre de désignations de CUMP tirées de ce texte, le cas échéant. */
+  designations: number;
+}
+
+const { source, citations, designations } = Astro.props;
+const idTitre = `${source.id}-titre`;
+const reference = [source.auteurs, source.reference].filter(Boolean).join(' ');
+const lienTexte = source.url
+  ? `${estPdf(source.url) ? 'Lire le PDF' : 'Lire le texte'} sur ${hote(source.url)}`
+  : null;
+
+const manquesVerification = [
+  !source.consulte_le && 'date de consultation',
+  !source.url_archive && 'archive',
+  !source.sha256 && 'empreinte du fichier',
+].filter((m): m is string => Boolean(m));
+
+const parCategorie = ordreCategories
+  .map((categorie) => ({
+    categorie,
+    citations: citations.filter((c) => c.affirmation.categorie === categorie),
+  }))
+  .filter((groupe) => groupe.citations.length);
+const sansLien = citations.some((c) => !c.emplacement);
+const resume = [
+  citations.length ? `Cité par ${nombre(citations.length, 'information')}` : null,
+  designations ? `${citations.length ? 'et' : 'Utilisé pour'} la liste des CUMP désignées` : null,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<article class="fiche" id={source.id} aria-labelledby={idTitre}>
+  <h3 class="fiche-titre" id={idTitre}>{typographie(source.titre)}</h3>
+  {
+    (reference || source.doi) && (
+      <p class="fiche-reference">
+        {typographie(reference)}
+        {source.doi && (
+          <>
+            {' '}
+            DOI&nbsp;<a href={`https://doi.org/${source.doi}`} rel="noreferrer">{source.doi}</a>
+          </>
+        )}
+      </p>
+    )
+  }
+
+  <dl class="fiche-details">
+    <div>
+      <dt>Statut</dt>
+      <dd>
+        {libellesStatutFiche[source.statut]}
+        {source.abroge_ou_modifie_par && <> par {source.abroge_ou_modifie_par}</>}
+      </dd>
+    </div>
+    {
+      source.date_publication && (
+        <div>
+          <dt>Publication</dt>
+          <dd>{datePublication(source.date_publication)}</dd>
+        </div>
+      )
+    }
+    <div>
+      <dt>Texte</dt>
+      <dd>
+        {
+          source.url && lienTexte ? (
+            <a href={source.url} rel="noreferrer">
+              {lienTexte}
+            </a>
+          ) : (
+            <span class="a-relever">lien à relever</span>
+          )
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>Réutilisation</dt>
+      <dd>
+        {
+          source.reutilisation ? (
+            libellesReutilisation[source.reutilisation]
+          ) : (
+            <span class="a-relever">à relever</span>
+          )
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>Vérification</dt>
+      <dd class="verification">
+        {source.consulte_le && <span>Consulté le {dateLisible(source.consulte_le)}.</span>}
+        {
+          source.url_archive && (
+            <span>
+              <a href={source.url_archive} rel="noreferrer">
+                Copie archivée
+              </a>
+            </span>
+          )
+        }
+        {
+          source.sha256 && (
+            <span>
+              Empreinte SHA-256&nbsp;: <code class="empreinte">{source.sha256}</code>
+            </span>
+          )
+        }
+        {
+          manquesVerification.length > 0 && (
+            <span class="a-relever">
+              {manquesVerification.join(', ').replace(/^./, (c) => c.toUpperCase())} à relever.
+            </span>
+          )
+        }
+      </dd>
+    </div>
+  </dl>
+
+  {source.note_publique && <p class="fiche-note">{typographie(source.note_publique)}</p>}
+  {
+    source.a_relever.length > 0 && (
+      <p class="a-relever">À relever&nbsp;: {source.a_relever.join(' ; ')}.</p>
+    )
+  }
+
+  {
+    resume ? (
+      <details class="citations">
+        <summary>{resume}</summary>
+        <div class="citations-corps">
+          {parCategorie.map((groupe) => (
+            <div class="citations-groupe">
+              <h4 class="citations-categorie">{libellesCategorie[groupe.categorie]}</h4>
+              <ul>
+                {groupe.citations.map((c) => (
+                  <li>
+                    {c.emplacement ? (
+                      <a href={chemin(c.emplacement.page, c.emplacement.ancre)}>{typographie(c.texte)}</a>
+                    ) : (
+                      typographie(c.texte)
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          {designations > 0 && (
+            <p>
+              Liste des CUMP régionales, renforcées et zonales ({nombre(designations, 'désignation')}),
+              affichée sur la carte (page à venir).
+            </p>
+          )}
+          {sansLien && (
+            <p class="citations-note">
+              Les informations sans lien seront affichées avec les prochaines pages.
+            </p>
+          )}
+        </div>
+      </details>
+    ) : (
+      <p class="non-cite">Aucune information du site ne cite encore ce texte.</p>
+    )
+  }
+</article>
+
+<style>
+  .fiche {
+    display: grid;
+    gap: var(--espace-3);
+    padding-block: var(--espace-5);
+    border-top: var(--trait) solid var(--filet);
+    scroll-margin-top: var(--espace-4);
+  }
+
+  .fiche:target {
+    outline: 3px solid var(--source);
+    outline-offset: 6px;
+    border-radius: var(--rayon);
+  }
+
+  .fiche-titre {
+    font-size: var(--taille-0);
+    line-height: var(--interligne-serre);
+  }
+
+  .fiche-reference {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .fiche-details {
+    display: grid;
+    gap: var(--espace-1);
+    margin: 0;
+  }
+
+  .fiche-details > div {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: var(--espace-3);
+  }
+
+  @media (width < 40rem) {
+    .fiche-details > div {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+  }
+
+  .fiche-details dt {
+    color: var(--encre-2);
+  }
+
+  .fiche-details dd {
+    margin: 0;
+  }
+
+  .verification {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .empreinte {
+    font-size: var(--taille--1);
+    overflow-wrap: anywhere;
+  }
+
+  .fiche-note {
+    font-style: italic;
+  }
+
+  .citations summary {
+    width: fit-content;
+    color: var(--source);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .citations-corps {
+    display: grid;
+    gap: var(--espace-3);
+    margin-top: var(--espace-3);
+    padding: var(--espace-4);
+    border-radius: var(--rayon);
+    background: var(--papier-2);
+  }
+
+  .citations-categorie {
+    margin-bottom: var(--espace-1);
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+    font-weight: 650;
+  }
+
+  .citations-groupe ul {
+    display: grid;
+    gap: var(--espace-1);
+    margin: 0;
+    padding-inline-start: 1.25em;
+  }
+
+  .citations-note,
+  .non-cite {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+</style>

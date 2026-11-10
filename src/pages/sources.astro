@@ -1,0 +1,197 @@
+---
+import { getEntry } from 'astro:content';
+import FicheSource from '../components/FicheSource.astro';
+import Base from '../layouts/Base.astro';
+import { nombre, typographie } from '../lib/affichage.ts';
+import { chemin } from '../lib/chemins.ts';
+import { citationsParSource } from '../lib/citations.ts';
+import { accueil, donnees } from '../lib/donnees.ts';
+import { groupesAutorite, ordreCategories, ordreTypes } from '../lib/libelles.ts';
+
+const { sources, affirmations, infos, designations } = await donnees();
+const { emplacements } = await accueil();
+const citations = citationsParSource(affirmations.values(), emplacements, ordreCategories);
+const exclusions = (await getEntry('exclusions', 'sources-exclues'))?.data.exclusions ?? [];
+
+const nombreDesignations = (id: string) =>
+  designations?.source_id === id
+    ? designations.annexes.reduce((total, annexe) => total + annexe.entrees.length, 0)
+    : 0;
+
+// Dans chaque groupe : d'abord les textes que le site cite, puis par type, date et titre.
+const estUtilisee = (id: string) =>
+  (citations.get(id)?.length ?? 0) > 0 || nombreDesignations(id) > 0;
+
+const groupes = groupesAutorite
+  .map((groupe) => ({
+    ...groupe,
+    ancre: groupe.autorite.replaceAll('_', '-'),
+    sources: [...sources.values()]
+      .filter((s) => s.autorite === groupe.autorite)
+      .sort(
+        (a, b) =>
+          Number(!estUtilisee(a.id)) - Number(!estUtilisee(b.id)) ||
+          ordreTypes.indexOf(a.type) - ordreTypes.indexOf(b.type) ||
+          (a.date_publication ?? '').localeCompare(b.date_publication ?? '') ||
+          a.titre.localeCompare(b.titre),
+      ),
+  }))
+  .filter((groupe) => groupe.sources.length);
+
+const brouillon = [...sources.values()].some((s) => s.statut === 'a_verifier') || !infos?.version;
+const fichiersDonnees = [
+  { fichier: 'sources.json', libelle: 'Sources, JSON' },
+  { fichier: 'sources.csv', libelle: 'Sources, CSV' },
+  { fichier: 'affirmations.json', libelle: 'Informations, JSON' },
+  { fichier: 'affirmations.csv', libelle: 'Informations, CSV' },
+];
+---
+
+<Base
+  courante="sources"
+  titre="Sources"
+  description="Les textes officiels et recommandations en libre accès utilisés par Repères CUMP."
+  brouillon={brouillon}
+  infos={infos}
+>
+  <main class="page-sources">
+    <h1>Sources</h1>
+    <p class="intro">
+      Tous les textes utilisés par le site sont en libre accès. Chaque information affichée renvoie à
+      l'un d'eux, avec l'article, la section ou la page.
+    </p>
+
+    <nav class="sommaire" aria-label="Sur cette page">
+      <ul>
+        {
+          groupes.map((groupe) => (
+            <li>
+              <a href={`#${groupe.ancre}`}>
+                {groupe.titre} ({groupe.sources.length})
+              </a>
+            </li>
+          ))
+        }
+        <li><a href="#ce-qui-n-est-pas-repris">Ce qui n'est pas repris</a></li>
+        <li><a href="#donnees-ouvertes">Données ouvertes</a></li>
+      </ul>
+    </nav>
+
+    {
+      groupes.map((groupe) => (
+        <section class="groupe" aria-labelledby={groupe.ancre}>
+          <h2 id={groupe.ancre}>
+            {groupe.titre}
+            <span class="groupe-nombre">{nombre(groupe.sources.length, 'texte')}</span>
+          </h2>
+          {groupe.sources.map((source) => (
+            <FicheSource
+              source={source}
+              citations={citations.get(source.id) ?? []}
+              designations={nombreDesignations(source.id)}
+            />
+          ))}
+        </section>
+      ))
+    }
+
+    <section class="groupe" aria-labelledby="ce-qui-n-est-pas-repris">
+      <h2 id="ce-qui-n-est-pas-repris">Ce qui n'est pas repris</h2>
+      <p>
+        Le site ne reprend que des sources en libre accès. Ces documents sont volontairement
+        écartés&nbsp;:
+      </p>
+      <ul class="liste">
+        {
+          exclusions.map((e) => (
+            <li>
+              {typographie(e.document)}, {typographie(e.raison)}.
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="groupe" aria-labelledby="donnees-ouvertes">
+      <h2 id="donnees-ouvertes">Données ouvertes</h2>
+      <p>
+        Les sources et les informations du site sont téléchargeables, sous licence CC&nbsp;BY&nbsp;4.0.
+        Les extraits de sources restent soumis aux droits de leurs auteurs.
+      </p>
+      <ul class="liste">
+        {
+          fichiersDonnees.map((d) => (
+            <li>
+              <a href={`${chemin('donnees')}${d.fichier}`} download>
+                {d.libelle}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .page-sources {
+    display: grid;
+    gap: var(--espace-5);
+    padding-top: var(--espace-5);
+  }
+
+  h1 {
+    font-size: var(--taille-3);
+  }
+
+  .intro {
+    max-width: var(--mesure);
+    font-size: var(--taille-1);
+    line-height: var(--interligne-serre);
+  }
+
+  .sommaire ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sommaire a {
+    display: inline-flex;
+    min-height: 2rem;
+    align-items: center;
+  }
+
+  .groupe {
+    display: grid;
+    gap: var(--espace-2);
+    max-width: 56rem;
+  }
+
+  .groupe h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--espace-1) var(--espace-3);
+    margin-top: var(--espace-5);
+    font-size: var(--taille-2);
+    scroll-margin-top: var(--espace-4);
+  }
+
+  .groupe-nombre {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+    font-weight: 400;
+  }
+
+  .liste {
+    display: grid;
+    gap: var(--espace-1);
+    margin: 0;
+    padding-inline-start: 1.25em;
+    max-width: var(--mesure);
+  }
+</style>

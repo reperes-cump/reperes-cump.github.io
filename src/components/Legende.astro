@@ -23,7 +23,7 @@ const valeurs = [
 ] as const;
 ---
 
-<section class="legende" aria-labelledby="legende-titre">
+<section class="legende" id="legende" aria-labelledby="legende-titre">
   <h2 id="legende-titre" class="legende-titre">Comment lire le tableau</h2>
 
   <ul class="legende-liste">
@@ -57,7 +57,7 @@ const valeurs = [
     }
   </ul>
 
-  <details class="grades">
+  <details class="grades" id="lecture-des-grades">
     <summary>Que veulent dire «&#8239;accord fort&#8239;» et «&#8239;accord relatif&#8239;»&#8239;?</summary>
     <div class:list={['cadre-verification', 'grades-corps', { 'non-verifie': !grades.verifie_le }]}>
       {paragraphes(grades.enonce ?? '').map((texte) => <p>{typographie(texte)}</p>)}

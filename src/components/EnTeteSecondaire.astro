@@ -1,0 +1,66 @@
+---
+/** En-tête léger des pages autres que l'accueil : nom du site et navigation. */
+import { chemin } from '../lib/chemins.ts';
+import { type PageId, pagesSite } from '../lib/pages.ts';
+
+interface Props {
+  courante: PageId;
+}
+
+const { courante } = Astro.props;
+const liens = pagesSite.filter((p) => p.chemin);
+---
+
+<header class="barre">
+  <a class="nom-site" href={chemin()}>Repères CUMP</a>
+  <nav aria-label="Navigation principale">
+    <ul class="liens">
+      {
+        liens.map((page) => (
+          <li>
+            <a href={chemin(page.chemin ?? '')} aria-current={page.id === courante ? 'page' : undefined}>
+              {page.titre}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .barre {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--espace-2) var(--espace-5);
+    padding-block: var(--espace-4);
+    border-bottom: var(--trait) solid var(--filet);
+  }
+
+  .nom-site {
+    color: var(--encre);
+    font-size: var(--taille-1);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .liens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-5);
+  }
+
+  .liens a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+  }
+
+  .liens a[aria-current="page"] {
+    color: var(--encre);
+    font-weight: 650;
+    text-decoration: none;
+  }
+</style>

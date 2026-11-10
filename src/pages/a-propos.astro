@@ -1,0 +1,69 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { donnees } from '../lib/donnees.ts';
+
+const { infos } = await donnees();
+const page = await getEntry('pages', 'a-propos');
+const historique = await getEntry('historique', 'historique');
+if (!page || !historique) throw new Error('À propos : contenu introuvable');
+const { Content } = await render(page);
+const { Content: Historique } = await render(historique);
+---
+
+<Base
+  courante="a-propos"
+  titre={page.data.titre}
+  description={page.data.description}
+  brouillon={!infos?.version}
+  infos={infos}
+>
+  <main class="texte">
+    <h1>{page.data.titre}</h1>
+    <Content />
+    <section aria-labelledby="historique">
+      <h2 id="historique">Historique des versions du contenu</h2>
+      <Historique />
+    </section>
+  </main>
+</Base>
+
+<style>
+  .texte {
+    display: grid;
+    gap: var(--espace-3);
+    max-width: var(--mesure);
+    padding-top: var(--espace-5);
+  }
+
+  h1 {
+    margin-bottom: var(--espace-2);
+    font-size: var(--taille-3);
+  }
+
+  .texte :global(h2) {
+    margin-top: var(--espace-5);
+    font-size: var(--taille-2);
+  }
+
+  .texte :global(h3) {
+    margin-top: var(--espace-3);
+    font-size: var(--taille-0);
+  }
+
+  .texte :global(ul) {
+    display: grid;
+    gap: var(--espace-2);
+    margin: 0;
+    padding-inline-start: 1.25em;
+  }
+
+  .texte :global(strong) {
+    font-weight: 650;
+  }
+
+  .texte > :global(p:first-of-type) {
+    font-size: var(--taille-1);
+    line-height: var(--interligne-serre);
+  }
+</style>

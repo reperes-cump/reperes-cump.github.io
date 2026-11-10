@@ -28,7 +28,10 @@ const etat =
       Outil d'information. Il ne remplace ni la régulation médicale du SAMU-Centre&nbsp;15 ni la
       décision du référent CUMP.
     </p>
-    <div class:list={['cadre-verification', 'demande', { 'non-verifie': !demande.verifie_le }]}>
+    <div
+      id="demande-samu"
+      class:list={['cadre-verification', 'demande', { 'non-verifie': !demande.verifie_le }]}
+    >
       <p>{typographie(demande.enonce ?? '')}</p>
       <Provenance affirmation={demande} sources={sources} titre={demande.enonce ?? ''} />
     </div>

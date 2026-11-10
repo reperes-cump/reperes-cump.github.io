@@ -1,21 +1,52 @@
 ---
-const pages = ["Circuit d'une demande", 'Carte des CUMP', 'Sources', 'À propos'];
+/** Pied de page commun : navigation, avertissement permanent, état du contenu, mentions. */
+import type { InfosContenu } from '../../schemas/index.ts';
+import { etatContenu } from '../lib/affichage.ts';
+import { chemin } from '../lib/chemins.ts';
+import { type PageId, pagesSite } from '../lib/pages.ts';
+
+interface Props {
+  courante: PageId;
+  infos: InfosContenu | null;
+}
+
+const { courante, infos } = Astro.props;
 ---
 
 <footer class="pied">
   <nav aria-label="Pages du site">
     <ul class="pages">
       {
-        pages.map((page) => (
+        courante !== 'accueil' && (
           <li>
-            <span class="page-lien">{page}</span>
-            <span class="a-venir">à venir</span>
+            <a href={chemin()}>Accueil</a>
+          </li>
+        )
+      }
+      {
+        pagesSite.map((page) => (
+          <li>
+            {page.chemin ? (
+              <a href={chemin(page.chemin)} aria-current={page.id === courante ? 'page' : undefined}>
+                {page.titre}
+              </a>
+            ) : (
+              <>
+                <span class="page-a-venir">{page.titre}</span>
+                <span class="a-venir">à venir</span>
+              </>
+            )}
           </li>
         ))
       }
     </ul>
   </nav>
   <div class="mentions">
+    <p class="avertissement">
+      Outil d'information. Il ne remplace ni la régulation médicale du SAMU-Centre&nbsp;15 ni la
+      décision du référent CUMP.
+    </p>
+    <p>{etatContenu(infos)}</p>
     <p>
       Projet indépendant, non affilié à la SFMU, à l'AFORCUMP-SFP, au ministère chargé de la santé,
       à une ARS ni à un établissement de santé.
@@ -48,8 +79,14 @@ const pages = ["Circuit d'une demande", 'Carte des CUMP', 'Sources', 'À propos'
     gap: var(--espace-2);
   }
 
-  .page-lien {
+  .pages a,
+  .page-a-venir {
     font-weight: 650;
+  }
+
+  .pages a[aria-current="page"] {
+    color: var(--encre);
+    text-decoration: none;
   }
 
   .a-venir {
@@ -63,5 +100,10 @@ const pages = ["Circuit d'une demande", 'Carte des CUMP', 'Sources', 'À propos'
     max-width: var(--mesure);
     color: var(--encre-2);
     font-size: var(--taille--1);
+  }
+
+  .mentions .avertissement {
+    color: var(--encre);
+    font-weight: 650;
   }
 </style>

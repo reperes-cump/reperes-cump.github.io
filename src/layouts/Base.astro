@@ -1,17 +1,24 @@
 ---
 import { Font } from 'astro:assets';
+import type { InfosContenu } from '../../schemas/index.ts';
 import BandeauBrouillon from '../components/BandeauBrouillon.astro';
+import EnTeteSecondaire from '../components/EnTeteSecondaire.astro';
 import Glyphes from '../components/Glyphes.astro';
 import PanneauSource from '../components/PanneauSource.astro';
+import PiedDePage from '../components/PiedDePage.astro';
+import type { PageId } from '../lib/pages.ts';
 import '../styles/base.css';
 
 interface Props {
+  courante: PageId;
   titre?: string;
+  description?: string;
   /** Au moins un élément de la page n'est pas vérifié. */
   brouillon: boolean;
+  infos: InfosContenu | null;
 }
 
-const { titre, brouillon } = Astro.props;
+const { courante, titre, description, brouillon, infos } = Astro.props;
 const titreComplet = titre
   ? `${titre} | Repères CUMP`
   : 'Repères CUMP | En connaissance de textes.';
@@ -23,7 +30,7 @@ const titreComplet = titre
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="Déclencher la CUMP, textes à l'appui." />
+    <meta name="description" content={description ?? "Déclencher la CUMP, textes à l'appui."} />
     <title>{titreComplet}</title>
     <Font cssVariable="--police-texte" preload />
   </head>
@@ -31,7 +38,9 @@ const titreComplet = titre
     <Glyphes />
     <BandeauBrouillon visible={brouillon} />
     <div class="page">
+      {courante !== 'accueil' && <EnTeteSecondaire courante={courante} />}
       <slot />
+      <PiedDePage courante={courante} infos={infos} />
     </div>
     <PanneauSource />
   </body>
