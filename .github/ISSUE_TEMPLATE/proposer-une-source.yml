@@ -1,0 +1,27 @@
+name: Proposer une source
+description: Un texte officiel ou une recommandation en libre accès qui manque au site.
+title: "Source proposée : "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Seules les sources en libre accès sont acceptées : textes publiés (Légifrance, Bulletin officiel, Journal officiel), recommandations de sociétés savantes téléchargeables librement, pages d'institutions publiques. Aucun document interne (schéma type départemental, plan ORSAN, protocole d'établissement).
+  - type: input
+    id: titre
+    attributes:
+      label: Titre exact du texte
+    validations:
+      required: true
+  - type: input
+    id: lien
+    attributes:
+      label: Lien en libre accès
+    validations:
+      required: true
+  - type: textarea
+    id: apport
+    attributes:
+      label: Ce que la source apporte
+      description: Quelle situation ou quelle règle elle documente, avec la page, l'article ou la section.
+    validations:
+      required: true

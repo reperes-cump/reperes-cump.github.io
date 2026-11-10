@@ -1,0 +1,17 @@
+# Mises à jour mensuelles, groupées en une pull request par écosystème.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      dependances-npm:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions-github:
+        patterns: ["*"]

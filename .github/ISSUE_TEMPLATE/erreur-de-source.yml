@@ -1,0 +1,35 @@
+name: Signaler une erreur de source
+description: Une information du site ne correspond pas au texte cité, ou le lien est faux.
+title: "Erreur de source : "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de signaler une erreur. Indiquez le passage exact du texte : c'est ce qui permet de corriger vite.
+  - type: input
+    id: element
+    attributes:
+      label: Élément concerné
+      description: La situation, la phrase ou la case du site, telle qu'affichée.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source citée
+      description: Par exemple « SFMU 2017, page 6 » ou « Code de la santé publique, art. R6311-25 ».
+    validations:
+      required: true
+  - type: textarea
+    id: erreur
+    attributes:
+      label: Ce qui est inexact
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Ce que dit le texte
+      description: Courte citation du passage, avec la page, l'article ou la section.
+    validations:
+      required: true

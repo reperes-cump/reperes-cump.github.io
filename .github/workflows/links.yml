@@ -1,0 +1,47 @@
+# Vérification des liens des sources : à la demande et sur les pull requests qui touchent les sources.
+# Non bloquante. Si un lien est mort, une issue est ouverte (ou complétée si elle existe déjà).
+# Aucune tâche planifiée : GitHub désactive les workflows planifiés d'un dépôt inactif.
+name: Liens des sources
+
+on:
+  pull_request:
+    paths:
+      - content/sources/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  liens:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: lychee
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --no-progress --max-retries 3 'content/sources/*.yaml'
+          output: lychee/rapport.md
+          fail: false
+      - name: Signaler les liens morts dans une issue
+        # Pas d'issue depuis une pull request venue d'un fork : son jeton ne le permet pas.
+        if: >-
+          steps.lychee.outputs.exit_code != 0 &&
+          (github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          titre="Lien de source mort"
+          numero=$(gh issue list --state open --search "\"$titre\" in:title" --json number --jq '.[0].number')
+          if [ -n "$numero" ]; then
+            gh issue comment "$numero" --body-file lychee/rapport.md
+          else
+            gh issue create --title "$titre" --body-file lychee/rapport.md
+          fi
