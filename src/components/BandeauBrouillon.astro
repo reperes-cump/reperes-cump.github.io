@@ -1,0 +1,29 @@
+---
+/** Bandeau affiché tant qu'un élément de la page n'est pas vérifié. */
+interface Props {
+  visible: boolean;
+}
+
+const { visible } = Astro.props;
+---
+
+{
+  visible && (
+    <div class="bandeau">
+      <p class="page bandeau-texte">Brouillon : contenu non vérifié.</p>
+    </div>
+  )
+}
+
+<style>
+  .bandeau {
+    background: var(--encre);
+    color: var(--papier);
+    font-size: var(--taille--1);
+  }
+
+  .bandeau-texte {
+    padding-block: var(--espace-2);
+    font-weight: 650;
+  }
+</style>

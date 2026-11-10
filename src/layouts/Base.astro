@@ -1,22 +1,24 @@
 ---
 import { Font } from 'astro:assets';
-import BandeauMaquette from '../components/BandeauMaquette.astro';
+import BandeauBrouillon from '../components/BandeauBrouillon.astro';
 import Glyphes from '../components/Glyphes.astro';
 import PanneauSource from '../components/PanneauSource.astro';
 import '../styles/base.css';
 
 interface Props {
   titre?: string;
+  /** Au moins un élément de la page n'est pas vérifié. */
+  brouillon: boolean;
 }
 
-const { titre } = Astro.props;
+const { titre, brouillon } = Astro.props;
 const titreComplet = titre
   ? `${titre} | Repères CUMP`
   : 'Repères CUMP | En connaissance de textes.';
 ---
 
 <!doctype html>
-<html lang="fr" data-brouillon>
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,7 +29,7 @@ const titreComplet = titre
   </head>
   <body>
     <Glyphes />
-    <BandeauMaquette />
+    <BandeauBrouillon visible={brouillon} />
     <div class="page">
       <slot />
     </div>

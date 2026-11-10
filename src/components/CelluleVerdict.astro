@@ -1,32 +1,35 @@
 ---
-import { sourceMatrice, type Verdict } from '../maquette/donnees-brouillon';
-import PuceSource from './PuceSource.astro';
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import type { Colonne } from '../lib/affichage.ts';
+import { colonnes } from '../lib/libelles.ts';
+import Provenance from './Provenance.astro';
 import TuileVerdict from './TuileVerdict.astro';
 
 interface Props {
-  verdict: Verdict;
-  situation: string;
-  /** Intitulé complet de la colonne (rappelé dans le panneau source). */
-  colonne: string;
-  /** Intitulé court affiché au-dessus de la cellule sur petit écran. */
-  etiquette: string;
-  colspan?: number;
+  ligne: Affirmation;
+  colonne: Colonne | 'fusion';
+  sources: Map<string, Source>;
 }
 
-const { verdict, situation, colonne, etiquette, colspan } = Astro.props;
+const { ligne, colonne, sources } = Astro.props;
+const verdict = colonne === 'fusion' ? ligne.fusion : ligne.verdicts?.[colonne];
+const titres = colonnes[colonne];
+if (!verdict || verdict.valeur === 'information') {
+  throw new Error(`${ligne.id} : verdict de matrice manquant pour « ${colonne} »`);
+}
 ---
 
-<td class="cellule" role="cell" colspan={colspan}>
-  <span class="etiquette-colonne" aria-hidden="true">{etiquette}</span>
-  <div class="cadre-verification">
-    <TuileVerdict verdict={verdict} />
-    <div class="provenance">
-      <PuceSource
-        source={sourceMatrice}
-        localisation={verdict.localisation}
-        contexte={{ titre: situation, colonne, verdict }}
-      />
-      <span class="mention-non-verifie">non vérifié</span>
-    </div>
+<td class="cellule" role="cell" colspan={colonne === 'fusion' ? 2 : undefined} data-colonne={colonne}>
+  <span class="etiquette-colonne" aria-hidden="true">{titres.court}</span>
+  <div class:list={['cadre-verification', { 'non-verifie': !ligne.verifie_le }]}>
+    <TuileVerdict verdict={{ ...verdict, valeur: verdict.valeur }} />
+    <Provenance
+      affirmation={ligne}
+      sources={sources}
+      titre={ligne.situation ?? ''}
+      colonne={colonne}
+      colonneTitre={titres.titre}
+      verdict={verdict}
+    />
   </div>
 </td>

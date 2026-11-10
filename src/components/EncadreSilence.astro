@@ -1,0 +1,69 @@
+---
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { typographie } from '../lib/affichage.ts';
+import Provenance from './Provenance.astro';
+
+interface Props {
+  elements: Affirmation[];
+  sources: Map<string, Source>;
+}
+
+const { elements, sources } = Astro.props;
+---
+
+<section class="encadre" aria-labelledby="encadre-titre">
+  <h2 id="encadre-titre" class="encadre-titre">Ce que les textes ne disent pas</h2>
+  <ul class="encadre-liste">
+    {
+      elements.map((a) => (
+        <li class:list={['cadre-verification', 'encadre-element', { 'non-verifie': !a.verifie_le }]}>
+          <p>
+            {a.note_publique ? (
+              <>
+                <strong>{typographie(a.enonce ?? '')}.</strong> {typographie(a.note_publique)}
+              </>
+            ) : (
+              typographie(a.enonce ?? '')
+            )}
+          </p>
+          <Provenance affirmation={a} sources={sources} titre={a.enonce ?? ''} />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .encadre {
+    display: grid;
+    gap: var(--espace-4);
+    padding: var(--espace-5);
+    border: var(--trait-fort) solid var(--encre);
+    border-radius: var(--rayon);
+  }
+
+  .encadre-titre {
+    font-size: var(--taille-1);
+  }
+
+  .encadre-liste {
+    display: grid;
+    gap: var(--espace-3);
+    max-width: var(--mesure);
+  }
+
+  .encadre-element {
+    padding: var(--espace-2) var(--espace-3);
+    margin-inline: calc(-1 * var(--espace-3));
+  }
+
+  .encadre-element strong {
+    font-weight: 650;
+  }
+
+  @media (width < 40rem) {
+    .encadre {
+      padding: var(--espace-4);
+    }
+  }
+</style>

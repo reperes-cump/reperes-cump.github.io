@@ -1,45 +1,15 @@
 ---
-import {
-  type Localisation,
-  libelles,
-  libellesGrade,
-  type Source,
-  type Verdict,
-} from '../maquette/donnees-brouillon';
-
+/** Puce de source : ouvre le panneau source préparé au build (voir ContenuPanneau). */
 interface Props {
-  source: Source;
-  localisation: Localisation;
-  /** Ce que la puce source : situation, colonne, verdict. */
-  contexte: {
-    titre: string;
-    colonne?: string;
-    verdict?: Verdict;
-  };
+  libelle: string;
+  /** Identifiant du modèle de panneau à ouvrir. */
+  panneau: string;
 }
 
-const { source, localisation, contexte } = Astro.props;
-// La page n'apparaît sur la puce qu'une fois relevée ; sinon le panneau l'indique.
-const libelle =
-  localisation.page === null
-    ? source.libelle_court
-    : `${source.libelle_court}, p.\u00a0${localisation.page}`;
-const verdict = contexte.verdict;
+const { libelle, panneau } = Astro.props;
 ---
 
-<button
-  type="button"
-  class="puce-source"
-  aria-haspopup="dialog"
-  data-source={source.id}
-  data-titre={contexte.titre}
-  data-colonne={contexte.colonne}
-  data-valeur={verdict?.valeur}
-  data-libelle={verdict ? (verdict.libelle ?? libelles[verdict.valeur]) : undefined}
-  data-grade={verdict?.grade ? libellesGrade[verdict.grade] : undefined}
-  data-section={localisation.section ?? ''}
-  data-page={localisation.page ?? ''}
->
+<button type="button" class="puce-source" aria-haspopup="dialog" data-panneau={panneau}>
   {libelle}
 </button>
 
@@ -55,7 +25,7 @@ const verdict = contexte.verdict;
     color: var(--source);
     font-size: var(--taille--1);
     line-height: 1.2;
-    white-space: nowrap;
+    text-align: start;
     cursor: pointer;
   }
 

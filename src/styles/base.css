@@ -138,7 +138,7 @@
     border-radius: 4px;
   }
 
-  :root[data-brouillon] .cadre-verification {
+  .cadre-verification.non-verifie {
     border-color: var(--encre-2);
   }
 
@@ -156,11 +156,6 @@
    * d'écran.
    */
   .mention-non-verifie {
-    display: none;
-  }
-
-  :root[data-brouillon] .mention-non-verifie {
-    display: inline;
     position: absolute;
     width: 1px;
     height: 1px;

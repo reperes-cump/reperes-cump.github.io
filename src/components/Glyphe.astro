@@ -1,8 +1,9 @@
 ---
-import type { Valeur } from '../maquette/donnees-brouillon';
+import type { Verdict } from '../../schemas/index.ts';
 
 interface Props {
-  valeur: Valeur;
+  /** Les verdicts « information » n'ont pas de glyphe. */
+  valeur: Exclude<Verdict['valeur'], 'information'>;
   class?: string;
 }
 

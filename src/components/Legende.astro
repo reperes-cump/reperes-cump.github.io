@@ -1,21 +1,26 @@
 ---
-import {
-  explications,
-  lectureDesGrades,
-  libelles,
-  sourceMatrice,
-  type Valeur,
-} from '../maquette/donnees-brouillon';
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { paragraphes, typographie } from '../lib/affichage.ts';
+import { explicationsVerdict, libellesVerdict } from '../lib/libelles.ts';
 import Glyphe from './Glyphe.astro';
-import PuceSource from './PuceSource.astro';
+import Provenance from './Provenance.astro';
 
-const valeurs: Valeur[] = [
+interface Props {
+  /** Affirmation qui explique les grades (catégorie « methode »). */
+  grades: Affirmation;
+  sources: Map<string, Source>;
+  /** Montrer l'entrée « Cadre en tirets » : au moins un élément de la page n'est pas vérifié. */
+  brouillon: boolean;
+}
+
+const { grades, sources, brouillon } = Astro.props;
+const valeurs = [
   'recommande',
   'deconseille',
   'pas_de_consensus',
   'pas_de_conclusion',
   'silence',
-];
+] as const;
 ---
 
 <section class="legende" aria-labelledby="legende-titre">
@@ -31,43 +36,33 @@ const valeurs: Valeur[] = [
             </span>
           </span>
           <span class="entree-texte">
-            <span class="entree-nom">{libelles[valeur]}</span>
-            {explications[valeur] && <span class="entree-explication">{explications[valeur]}</span>}
+            <span class="entree-nom">{libellesVerdict[valeur]}</span>
+            {explicationsVerdict[valeur] && (
+              <span class="entree-explication">{explicationsVerdict[valeur]}</span>
+            )}
           </span>
         </li>
       ))
     }
-    <li class="entree entree-brouillon">
-      <span class="pastille pastille-brouillon" aria-hidden="true"></span>
-      <span class="entree-texte">
-        <span class="entree-nom">Cadre en tirets</span>
-        <span class="entree-explication">pas encore vérifié sur le texte</span>
-      </span>
-    </li>
+    {
+      brouillon && (
+        <li class="entree">
+          <span class="pastille pastille-brouillon" aria-hidden="true" />
+          <span class="entree-texte">
+            <span class="entree-nom">Cadre en tirets</span>
+            <span class="entree-explication">pas encore vérifié sur le texte</span>
+          </span>
+        </li>
+      )
+    }
   </ul>
 
   <details class="grades">
     <summary>Que veulent dire «&#8239;accord fort&#8239;» et «&#8239;accord relatif&#8239;»&#8239;?</summary>
-    <div class="cadre-verification grades-corps">
-      <p>{lectureDesGrades.methode}</p>
-      <ul class="grades-liste">
-        {
-          lectureDesGrades.grades.map(({ terme, definition }) => (
-            <li>
-              <strong>{terme}</strong>&nbsp;: {definition}
-            </li>
-          ))
-        }
-      </ul>
-      <p>{lectureDesGrades.precision}</p>
-      <p class="provenance">
-        <PuceSource
-          source={sourceMatrice}
-          localisation={lectureDesGrades.localisation}
-          contexte={{ titre: 'Accord fort, accord relatif' }}
-        />
-        <span class="mention-non-verifie">non vérifié</span>
-      </p>
+    <div class:list={['cadre-verification', 'grades-corps', { 'non-verifie': !grades.verifie_le }]}>
+      {paragraphes(grades.enonce ?? '').map((texte) => <p>{typographie(texte)}</p>)}
+      {grades.note_publique && <p>{typographie(grades.note_publique)}</p>}
+      <Provenance affirmation={grades} sources={sources} titre="Accord fort, accord relatif" />
     </div>
   </details>
 </section>
@@ -103,8 +98,8 @@ const valeurs: Valeur[] = [
   .entree-texte {
     display: flex;
     flex-direction: column;
-    line-height: var(--interligne-serre);
     padding-top: 0.2rem;
+    line-height: var(--interligne-serre);
   }
 
   .entree-nom {
@@ -119,9 +114,9 @@ const valeurs: Valeur[] = [
 
   .pastille {
     display: inline-flex;
+    flex: none;
     align-items: center;
     justify-content: center;
-    flex: none;
     width: 2.75rem;
     height: 1.75rem;
   }
@@ -135,14 +130,6 @@ const valeurs: Valeur[] = [
   .pastille-brouillon {
     border: 1.5px dashed var(--encre-2);
     border-radius: 4px;
-  }
-
-  .entree-brouillon {
-    display: none;
-  }
-
-  :global(:root[data-brouillon]) .entree-brouillon {
-    display: flex;
   }
 
   .grades {
@@ -163,15 +150,5 @@ const valeurs: Valeur[] = [
     margin-top: var(--espace-3);
     padding: var(--espace-4);
     background: var(--papier-2);
-  }
-
-  .grades-liste {
-    display: grid;
-    gap: var(--espace-1);
-    padding-inline-start: 1.25em;
-  }
-
-  .grades-liste strong {
-    font-weight: 650;
   }
 </style>

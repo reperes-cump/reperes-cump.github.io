@@ -1,13 +1,36 @@
 ---
+import { getCollection, getEntry } from 'astro:content';
+import type { Affirmation } from '../../schemas/index.ts';
+import EncadreSilence from '../components/EncadreSilence.astro';
 import EnTete from '../components/EnTete.astro';
 import Legende from '../components/Legende.astro';
 import Matrice from '../components/Matrice.astro';
 import PiedDePage from '../components/PiedDePage.astro';
 import Base from '../layouts/Base.astro';
+import { lignesMatrice } from '../lib/affichage.ts';
+
+const sources = new Map((await getCollection('sources')).map((e) => [e.id, e.data]));
+const affirmations = new Map((await getCollection('affirmations')).map((e) => [e.id, e.data]));
+const infos = (await getEntry('infos', 'contenu'))?.data ?? null;
+const encadre = (await getEntry('visuels', 'encadre-silence'))?.data;
+
+const requise = (id: string): Affirmation => {
+  const affirmation = affirmations.get(id);
+  if (!affirmation) throw new Error(`Accueil : affirmation introuvable : ${id}`);
+  return affirmation;
+};
+
+const lignes = lignesMatrice(affirmations.values());
+const demande = requise('circuit-demande-samu');
+const grades = requise('methode-grades');
+const elementsEncadre = (encadre?.elements ?? []).flatMap((e) => e.affirmations.map(requise));
+
+const affichees = [...lignes, demande, grades, ...elementsEncadre];
+const brouillon = affichees.some((a) => !a.verifie_le) || !infos?.version;
 ---
 
-<Base>
-  <EnTete />
+<Base brouillon={brouillon}>
+  <EnTete demande={demande} infos={infos} sources={sources} />
   <main class="accueil">
     <div class="intro">
       <p class="intro-question">
@@ -16,8 +39,9 @@ import Base from '../layouts/Base.astro';
       </p>
       <p class="intro-aide">Dans chaque case, «&#8239;SFMU 2017&#8239;» ouvre la source.</p>
     </div>
-    <Legende />
-    <Matrice />
+    <Legende grades={grades} sources={sources} brouillon={affichees.some((a) => !a.verifie_le)} />
+    <Matrice lignes={lignes} sources={sources} />
+    <EncadreSilence elements={elementsEncadre} sources={sources} />
   </main>
   <PiedDePage />
 </Base>

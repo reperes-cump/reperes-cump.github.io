@@ -1,0 +1,190 @@
+---
+/**
+ * Contenu d'un panneau source, préparé au build dans un <template>.
+ * Le panneau commun (PanneauSource) le recopie à l'ouverture.
+ */
+import type { Affirmation, Source, Verdict } from '../../schemas/index.ts';
+import {
+  dateLisible,
+  estPdf,
+  hote,
+  lienDirect,
+  texteLocalisation,
+  typographie,
+} from '../lib/affichage.ts';
+import {
+  libellesAutorite,
+  libellesGrade,
+  libellesStatut,
+  libellesVerdict,
+} from '../lib/libelles.ts';
+import Glyphe from './Glyphe.astro';
+
+type Reference = Affirmation['sources'][number];
+
+interface Props {
+  id: string;
+  /** Situation ou énoncé concerné. */
+  titre: string;
+  /** Colonne de la matrice, le cas échéant. */
+  colonne?: string;
+  verdict?: Verdict | null;
+  source: Source;
+  references: Reference[];
+  verifieLe: string | null;
+}
+
+const { id, titre, colonne, verdict, source, references, verifieLe } = Astro.props;
+
+const minuscule = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+const majuscule = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+
+const nomVerdict = verdict ? (verdict.libelle ?? libellesVerdict[verdict.valeur]) : null;
+const grade = verdict?.grade ? libellesGrade[verdict.grade] : null;
+const resume = [nomVerdict, grade].filter(Boolean).join(', ');
+const ligneVerdict = resume
+  ? colonne
+    ? `${colonne} : ${minuscule(resume)}`
+    : majuscule(resume)
+  : null;
+const glyphe = verdict && verdict.valeur !== 'information' ? verdict.valeur : null;
+
+const nature = `${libellesAutorite[source.autorite]}, ${libellesStatut[source.statut]}.`;
+const reference = [source.auteurs, source.reference].filter(Boolean).join(' ');
+
+// Un passage par localisation différente.
+const passages = [
+  ...new Map(
+    references.map((r) => {
+      const lieu = texteLocalisation(r.localisation);
+      return [`${lieu}|${r.extrait}`, { lieu, extrait: r.extrait }];
+    }),
+  ).values(),
+];
+const manque = (p: { lieu: string | null; extrait: string | null }) =>
+  !p.lieu && !p.extrait ? 'Extrait et page à relever.' : !p.lieu ? 'Page à relever.' : null;
+
+const avecPage = references.find((r) => r.lien_profond || r.localisation.page) ?? references[0];
+const lien = lienDirect(source, avecPage);
+const page = avecPage?.localisation.page;
+const texteLien =
+  lien && source.url
+    ? estPdf(source.url)
+      ? page
+        ? `Lire le PDF à la page ${page} (${hote(source.url)})`
+        : `Lire le PDF sur ${hote(source.url)}`
+      : `Lire le texte sur ${hote(lien)}`
+    : null;
+---
+
+<template id={id}>
+  <div class="contexte">
+    <p class="contexte-titre">{typographie(titre)}</p>
+    {
+      ligneVerdict && (
+        <p class="contexte-verdict">
+          {glyphe && <Glyphe valeur={glyphe} class="contexte-glyphe" />}
+          <span>{typographie(ligneVerdict)}</span>
+        </p>
+      )
+    }
+  </div>
+
+  <div class="document">
+    <p class="document-titre">{typographie(source.titre)}</p>
+    {reference && <p class="document-detail">{typographie(reference)}</p>}
+    <p class="document-detail">{nature}</p>
+  </div>
+
+  <div class="passage">
+    <h3 class="passage-titre">Passage du texte</h3>
+    {
+      passages.map((p) => (
+        <div class="passage-element">
+          {p.extrait && <p class="extrait">{p.extrait}</p>}
+          {p.lieu && <p>{p.lieu}.</p>}
+          {manque(p) && <p class="a-relever">{manque(p)}</p>}
+        </div>
+      ))
+    }
+  </div>
+
+  {
+    lien && texteLien ? (
+      <p>
+        <a href={lien} rel="noreferrer">
+          {texteLien}
+        </a>
+      </p>
+    ) : (
+      <p class="a-relever">Lien vers le texte à relever.</p>
+    )
+  }
+  <p class="verification">
+    {
+      verifieLe
+        ? `Vérifié sur le texte le ${dateLisible(verifieLe)}.`
+        : 'Pas encore vérifié sur le texte.'
+    }
+  </p>
+</template>
+
+<style>
+  .contexte {
+    display: grid;
+    gap: var(--espace-1);
+    padding: var(--espace-3) var(--espace-4);
+    border-radius: var(--rayon);
+    background: var(--papier-2);
+  }
+
+  .contexte-titre {
+    font-weight: 650;
+  }
+
+  .contexte-verdict {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+  }
+
+  .contexte-verdict :global(.contexte-glyphe) {
+    width: 1.2em;
+    height: 1.2em;
+  }
+
+  .document,
+  .passage,
+  .passage-element {
+    display: grid;
+    gap: var(--espace-1);
+  }
+
+  .passage {
+    gap: var(--espace-2);
+  }
+
+  .document-titre {
+    font-weight: 650;
+    line-height: var(--interligne-serre);
+  }
+
+  .document-detail,
+  .verification {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .passage-titre {
+    font-size: var(--taille-0);
+  }
+
+  /* Texte littéral d'une source : police serif, sur surlignage. */
+  .extrait {
+    padding: var(--espace-1) var(--espace-2);
+    background: var(--surligneur);
+    color: var(--sur-surligneur);
+    font-family: var(--police-source);
+    font-size: 1.06em;
+  }
+</style>

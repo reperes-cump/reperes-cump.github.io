@@ -1,16 +1,91 @@
 ---
-import { matrice } from '../maquette/donnees-brouillon';
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { typographie } from '../lib/affichage.ts';
+import { colonnes, libellesAutorite, libellesVerdict } from '../lib/libelles.ts';
 import CelluleVerdict from './CelluleVerdict.astro';
+import Glyphe from './Glyphe.astro';
 
-const colonnes = {
-  alerte: { titre: 'Alerter le référent', court: 'Alerter' },
-  activation: { titre: 'Activer la CUMP', court: 'Activer' },
-  fusion: { titre: 'Alerter le référent et activer la CUMP', court: 'Alerter et activer' },
-};
+interface Props {
+  lignes: Affirmation[];
+  sources: Map<string, Source>;
+}
+
+const { lignes, sources } = Astro.props;
+
+const valeursLigne = (l: Affirmation) =>
+  l.fusion
+    ? { alerte: l.fusion.valeur, activation: l.fusion.valeur }
+    : { alerte: l.verdicts?.alerte.valeur, activation: l.verdicts?.activation.valeur };
+const autoritesLigne = (l: Affirmation) => [
+  ...new Set(l.sources.flatMap((r) => sources.get(r.source_id)?.autorite ?? [])),
+];
+
+// Filtres : seulement les verdicts présents, et l'autorité seulement s'il y en a plusieurs.
+const ordreVerdicts = [
+  'recommande',
+  'deconseille',
+  'pas_de_consensus',
+  'pas_de_conclusion',
+  'silence',
+] as const;
+const presents = new Set(lignes.flatMap((l) => Object.values(valeursLigne(l))));
+const verdictsFiltre = ordreVerdicts.filter((v) => presents.has(v));
+const autorites = [...new Set(lignes.flatMap(autoritesLigne))];
+const modes = [
+  { valeur: 'deux', libelle: 'Les deux' },
+  { valeur: 'alerte', libelle: colonnes.alerte.court },
+  { valeur: 'activation', libelle: colonnes.activation.court },
+];
 ---
 
-<div class="conteneur-matrice">
-  <table class="matrice" role="table">
+<div class="conteneur-matrice" data-matrice>
+  <div class="filtres" data-filtres hidden>
+    <fieldset class="bascule">
+      <legend class="visuellement-cache">Colonnes affichées</legend>
+      {
+        modes.map((mode, index) => (
+          <label class="bascule-option">
+            <input type="radio" name="colonnes" value={mode.valeur} checked={index === 0} />
+            <span>{mode.libelle}</span>
+          </label>
+        ))
+      }
+    </fieldset>
+    <details class="filtre-details">
+      <summary>Filtrer</summary>
+      <div class="filtre-corps">
+        <fieldset class="filtre-groupe">
+          <legend>Verdicts</legend>
+          {
+            verdictsFiltre.map((valeur) => (
+              <label class="filtre-option">
+                <input type="checkbox" name="verdict" value={valeur} checked />
+                <Glyphe valeur={valeur} />
+                <span>{libellesVerdict[valeur]}</span>
+              </label>
+            ))
+          }
+        </fieldset>
+        {
+          autorites.length > 1 && (
+            <fieldset class="filtre-groupe">
+              <legend>Autorité</legend>
+              {autorites.map((autorite) => (
+                <label class="filtre-option">
+                  <input type="checkbox" name="autorite" value={autorite} checked />
+                  <span>{libellesAutorite[autorite]}</span>
+                </label>
+              ))}
+            </fieldset>
+          )
+        }
+        <button type="button" class="filtre-tout" data-tout>Tout afficher</button>
+      </div>
+    </details>
+    <p class="filtre-resultat" aria-live="polite" data-resultat></p>
+  </div>
+
+  <table class="matrice" role="table" data-colonnes="deux">
     <caption class="visuellement-cache">
       Alerter le référent, activer la CUMP : verdict de la recommandation SFMU 2017 pour chaque
       situation
@@ -18,39 +93,31 @@ const colonnes = {
     <thead role="rowgroup">
       <tr role="row">
         <th scope="col" role="columnheader">Situation</th>
-        <th scope="col" role="columnheader">{colonnes.alerte.titre}</th>
-        <th scope="col" role="columnheader">{colonnes.activation.titre}</th>
+        <th scope="col" role="columnheader" data-colonne="alerte">{colonnes.alerte.titre}</th>
+        <th scope="col" role="columnheader" data-colonne="activation">
+          {colonnes.activation.titre}
+        </th>
       </tr>
     </thead>
     <tbody role="rowgroup">
       {
-        matrice.map((ligne) => (
-          <tr role="row" id={`situation-${ligne.id}`}>
+        lignes.map((ligne) => (
+          <tr
+            role="row"
+            id={`situation-${ligne.critere_explorateur}`}
+            data-alerte={valeursLigne(ligne).alerte}
+            data-activation={valeursLigne(ligne).activation}
+            data-autorites={autoritesLigne(ligne).join(' ')}
+          >
             <th scope="row" role="rowheader">
-              {ligne.situation}
+              {typographie(ligne.situation ?? '')}
             </th>
-            {ligne.fusionnee ? (
-              <CelluleVerdict
-                verdict={ligne.alerte}
-                situation={ligne.situation}
-                colonne={colonnes.fusion.titre}
-                etiquette={colonnes.fusion.court}
-                colspan={2}
-              />
+            {ligne.fusion ? (
+              <CelluleVerdict ligne={ligne} colonne="fusion" sources={sources} />
             ) : (
               <>
-                <CelluleVerdict
-                  verdict={ligne.alerte}
-                  situation={ligne.situation}
-                  colonne={colonnes.alerte.titre}
-                  etiquette={colonnes.alerte.court}
-                />
-                <CelluleVerdict
-                  verdict={ligne.activation}
-                  situation={ligne.situation}
-                  colonne={colonnes.activation.titre}
-                  etiquette={colonnes.activation.court}
-                />
+                <CelluleVerdict ligne={ligne} colonne="alerte" sources={sources} />
+                <CelluleVerdict ligne={ligne} colonne="activation" sources={sources} />
               </>
             )}
           </tr>
@@ -58,14 +125,207 @@ const colonnes = {
       }
     </tbody>
   </table>
+  <p class="filtre-vide" data-vide hidden>Aucune situation ne correspond à ces filtres.</p>
 </div>
+
+<script>
+  for (const racine of document.querySelectorAll<HTMLElement>('[data-matrice]')) {
+    const filtres = racine.querySelector<HTMLElement>('[data-filtres]');
+    const table = racine.querySelector<HTMLTableElement>('table');
+    const corps = table?.tBodies[0];
+    const resultat = racine.querySelector<HTMLElement>('[data-resultat]');
+    const vide = racine.querySelector<HTMLElement>('[data-vide]');
+    if (!filtres || !table || !corps) continue;
+
+    const coches = (nom: string) =>
+      new Set(
+        [...filtres.querySelectorAll<HTMLInputElement>(`input[name="${nom}"]:checked`)].map(
+          (champ) => champ.value,
+        ),
+      );
+    const autoritesFiltrees = filtres.querySelector('input[name="autorite"]') !== null;
+
+    const appliquer = () => {
+      const mode =
+        filtres.querySelector<HTMLInputElement>('input[name="colonnes"]:checked')?.value ?? 'deux';
+      const verdicts = coches('verdict');
+      const autorites = coches('autorite');
+      table.dataset.colonnes = mode;
+      for (const cellule of table.querySelectorAll<HTMLTableCellElement>(
+        'td[data-colonne="fusion"]',
+      )) {
+        cellule.colSpan = mode === 'deux' ? 2 : 1;
+      }
+
+      let visibles = 0;
+      for (const ligne of corps.rows) {
+        const valeurs =
+          mode === 'deux'
+            ? [ligne.dataset.alerte, ligne.dataset.activation]
+            : [mode === 'alerte' ? ligne.dataset.alerte : ligne.dataset.activation];
+        const verdictRetenu = valeurs.some((v) => v !== undefined && verdicts.has(v));
+        const autoriteRetenue =
+          !autoritesFiltrees ||
+          (ligne.dataset.autorites ?? '').split(' ').some((a) => autorites.has(a));
+        ligne.hidden = !(verdictRetenu && autoriteRetenue);
+        if (!ligne.hidden) visibles += 1;
+      }
+
+      const total = corps.rows.length;
+      if (resultat) {
+        resultat.textContent =
+          visibles === total ? '' : `${visibles} situation${visibles > 1 ? 's' : ''} sur ${total}`;
+      }
+      if (vide) vide.hidden = visibles > 0;
+    };
+
+    filtres.addEventListener('change', appliquer);
+    filtres.querySelector('[data-tout]')?.addEventListener('click', () => {
+      for (const champ of filtres.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')) {
+        champ.checked = true;
+      }
+      appliquer();
+    });
+    filtres.hidden = false;
+    appliquer();
+  }
+</script>
 
 <style>
   /* Les cellules <td> sont rendues par CelluleVerdict : d'où les sélecteurs :global(td). */
   .conteneur-matrice {
     container-type: inline-size;
+    display: grid;
+    gap: var(--espace-3);
   }
 
+  /* Filtres */
+  .filtres {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--espace-2) var(--espace-4);
+  }
+
+  .filtres[hidden],
+  .filtre-vide[hidden] {
+    display: none;
+  }
+
+  .bascule {
+    display: inline-flex;
+    margin: 0;
+    padding: 2px;
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon-puce);
+  }
+
+  .bascule-option {
+    position: relative;
+  }
+
+  .bascule-option input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .bascule-option span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 var(--espace-3);
+    border-radius: var(--rayon-puce);
+    font-size: var(--taille--1);
+  }
+
+  .bascule-option input:checked + span {
+    background: var(--encre);
+    color: var(--papier);
+    font-weight: 650;
+  }
+
+  .bascule-option input:focus-visible + span {
+    outline: 3px solid var(--source);
+    outline-offset: 2px;
+  }
+
+  .filtre-details summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    color: var(--source);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .filtre-corps {
+    display: grid;
+    gap: var(--espace-3);
+    margin-top: var(--espace-2);
+    padding: var(--espace-3) var(--espace-4);
+    border-radius: var(--rayon);
+    background: var(--papier-2);
+  }
+
+  .filtre-groupe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-4);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .filtre-groupe legend {
+    width: 100%;
+    margin-bottom: var(--espace-1);
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .filtre-option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+    min-height: 2rem;
+    cursor: pointer;
+  }
+
+  .filtre-option input {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--encre);
+  }
+
+  .filtre-tout {
+    justify-self: start;
+    min-height: 2rem;
+    padding: 0 var(--espace-3);
+    border: var(--trait) solid var(--encre);
+    border-radius: var(--rayon);
+    background: var(--papier);
+    font-size: var(--taille--1);
+    cursor: pointer;
+  }
+
+  .filtre-resultat {
+    align-self: center;
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .filtre-vide {
+    padding: var(--espace-4) 0;
+    color: var(--encre-2);
+  }
+
+  /* Tableau */
   .matrice {
     width: 100%;
     table-layout: fixed;
@@ -93,6 +353,19 @@ const colonnes = {
 
   thead th:not(:first-child) {
     width: 31%;
+  }
+
+  .matrice:not([data-colonnes="deux"]) thead th:first-child {
+    width: 50%;
+  }
+
+  .matrice[data-colonnes="alerte"] :global([data-colonne="activation"]),
+  .matrice[data-colonnes="activation"] :global([data-colonne="alerte"]) {
+    display: none;
+  }
+
+  .matrice tbody tr[hidden] {
+    display: none;
   }
 
   tbody th,
@@ -139,6 +412,14 @@ const colonnes = {
       border-bottom: var(--trait) solid var(--filet);
     }
 
+    .matrice:not([data-colonnes="deux"]) tbody tr {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .matrice tbody tr[hidden] {
+      display: none;
+    }
+
     .matrice tbody th,
     .matrice tbody :global(td) {
       padding: 0;
@@ -150,8 +431,13 @@ const colonnes = {
       font-weight: 650;
     }
 
-    .matrice :global(td[colspan]) {
+    .matrice :global(td[data-colonne="fusion"]) {
       grid-column: 1 / -1;
+    }
+
+    .matrice[data-colonnes="alerte"] :global([data-colonne="activation"]),
+    .matrice[data-colonnes="activation"] :global([data-colonne="alerte"]) {
+      display: none;
     }
 
     .matrice :global(.cadre-verification) {

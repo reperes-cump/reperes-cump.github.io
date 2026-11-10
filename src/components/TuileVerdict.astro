@@ -1,16 +1,18 @@
 ---
-import { libelles, libellesGrade, type Verdict } from '../maquette/donnees-brouillon';
+import type { Verdict } from '../../schemas/index.ts';
+import { typographie } from '../lib/affichage.ts';
+import { libellesGrade, libellesVerdict, phraseSilence } from '../lib/libelles.ts';
 import Glyphe from './Glyphe.astro';
 
 interface Props {
-  verdict: Verdict;
+  verdict: Verdict & { valeur: Exclude<Verdict['valeur'], 'information'> };
 }
 
 const { verdict } = Astro.props;
 const silence = verdict.valeur === 'silence';
-const libelle = silence
-  ? "Les textes consultés n'en parlent pas"
-  : (verdict.libelle ?? libelles[verdict.valeur]);
+const libelle = typographie(
+  silence ? phraseSilence : (verdict.libelle ?? libellesVerdict[verdict.valeur]),
+);
 const grade = verdict.grade ? libellesGrade[verdict.grade] : null;
 ---
 

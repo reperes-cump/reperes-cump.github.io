@@ -1,0 +1,47 @@
+---
+/**
+ * Puces de source d'un élément affiché (une par source citée), avec leur panneau,
+ * et la mention « non vérifié » pour les lecteurs d'écran.
+ */
+import type { Affirmation, Source, Verdict } from '../../schemas/index.ts';
+import { type Colonne, groupesSources, idPanneau, libellePuce } from '../lib/affichage.ts';
+import ContenuPanneau from './ContenuPanneau.astro';
+import PuceSource from './PuceSource.astro';
+
+interface Props {
+  affirmation: Affirmation;
+  sources: Map<string, Source>;
+  titre: string;
+  colonne?: Colonne | 'fusion';
+  colonneTitre?: string;
+  verdict?: Verdict | null;
+}
+
+const { affirmation, sources, titre, colonne, colonneTitre, verdict } = Astro.props;
+const groupes = groupesSources(affirmation, colonne === 'fusion' ? undefined : colonne).flatMap(
+  ({ sourceId, references }) => {
+    const source = sources.get(sourceId);
+    return source ? [{ source, references, id: idPanneau(affirmation.id, sourceId, colonne) }] : [];
+  },
+);
+---
+
+<div class="provenance">
+  {
+    groupes.map(({ source, references, id }) => (
+      <>
+        <PuceSource libelle={libellePuce(source, references)} panneau={id} />
+        <ContenuPanneau
+          id={id}
+          titre={titre}
+          colonne={colonneTitre}
+          verdict={verdict ?? affirmation.verdict}
+          source={source}
+          references={references}
+          verifieLe={affirmation.verifie_le}
+        />
+      </>
+    ))
+  }
+  {!affirmation.verifie_le && <span class="mention-non-verifie">non vérifié</span>}
+</div>

@@ -1,10 +1,19 @@
 ---
-import { contenu, demandeAuSamu, sourceMatrice } from '../maquette/donnees-brouillon';
-import PuceSource from './PuceSource.astro';
+import type { Affirmation, InfosContenu, Source } from '../../schemas/index.ts';
+import { dateLisible, typographie } from '../lib/affichage.ts';
+import Provenance from './Provenance.astro';
 
+interface Props {
+  /** Affirmation « toute demande s'adresse au SAMU-Centre 15 ». */
+  demande: Affirmation;
+  infos: InfosContenu | null;
+  sources: Map<string, Source>;
+}
+
+const { demande, infos, sources } = Astro.props;
 const etat =
-  contenu.version && contenu.derniere_verification
-    ? `Version ${contenu.version} du contenu, vérifiée le ${contenu.derniere_verification}.`
+  infos?.version && infos.derniere_verification
+    ? `Version ${infos.version} du contenu, vérifiée le ${dateLisible(infos.derniere_verification)}.`
     : 'Contenu en brouillon, pas encore vérifié.';
 ---
 
@@ -19,15 +28,10 @@ const etat =
       Outil d'information. Il ne remplace ni la régulation médicale du SAMU-Centre&nbsp;15 ni la
       décision du référent CUMP.
     </p>
-    <p class="cadre-verification demande">
-      <span>{demandeAuSamu.texte}</span>
-      <PuceSource
-        source={sourceMatrice}
-        localisation={demandeAuSamu.verdict.localisation}
-        contexte={{ titre: demandeAuSamu.texte, verdict: demandeAuSamu.verdict }}
-      />
-      <span class="mention-non-verifie">non vérifié</span>
-    </p>
+    <div class:list={['cadre-verification', 'demande', { 'non-verifie': !demande.verifie_le }]}>
+      <p>{typographie(demande.enonce ?? '')}</p>
+      <Provenance affirmation={demande} sources={sources} titre={demande.enonce ?? ''} />
+    </div>
     <p class="etat">{etat}</p>
   </div>
 </header>
