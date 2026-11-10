@@ -3,11 +3,13 @@ import {
   affirmationSchema,
   contenuSchema,
   designationsSchema,
+  exclusionsSchema,
   glossaireSchema,
+  pageSchema,
   sourceSchema,
   visuelSchema,
 } from '../../schemas/index.ts';
-import { existe, type FichierYaml, lireDossier, lireYaml } from './lecture.ts';
+import { existe, type FichierYaml, lireDossier, lireMarkdown, lireYaml } from './lecture.ts';
 import { listerARelever, verifierCoherence, verifierPublication } from './regles.ts';
 import { CHEMIN_DESIGNATIONS, CHEMIN_INFOS, type Contenu, type Probleme } from './types.ts';
 
@@ -16,6 +18,8 @@ z.config(z.locales.fr());
 export const VISUELS = ['circuit', 'frise', 'pyramide', 'encadre-silence'] as const;
 const CHEMIN_DEPARTEMENTS = 'content/territoires/departements.yaml';
 const CHEMIN_ZONES = 'content/territoires/zones.yaml';
+const CHEMIN_A_PROPOS = 'content/pages/a-propos.md';
+const CHEMIN_EXCLUSIONS = 'content/pages/sources-exclues.yaml';
 
 export interface Resultat {
   contenu: Contenu;
@@ -139,6 +143,18 @@ export async function chargerContenu(
       fichier: CHEMIN_ZONES,
       message: 'absent : le niveau « zones » de la carte reste désactivé',
     });
+  }
+
+  // Pages rédigées : à propos (Markdown) et documents exclus.
+  if (await existe(racine, CHEMIN_A_PROPOS)) {
+    valider(pageSchema, await lireMarkdown(racine, CHEMIN_A_PROPOS), erreurs);
+  } else {
+    erreurs.push({ fichier: CHEMIN_A_PROPOS, message: 'fichier absent' });
+  }
+  if (await existe(racine, CHEMIN_EXCLUSIONS)) {
+    valider(exclusionsSchema, await lireYaml(racine, CHEMIN_EXCLUSIONS), erreurs);
+  } else {
+    erreurs.push({ fichier: CHEMIN_EXCLUSIONS, message: 'fichier absent' });
   }
 
   const contenu: Contenu = {

@@ -51,3 +51,26 @@ export async function existe(racine: string, chemin: string): Promise<boolean> {
     return false;
   }
 }
+
+export interface FichierMarkdown extends FichierYaml {
+  /** Texte Markdown, sans l'en-tête. */
+  corps: string;
+}
+
+/** Lit un fichier Markdown avec un en-tête YAML entre deux lignes « --- ». */
+export async function lireMarkdown(racine: string, chemin: string): Promise<FichierMarkdown> {
+  const texte = await readFile(join(racine, chemin), 'utf8');
+  const morceaux = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(texte);
+  const nom = basename(chemin, '.md');
+  if (!morceaux) {
+    return { chemin, nom, donnees: {}, corps: texte, erreurs: ['en-tête « --- » manquant'] };
+  }
+  const document = parseDocument(morceaux[1] ?? '', { prettyErrors: true, uniqueKeys: true });
+  return {
+    chemin,
+    nom,
+    donnees: document.toJS(),
+    corps: morceaux[2] ?? '',
+    erreurs: document.errors.map((erreur) => erreur.message),
+  };
+}

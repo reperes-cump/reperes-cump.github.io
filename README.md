@@ -28,6 +28,7 @@ Tout le contenu est dans le dossier [`content/`](content/), en fichiers YAML. Il
 | `content/affirmations/` | Une information sourcée par fichier : énoncé ou ligne de matrice, verdict, sources avec localisation. |
 | `content/visuels/`      | L'ordre des éléments du circuit, de la frise, de la pyramide, de l'encadré et du glossaire.           |
 | `content/territoires/`  | Les désignations de CUMP relevées dans l'arrêté.                                                      |
+| `content/pages/`        | Le texte de la page À propos et la liste des documents écartés.                                       |
 | `content/contenu.yaml`  | Version du contenu, date de dernière vérification, mainteneur.                                        |
 
 Exemple de ligne de matrice (la page est fictive) :

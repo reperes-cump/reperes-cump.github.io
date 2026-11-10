@@ -1,0 +1,8 @@
+# Documents volontairement écartés : le site ne reprend que des sources en libre accès.
+exclusions:
+  - document: "Schémas types d'intervention départementaux"
+    raison: "non publics"
+  - document: "Plans ORSAN régionaux"
+    raison: "non publics"
+  - document: "Supports de formation"
+    raison: "non opposables"
