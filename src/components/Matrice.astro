@@ -1,0 +1,185 @@
+---
+import { matrice } from '../maquette/donnees-brouillon';
+import CelluleVerdict from './CelluleVerdict.astro';
+
+const colonnes = {
+  alerte: { titre: 'Alerter le référent', court: 'Alerter' },
+  activation: { titre: 'Activer la CUMP', court: 'Activer' },
+  fusion: { titre: 'Alerter le référent et activer la CUMP', court: 'Alerter et activer' },
+};
+---
+
+<div class="conteneur-matrice">
+  <table class="matrice" role="table">
+    <caption class="visuellement-cache">
+      Alerter le référent, activer la CUMP : verdict de la recommandation SFMU 2017 pour chaque
+      situation
+    </caption>
+    <thead role="rowgroup">
+      <tr role="row">
+        <th scope="col" role="columnheader">Situation</th>
+        <th scope="col" role="columnheader">{colonnes.alerte.titre}</th>
+        <th scope="col" role="columnheader">{colonnes.activation.titre}</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      {
+        matrice.map((ligne) => (
+          <tr role="row" id={`situation-${ligne.id}`}>
+            <th scope="row" role="rowheader">
+              {ligne.situation}
+            </th>
+            {ligne.fusionnee ? (
+              <CelluleVerdict
+                verdict={ligne.alerte}
+                situation={ligne.situation}
+                colonne={colonnes.fusion.titre}
+                etiquette={colonnes.fusion.court}
+                colspan={2}
+              />
+            ) : (
+              <>
+                <CelluleVerdict
+                  verdict={ligne.alerte}
+                  situation={ligne.situation}
+                  colonne={colonnes.alerte.titre}
+                  etiquette={colonnes.alerte.court}
+                />
+                <CelluleVerdict
+                  verdict={ligne.activation}
+                  situation={ligne.situation}
+                  colonne={colonnes.activation.titre}
+                  etiquette={colonnes.activation.court}
+                />
+              </>
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  /* Les cellules <td> sont rendues par CelluleVerdict : d'où les sélecteurs :global(td). */
+  .conteneur-matrice {
+    container-type: inline-size;
+  }
+
+  .matrice {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: var(--espace-3) var(--espace-3) var(--espace-2);
+    border-bottom: var(--trait-fort) solid var(--encre);
+    background: var(--papier);
+    font-size: var(--taille-0);
+    font-weight: 700;
+    text-align: start;
+    vertical-align: bottom;
+  }
+
+  thead th:first-child {
+    padding-inline-start: 0;
+    width: 38%;
+  }
+
+  thead th:not(:first-child) {
+    width: 31%;
+  }
+
+  tbody th,
+  tbody :global(td) {
+    padding: var(--espace-2) var(--espace-2) var(--espace-3);
+    border-bottom: var(--trait) solid var(--filet);
+    vertical-align: top;
+  }
+
+  tbody th {
+    padding-inline: 0 var(--espace-4);
+    padding-top: calc(var(--espace-2) + var(--espace-3));
+    font-weight: 400;
+    text-align: start;
+  }
+
+  .matrice :global(.etiquette-colonne) {
+    display: none;
+  }
+
+  /* Petit conteneur : une situation par bloc, deux verdicts côte à côte. */
+  @container (width < 40rem) {
+    .matrice,
+    .matrice tbody,
+    .matrice tr,
+    .matrice th,
+    .matrice :global(td) {
+      display: block;
+    }
+
+    .matrice thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .matrice tbody tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--espace-2);
+      padding-block: var(--espace-4);
+      border-bottom: var(--trait) solid var(--filet);
+    }
+
+    .matrice tbody th,
+    .matrice tbody :global(td) {
+      padding: 0;
+      border: 0;
+    }
+
+    .matrice tbody th {
+      grid-column: 1 / -1;
+      font-weight: 650;
+    }
+
+    .matrice :global(td[colspan]) {
+      grid-column: 1 / -1;
+    }
+
+    .matrice :global(.cadre-verification) {
+      padding: 3px;
+    }
+
+    .matrice :global(.tuile) {
+      min-height: 3.5rem;
+      padding: var(--espace-2);
+      font-size: 0.9375rem;
+    }
+
+    .matrice :global(.plaque) {
+      gap: 0.375rem;
+      padding: 2px var(--espace-1);
+      margin: -2px calc(-1 * var(--espace-1));
+    }
+
+    .matrice :global(.tuile-glyphe) {
+      width: 1.1em;
+      height: 1.1em;
+    }
+
+    .matrice :global(.etiquette-colonne) {
+      display: block;
+      margin-block-end: var(--espace-1);
+      color: var(--encre-2);
+      font-size: var(--taille--1);
+    }
+  }
+</style>

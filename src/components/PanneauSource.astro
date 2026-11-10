@@ -1,0 +1,332 @@
+---
+/**
+ * Panneau source commun à la page : un seul <dialog>, rempli à l'ouverture à
+ * partir des attributs de la puce activée et des métadonnées de la source.
+ * Volet latéral sur grand écran, volet bas sur petit écran.
+ */
+import {
+  libellesAutorite,
+  libellesStatut,
+  sourceMatrice,
+  type Source,
+} from '../maquette/donnees-brouillon';
+
+const sources: Source[] = [sourceMatrice];
+const donnees = Object.fromEntries(
+  sources.map((s) => [
+    s.id,
+    {
+      titre: s.titre,
+      reference: s.reference,
+      autorite: libellesAutorite[s.autorite],
+      statut: libellesStatut[s.statut],
+      url: s.url,
+      verifie_le: s.verifie_le,
+    },
+  ]),
+);
+---
+
+<dialog id="panneau-source" class="panneau" aria-labelledby="panneau-titre">
+  <div class="panneau-corps">
+    <div class="panneau-entete">
+      <h2 id="panneau-titre" class="panneau-titre" tabindex="-1">Source</h2>
+      <button type="button" class="panneau-fermer" data-fermer>Fermer</button>
+    </div>
+
+    <div class="contexte">
+      <p class="contexte-titre" data-champ="contexte-titre"></p>
+      <p class="contexte-verdict" data-champ="contexte-verdict-ligne">
+        <svg class="contexte-glyphe" aria-hidden="true" focusable="false">
+          <use data-champ="contexte-glyphe" href=""></use>
+        </svg>
+        <span data-champ="contexte-verdict"></span>
+      </p>
+    </div>
+
+    <div class="document">
+      <p class="document-titre" data-champ="titre"></p>
+      <p class="document-reference" data-champ="reference"></p>
+      <p class="document-nature" data-champ="nature"></p>
+    </div>
+
+    <div class="passage">
+      <h3 class="passage-titre">Passage du texte</h3>
+      <p class="extrait" data-champ="extrait" hidden></p>
+      <p data-champ="lieu"></p>
+    </div>
+
+    <p><a data-champ="lien" href="" rel="noreferrer"></a></p>
+    <p class="verification" data-champ="verification"></p>
+  </div>
+</dialog>
+
+<script type="application/json" id="donnees-sources" set:html={JSON.stringify(donnees)} />
+
+<script>
+  interface DonneesSource {
+    titre: string;
+    reference: string;
+    autorite: string;
+    statut: string;
+    url: string;
+    verifie_le: string | null;
+  }
+
+  const panneau = document.getElementById('panneau-source');
+  const brut = document.getElementById('donnees-sources')?.textContent ?? '{}';
+  const sources = JSON.parse(brut) as Record<string, DonneesSource>;
+
+  if (panneau instanceof HTMLDialogElement) {
+    const champ = (nom: string) => panneau.querySelector<HTMLElement>(`[data-champ="${nom}"]`);
+    const ecrire = (nom: string, texte: string) => {
+      const el = champ(nom);
+      if (el) el.textContent = texte;
+    };
+    let declencheur: HTMLElement | null = null;
+
+    const ouvrir = (puce: HTMLElement) => {
+      const d = puce.dataset;
+      const source = d.source ? sources[d.source] : undefined;
+      if (!source) return;
+
+      ecrire('contexte-titre', d.titre ?? '');
+      const ligneVerdict = champ('contexte-verdict-ligne');
+      if (ligneVerdict) ligneVerdict.hidden = !d.valeur;
+      if (d.valeur) {
+        champ('contexte-glyphe')?.setAttribute('href', `#glyphe-${d.valeur}`);
+        const libelle = d.libelle ? d.libelle.charAt(0).toLowerCase() + d.libelle.slice(1) : '';
+        const verdict = [libelle, d.grade].filter(Boolean).join(', ');
+        const morceaux = d.colonne ? [d.colonne, verdict] : [verdict];
+        ecrire('contexte-verdict', morceaux.join(' : '));
+      }
+
+      ecrire('titre', source.titre);
+      ecrire('reference', source.reference);
+      ecrire('nature', `${source.autorite}, ${source.statut.toLowerCase()}.`);
+
+      // Extrait, page et section : affichés quand ils ont été relevés.
+      const extrait = champ('extrait');
+      if (extrait) {
+        extrait.textContent = d.extrait ?? '';
+        extrait.hidden = !d.extrait;
+      }
+      const lieu = champ('lieu');
+      if (lieu) {
+        const morceaux = [
+          d.page ? `Page ${d.page}` : '',
+          d.section ? `section «\u202F${d.section}\u202F»` : '',
+        ].filter(Boolean);
+        const manque = [!d.extrait && 'extrait', !d.page && 'page'].filter(Boolean);
+        lieu.textContent = morceaux.length
+          ? `${morceaux.join(', ')}.`
+          : `${manque.join(' et ').replace(/^./, (c) => c.toUpperCase())} à relever.`;
+        lieu.classList.toggle('a-relever', !d.page);
+      }
+
+      const lien = champ('lien');
+      if (lien instanceof HTMLAnchorElement) {
+        const hote = new URL(source.url).hostname.replace(/^www\./, '');
+        lien.href = d.page ? `${source.url}#page=${d.page}` : source.url;
+        lien.textContent = d.page
+          ? `Lire le PDF à la page ${d.page} (${hote})`
+          : `Lire le PDF sur ${hote}`;
+      }
+
+      ecrire(
+        'verification',
+        source.verifie_le
+          ? `Vérifié sur le texte le ${source.verifie_le}.`
+          : 'Pas encore vérifié sur le texte.',
+      );
+
+      declencheur = puce;
+      panneau.showModal();
+      panneau.querySelector<HTMLElement>('#panneau-titre')?.focus();
+    };
+
+    document.addEventListener('click', (evenement) => {
+      const cible = evenement.target;
+      if (!(cible instanceof Element)) return;
+      const puce = cible.closest<HTMLElement>('button.puce-source');
+      if (puce) ouvrir(puce);
+    });
+
+    panneau.querySelector('[data-fermer]')?.addEventListener('click', () => panneau.close());
+
+    // Un clic sur le voile (hors du contenu) ferme le panneau.
+    panneau.addEventListener('click', (evenement) => {
+      if (evenement.target === panneau) panneau.close();
+    });
+
+    panneau.addEventListener('close', () => {
+      declencheur?.focus();
+      declencheur = null;
+    });
+  }
+</script>
+
+<style>
+  .panneau {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(30rem, 100vw);
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-inline-start: var(--trait) solid var(--filet);
+    background: var(--papier);
+    color: var(--encre);
+    overflow: hidden;
+    transition: transform var(--duree) var(--courbe);
+  }
+
+  @starting-style {
+    .panneau[open] {
+      transform: translateX(100%);
+    }
+  }
+
+  .panneau::backdrop {
+    background: var(--voile);
+  }
+
+  @media (width < 40rem) {
+    .panneau {
+      inset: auto 0 0 0;
+      width: 100%;
+      height: auto;
+      max-height: 88dvh;
+      border-inline-start: 0;
+      border-top: var(--trait) solid var(--filet);
+      border-radius: 12px 12px 0 0;
+    }
+
+    @starting-style {
+      .panneau[open] {
+        transform: translateY(100%);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panneau {
+      transition: none;
+    }
+  }
+
+  .panneau-corps {
+    display: grid;
+    align-content: start;
+    gap: var(--espace-5);
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--espace-5) var(--espace-5) var(--espace-6);
+  }
+
+  @media (width < 40rem) {
+    .panneau-corps {
+      height: auto;
+      max-height: 88dvh;
+    }
+  }
+
+  .panneau-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espace-4);
+  }
+
+  .panneau-titre {
+    font-size: var(--taille-1);
+  }
+
+  .panneau-titre:focus {
+    outline: none;
+  }
+
+  .panneau-fermer {
+    min-height: 2.25rem;
+    padding: var(--espace-1) var(--espace-3);
+    border: var(--trait) solid var(--encre);
+    border-radius: var(--rayon);
+    background: var(--papier);
+    cursor: pointer;
+  }
+
+  .panneau-fermer:hover {
+    background: var(--papier-2);
+  }
+
+  .contexte {
+    display: grid;
+    gap: var(--espace-1);
+    padding: var(--espace-3) var(--espace-4);
+    border-radius: var(--rayon);
+    background: var(--papier-2);
+  }
+
+  .contexte-titre {
+    font-weight: 650;
+  }
+
+  .contexte-verdict {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+  }
+
+  .contexte-verdict[hidden] {
+    display: none;
+  }
+
+  .contexte-glyphe {
+    flex: none;
+    width: 1.2em;
+    height: 1.2em;
+  }
+
+  .document {
+    display: grid;
+    gap: var(--espace-1);
+  }
+
+  .document-titre {
+    font-weight: 650;
+    line-height: var(--interligne-serre);
+  }
+
+  .document-reference,
+  .document-nature,
+  .verification {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .passage {
+    display: grid;
+    gap: var(--espace-2);
+  }
+
+  .passage-titre {
+    font-size: var(--taille-0);
+  }
+
+  /* Texte littéral d'une source : police serif, sur surlignage. */
+  .extrait {
+    padding: var(--espace-1) var(--espace-2);
+    background: var(--surligneur);
+    color: var(--sur-surligneur);
+    font-family: var(--police-source);
+    font-size: 1.06em;
+  }
+
+  .extrait[hidden] {
+    display: none;
+  }
+</style>

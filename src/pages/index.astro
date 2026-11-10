@@ -1,0 +1,54 @@
+---
+import EnTete from '../components/EnTete.astro';
+import Legende from '../components/Legende.astro';
+import Matrice from '../components/Matrice.astro';
+import PiedDePage from '../components/PiedDePage.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base>
+  <EnTete />
+  <main class="accueil">
+    <div class="intro">
+      <p class="intro-question">
+        Pour chaque situation, ce que dit la recommandation de la SFMU (2017)&nbsp;: faut-il
+        alerter le référent&#8239;? Faut-il activer la CUMP&#8239;?
+      </p>
+      <p class="intro-aide">Dans chaque case, «&#8239;SFMU 2017&#8239;» ouvre la source.</p>
+    </div>
+    <Legende />
+    <Matrice />
+  </main>
+  <PiedDePage />
+</Base>
+
+<style>
+  .accueil {
+    display: grid;
+    gap: var(--espace-5);
+    padding-top: var(--espace-5);
+    border-top: var(--trait) solid var(--filet);
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--espace-1);
+    max-width: var(--mesure);
+  }
+
+  .intro-question {
+    font-size: var(--taille-0);
+    line-height: var(--interligne-serre);
+    font-weight: 650;
+  }
+
+  @media (width >= 48rem) {
+    .intro-question {
+      font-size: var(--taille-1);
+    }
+  }
+
+  .intro-aide {
+    color: var(--encre-2);
+  }
+</style>

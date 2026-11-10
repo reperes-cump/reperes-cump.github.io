@@ -1,0 +1,99 @@
+/*
+ * Jetons de design.
+ *
+ * Couleurs : chaque paire texte/fond atteint au moins 4,5:1 (WCAG AA), chaque
+ * élément graphique (glyphe, trait, aplat) au moins 3:1 sur le fond.
+ * Le mode sombre est défini deux fois : pour la préférence système, et pour un
+ * choix explicite (`data-theme="sombre"`). `data-theme="clair"` force le clair.
+ */
+
+@layer jetons {
+  :root {
+    color-scheme: light;
+
+    /* Couleurs, mode clair */
+    --encre: #1c2b3a; /* texte, traits, hachures */
+    --encre-2: #4a5866; /* texte secondaire, cadre « non vérifié » */
+    --papier: #fbfcfd; /* fond */
+    --papier-2: #eef2f6; /* fond des encadrés */
+    --filet: #d5dce3; /* traits décoratifs */
+    --recommande: #0f6e64; /* sarcelle profond */
+    --deconseille: #8c1c4a; /* prune */
+    --sur-aplat: #fbfcfd; /* texte et glyphe posés sur un aplat */
+    --source: #2a4fbf; /* puces et liens de source */
+    --source-survol: #e8edfb;
+    --surligneur: #fff1b8; /* passage cité dans le panneau source */
+    --sur-surligneur: #1c2b3a;
+    --voile: rgb(20 32 44 / 0.45); /* fond derrière le panneau source */
+
+    /* Typographie */
+    /* Provisoire : serif du système, en attendant la vérification de la licence de Source Serif 4. */
+    --police-source: ui-serif, Georgia, 'Times New Roman', serif;
+    --taille--1: 0.8rem;
+    --taille-0: 1rem; /* 17 px, voir base.css */
+    --taille-1: 1.25rem;
+    --taille-2: 1.5625rem;
+    --taille-3: 1.9531rem;
+    --taille-4: 2.4414rem;
+    --interligne: 1.5;
+    --interligne-serre: 1.25;
+    --mesure: 80ch;
+
+    /* Espacements */
+    --espace-1: 0.25rem;
+    --espace-2: 0.5rem;
+    --espace-3: 0.75rem;
+    --espace-4: 1rem;
+    --espace-5: 1.5rem;
+    --espace-6: 2rem;
+    --espace-7: 3rem;
+    --espace-8: 4rem;
+    --gouttiere: 16px;
+
+    /* Formes */
+    --rayon: 2px;
+    --rayon-puce: 999px;
+    --trait: 1px;
+    --trait-fort: 2px;
+
+    /* Mouvement */
+    --duree: 180ms;
+    --courbe: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='clair']) {
+      color-scheme: dark;
+      --encre: #e6edf3;
+      --encre-2: #a9b6c3;
+      --papier: #14202c;
+      --papier-2: #1d2b39;
+      --filet: #2f3f50;
+      --recommande: #3f9c90;
+      --deconseille: #cc6a93;
+      --sur-aplat: #14202c;
+      --source: #8fa8ff;
+      --source-survol: #243656;
+      --surligneur: #3a3418;
+      --sur-surligneur: #f3e9c6;
+      --voile: rgb(5 10 16 / 0.6);
+    }
+  }
+
+  :root[data-theme='sombre'] {
+    color-scheme: dark;
+    --encre: #e6edf3;
+    --encre-2: #a9b6c3;
+    --papier: #14202c;
+    --papier-2: #1d2b39;
+    --filet: #2f3f50;
+    --recommande: #3f9c90;
+    --deconseille: #cc6a93;
+    --sur-aplat: #14202c;
+    --source: #8fa8ff;
+    --source-survol: #243656;
+    --surligneur: #3a3418;
+    --sur-surligneur: #f3e9c6;
+    --voile: rgb(5 10 16 / 0.6);
+  }
+}

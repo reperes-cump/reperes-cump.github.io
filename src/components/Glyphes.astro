@@ -1,0 +1,49 @@
+---
+/**
+ * Planche des glyphes de verdict, insérée une fois par page.
+ * La forme porte le sens ; la couleur ne fait que le renforcer.
+ * Tous les tracés utilisent `currentColor` : ils restent lisibles en noir et
+ * blanc et en mode de contraste forcé.
+ */
+---
+
+<svg class="visuellement-cache" aria-hidden="true" focusable="false">
+  <!-- Recommandé : disque plein -->
+  <symbol id="glyphe-recommande" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" fill="currentColor"></circle>
+  </symbol>
+
+  <!-- Déconseillé : disque barré -->
+  <symbol id="glyphe-deconseille" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.5"></circle>
+    <line x1="6.3" y1="17.7" x2="17.7" y2="6.3" stroke="currentColor" stroke-width="2.5"></line>
+  </symbol>
+
+  <!-- Pas de consensus : carré hachuré -->
+  <symbol id="glyphe-pas_de_consensus" viewBox="0 0 24 24">
+    <rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"></rect>
+    <path
+      d="M4 10 10 4M4 15 15 4M4 20 20 4M9 20 20 9M14 20 20 14"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"></path>
+  </symbol>
+
+  <!-- Pas de conclusion : cercle en pointillés -->
+  <symbol id="glyphe-pas_de_conclusion" viewBox="0 0 24 24">
+    <circle
+      cx="12"
+      cy="12"
+      r="8"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-dasharray="0.01 4.18"></circle>
+  </symbol>
+
+  <!-- Silence des textes : tiret long -->
+  <symbol id="glyphe-silence" viewBox="0 0 24 24">
+    <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2.5"></line>
+  </symbol>
+</svg>

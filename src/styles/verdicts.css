@@ -1,0 +1,51 @@
+/*
+ * Rendu des cinq verdicts, commun aux cellules de la matrice et à la légende.
+ * Établi : plein. Contesté : hachuré. Non documenté : pointillés.
+ * Silence des textes : rien.
+ */
+
+@layer base {
+  .rendu {
+    border: var(--trait-fort) solid transparent;
+    border-radius: var(--rayon);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .rendu[data-valeur='recommande'] {
+    background-color: var(--recommande);
+    color: var(--sur-aplat);
+  }
+
+  .rendu[data-valeur='deconseille'] {
+    background-color: var(--deconseille);
+    color: var(--sur-aplat);
+  }
+
+  .rendu[data-valeur='pas_de_consensus'] {
+    border-color: var(--encre);
+    border-width: var(--trait);
+    background-color: var(--papier);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--encre) 0 1.25px,
+      transparent 1.25px 7px
+    );
+    color: var(--encre);
+  }
+
+  .rendu[data-valeur='pas_de_consensus'] .plaque {
+    background-color: var(--papier);
+  }
+
+  .rendu[data-valeur='pas_de_conclusion'] {
+    border: var(--trait-fort) dotted var(--encre);
+    background-color: transparent;
+    color: var(--encre);
+  }
+
+  .rendu[data-valeur='silence'] {
+    background-color: transparent;
+    color: var(--encre-2);
+  }
+}

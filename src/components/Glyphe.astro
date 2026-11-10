@@ -1,0 +1,22 @@
+---
+import type { Valeur } from '../maquette/donnees-brouillon';
+
+interface Props {
+  valeur: Valeur;
+  class?: string;
+}
+
+const { valeur, class: classe } = Astro.props;
+---
+
+<svg class:list={['glyphe', classe]} aria-hidden="true" focusable="false">
+  <use href={`#glyphe-${valeur}`}></use>
+</svg>
+
+<style>
+  .glyphe {
+    flex: none;
+    width: 1.25em;
+    height: 1.25em;
+  }
+</style>

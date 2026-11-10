@@ -1,0 +1,67 @@
+---
+import { libelles, libellesGrade, type Verdict } from '../maquette/donnees-brouillon';
+import Glyphe from './Glyphe.astro';
+
+interface Props {
+  verdict: Verdict;
+}
+
+const { verdict } = Astro.props;
+const silence = verdict.valeur === 'silence';
+const libelle = silence
+  ? "Les textes consultés n'en parlent pas"
+  : (verdict.libelle ?? libelles[verdict.valeur]);
+const grade = verdict.grade ? libellesGrade[verdict.grade] : null;
+---
+
+<div class="tuile rendu" data-valeur={verdict.valeur}>
+  <span class="plaque">
+    <Glyphe valeur={verdict.valeur} class="tuile-glyphe" />
+    <span class="texte">
+      {silence && <span class="visuellement-cache">Silence des textes : </span>}
+      <span class:list={['libelle', { 'libelle-silence': silence }]}>{libelle}</span>
+      {grade && <span class="grade">{grade}</span>}
+    </span>
+  </span>
+</div>
+
+<style>
+  .tuile {
+    display: flex;
+    align-items: flex-start;
+    min-height: 4rem;
+    padding: var(--espace-2) var(--espace-3);
+  }
+
+  .plaque {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--espace-2);
+    max-width: 100%;
+    padding: var(--espace-1) var(--espace-2);
+    margin: calc(-1 * var(--espace-1)) calc(-1 * var(--espace-2));
+    border-radius: var(--rayon);
+  }
+
+  :global(.tuile-glyphe) {
+    margin-top: 0.1em;
+  }
+
+  .texte {
+    display: flex;
+    flex-direction: column;
+    line-height: var(--interligne-serre);
+  }
+
+  .libelle {
+    font-weight: 650;
+  }
+
+  .libelle-silence {
+    font-weight: 400;
+  }
+
+  .grade {
+    margin-top: 0.15em;
+  }
+</style>

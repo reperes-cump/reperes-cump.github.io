@@ -1,0 +1,36 @@
+---
+import { Font } from 'astro:assets';
+import BandeauMaquette from '../components/BandeauMaquette.astro';
+import Glyphes from '../components/Glyphes.astro';
+import PanneauSource from '../components/PanneauSource.astro';
+import '../styles/base.css';
+
+interface Props {
+  titre?: string;
+}
+
+const { titre } = Astro.props;
+const titreComplet = titre
+  ? `${titre} | Repères CUMP`
+  : 'Repères CUMP | En connaissance de textes.';
+---
+
+<!doctype html>
+<html lang="fr" data-brouillon>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Déclencher la CUMP, textes à l'appui." />
+    <title>{titreComplet}</title>
+    <Font cssVariable="--police-texte" preload />
+  </head>
+  <body>
+    <Glyphes />
+    <BandeauMaquette />
+    <div class="page">
+      <slot />
+    </div>
+    <PanneauSource />
+  </body>
+</html>

@@ -1,0 +1,32 @@
+---
+import { sourceMatrice, type Verdict } from '../maquette/donnees-brouillon';
+import PuceSource from './PuceSource.astro';
+import TuileVerdict from './TuileVerdict.astro';
+
+interface Props {
+  verdict: Verdict;
+  situation: string;
+  /** Intitulé complet de la colonne (rappelé dans le panneau source). */
+  colonne: string;
+  /** Intitulé court affiché au-dessus de la cellule sur petit écran. */
+  etiquette: string;
+  colspan?: number;
+}
+
+const { verdict, situation, colonne, etiquette, colspan } = Astro.props;
+---
+
+<td class="cellule" role="cell" colspan={colspan}>
+  <span class="etiquette-colonne" aria-hidden="true">{etiquette}</span>
+  <div class="cadre-verification">
+    <TuileVerdict verdict={verdict} />
+    <div class="provenance">
+      <PuceSource
+        source={sourceMatrice}
+        localisation={verdict.localisation}
+        contexte={{ titre: situation, colonne, verdict }}
+      />
+      <span class="mention-non-verifie">non vérifié</span>
+    </div>
+  </div>
+</td>

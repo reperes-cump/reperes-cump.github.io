@@ -1,0 +1,65 @@
+---
+import {
+  libelles,
+  libellesGrade,
+  type Localisation,
+  type Source,
+  type Verdict,
+} from '../maquette/donnees-brouillon';
+
+interface Props {
+  source: Source;
+  localisation: Localisation;
+  /** Ce que la puce source : situation, colonne, verdict. */
+  contexte: {
+    titre: string;
+    colonne?: string;
+    verdict?: Verdict;
+  };
+}
+
+const { source, localisation, contexte } = Astro.props;
+// La page n'apparaît sur la puce qu'une fois relevée ; sinon le panneau l'indique.
+const libelle =
+  localisation.page === null
+    ? source.libelle_court
+    : `${source.libelle_court}, p.\u00a0${localisation.page}`;
+const verdict = contexte.verdict;
+---
+
+<button
+  type="button"
+  class="puce-source"
+  aria-haspopup="dialog"
+  data-source={source.id}
+  data-titre={contexte.titre}
+  data-colonne={contexte.colonne}
+  data-valeur={verdict?.valeur}
+  data-libelle={verdict ? (verdict.libelle ?? libelles[verdict.valeur]) : undefined}
+  data-grade={verdict?.grade ? libellesGrade[verdict.grade] : undefined}
+  data-section={localisation.section ?? ''}
+  data-page={localisation.page ?? ''}
+>
+  {libelle}
+</button>
+
+<style>
+  .puce-source {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0.1rem var(--espace-2);
+    border: var(--trait) solid currentColor;
+    border-radius: var(--rayon-puce);
+    background: var(--papier);
+    color: var(--source);
+    font-size: var(--taille--1);
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .puce-source:hover {
+    background: var(--source-survol);
+  }
+</style>

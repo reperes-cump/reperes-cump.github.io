@@ -1,0 +1,177 @@
+---
+import {
+  explications,
+  lectureDesGrades,
+  libelles,
+  sourceMatrice,
+  type Valeur,
+} from '../maquette/donnees-brouillon';
+import Glyphe from './Glyphe.astro';
+import PuceSource from './PuceSource.astro';
+
+const valeurs: Valeur[] = [
+  'recommande',
+  'deconseille',
+  'pas_de_consensus',
+  'pas_de_conclusion',
+  'silence',
+];
+---
+
+<section class="legende" aria-labelledby="legende-titre">
+  <h2 id="legende-titre" class="legende-titre">Comment lire le tableau</h2>
+
+  <ul class="legende-liste">
+    {
+      valeurs.map((valeur) => (
+        <li class="entree">
+          <span class="pastille rendu" data-valeur={valeur}>
+            <span class="plaque">
+              <Glyphe valeur={valeur} />
+            </span>
+          </span>
+          <span class="entree-texte">
+            <span class="entree-nom">{libelles[valeur]}</span>
+            {explications[valeur] && <span class="entree-explication">{explications[valeur]}</span>}
+          </span>
+        </li>
+      ))
+    }
+    <li class="entree entree-brouillon">
+      <span class="pastille pastille-brouillon" aria-hidden="true"></span>
+      <span class="entree-texte">
+        <span class="entree-nom">Cadre en tirets</span>
+        <span class="entree-explication">pas encore vérifié sur le texte</span>
+      </span>
+    </li>
+  </ul>
+
+  <details class="grades">
+    <summary>Que veulent dire «&#8239;accord fort&#8239;» et «&#8239;accord relatif&#8239;»&#8239;?</summary>
+    <div class="cadre-verification grades-corps">
+      <p>{lectureDesGrades.methode}</p>
+      <ul class="grades-liste">
+        {
+          lectureDesGrades.grades.map(({ terme, definition }) => (
+            <li>
+              <strong>{terme}</strong>&nbsp;: {definition}
+            </li>
+          ))
+        }
+      </ul>
+      <p>{lectureDesGrades.precision}</p>
+      <p class="provenance">
+        <PuceSource
+          source={sourceMatrice}
+          localisation={lectureDesGrades.localisation}
+          contexte={{ titre: 'Accord fort, accord relatif' }}
+        />
+        <span class="mention-non-verifie">non vérifié</span>
+      </p>
+    </div>
+  </details>
+</section>
+
+<style>
+  .legende {
+    display: grid;
+    gap: var(--espace-4);
+  }
+
+  .legende-titre {
+    font-size: var(--taille-0);
+  }
+
+  .legende-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--espace-2) var(--espace-5);
+  }
+
+  @media (width >= 48rem) {
+    .legende-liste {
+      row-gap: var(--espace-3);
+    }
+  }
+
+  .entree {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--espace-3);
+  }
+
+  .entree-texte {
+    display: flex;
+    flex-direction: column;
+    line-height: var(--interligne-serre);
+    padding-top: 0.2rem;
+  }
+
+  .entree-nom {
+    font-weight: 650;
+  }
+
+  .entree-explication {
+    margin-top: 0.2em;
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .pastille {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.75rem;
+    height: 1.75rem;
+  }
+
+  .pastille .plaque {
+    display: inline-flex;
+    padding: 1px;
+    border-radius: var(--rayon);
+  }
+
+  .pastille-brouillon {
+    border: 1.5px dashed var(--encre-2);
+    border-radius: 4px;
+  }
+
+  .entree-brouillon {
+    display: none;
+  }
+
+  :global(:root[data-brouillon]) .entree-brouillon {
+    display: flex;
+  }
+
+  .grades {
+    max-width: var(--mesure);
+  }
+
+  .grades summary {
+    width: fit-content;
+    color: var(--source);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .grades-corps {
+    gap: var(--espace-3);
+    margin-top: var(--espace-3);
+    padding: var(--espace-4);
+    background: var(--papier-2);
+  }
+
+  .grades-liste {
+    display: grid;
+    gap: var(--espace-1);
+    padding-inline-start: 1.25em;
+  }
+
+  .grades-liste strong {
+    font-weight: 650;
+  }
+</style>

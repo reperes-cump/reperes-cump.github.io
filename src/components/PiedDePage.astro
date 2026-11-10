@@ -1,0 +1,67 @@
+---
+const pages = ["Circuit d'une demande", 'Carte des CUMP', 'Sources', 'À propos'];
+---
+
+<footer class="pied">
+  <nav aria-label="Pages du site">
+    <ul class="pages">
+      {
+        pages.map((page) => (
+          <li>
+            <span class="page-lien">{page}</span>
+            <span class="a-venir">à venir</span>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="mentions">
+    <p>
+      Projet indépendant, non affilié à la SFMU, à l'AFORCUMP-SFP, au ministère chargé de la santé,
+      à une ARS ni à un établissement de santé.
+    </p>
+    <p>
+      Code sous licence MIT. Contenu rédigé et données sous licence CC&nbsp;BY&nbsp;4.0. Les
+      extraits de sources restent soumis aux droits de leurs auteurs.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .pied {
+    display: grid;
+    gap: var(--espace-5);
+    margin-top: var(--espace-7);
+    padding-block: var(--espace-5) var(--espace-7);
+    border-top: var(--trait-fort) solid var(--encre);
+  }
+
+  .pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-3) var(--espace-6);
+  }
+
+  .pages li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--espace-2);
+  }
+
+  .page-lien {
+    font-weight: 650;
+  }
+
+  .a-venir {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .mentions {
+    display: grid;
+    gap: var(--espace-2);
+    max-width: var(--mesure);
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import { contenu, demandeAuSamu, sourceMatrice } from '../maquette/donnees-brouillon';
+import PuceSource from './PuceSource.astro';
+
+const etat =
+  contenu.version && contenu.derniere_verification
+    ? `Version ${contenu.version} du contenu, vérifiée le ${contenu.derniere_verification}.`
+    : 'Contenu en brouillon, pas encore vérifié.';
+---
+
+<header class="en-tete">
+  <div class="identite">
+    <h1 class="nom">Repères CUMP</h1>
+    <p class="accroche">En connaissance de textes.</p>
+  </div>
+
+  <div class="usage">
+    <p class="avertissement">
+      Outil d'information. Il ne remplace ni la régulation médicale du SAMU-Centre&nbsp;15 ni la
+      décision du référent CUMP.
+    </p>
+    <p class="cadre-verification demande">
+      <span>{demandeAuSamu.texte}</span>
+      <PuceSource
+        source={sourceMatrice}
+        localisation={demandeAuSamu.verdict.localisation}
+        contexte={{ titre: demandeAuSamu.texte, verdict: demandeAuSamu.verdict }}
+      />
+      <span class="mention-non-verifie">non vérifié</span>
+    </p>
+    <p class="etat">{etat}</p>
+  </div>
+</header>
+
+<style>
+  .en-tete {
+    display: grid;
+    gap: var(--espace-4);
+    padding-block: var(--espace-5);
+  }
+
+  @media (width >= 60rem) {
+    .en-tete {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: var(--espace-7);
+      align-items: start;
+      padding-block: var(--espace-6);
+    }
+  }
+
+  .nom {
+    font-size: var(--taille-3);
+    letter-spacing: -0.01em;
+  }
+
+  @media (width >= 48rem) {
+    .nom {
+      font-size: var(--taille-4);
+    }
+  }
+
+  .accroche {
+    margin-top: var(--espace-1);
+    color: var(--encre-2);
+    font-size: var(--taille-1);
+  }
+
+  .usage {
+    display: grid;
+    gap: var(--espace-2);
+    max-width: var(--mesure);
+  }
+
+  .avertissement {
+    font-weight: 650;
+  }
+
+  .demande {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espace-1) var(--espace-2);
+    padding: var(--espace-1) var(--espace-2);
+    margin-inline: calc(-1 * var(--espace-2));
+  }
+
+  .etat {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+</style>

@@ -1,0 +1,168 @@
+@layer reset, jetons, base;
+
+@import './tokens.css';
+@import './verdicts.css';
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  p,
+  ul,
+  ol,
+  dl,
+  dd,
+  figure,
+  blockquote {
+    margin: 0;
+  }
+
+  ul[class],
+  ol[class] {
+    padding: 0;
+    list-style: none;
+  }
+
+  svg {
+    display: block;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+@layer base {
+  html {
+    /* Corps de 17 px. */
+    font-size: 106.25%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--papier);
+    color: var(--encre);
+    font-family: var(--police-texte, system-ui, sans-serif);
+    font-size: var(--taille-0);
+    line-height: var(--interligne);
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: var(--interligne-serre);
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--source);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--source);
+    outline-offset: 2px;
+  }
+
+  .visuellement-cache {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: var(--gouttiere);
+  }
+
+  @media (width >= 48rem) {
+    .page {
+      padding-inline: var(--espace-6);
+    }
+  }
+
+  /* Marque d'une information à relever dans la source. */
+  .a-relever {
+    color: var(--encre-2);
+    font-style: italic;
+  }
+
+  /* Cadre tireté : élément non vérifié (mode brouillon). */
+  .cadre-verification {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-2);
+    padding: var(--espace-1);
+    border: 1.5px dashed transparent;
+    border-radius: 4px;
+  }
+
+  :root[data-brouillon] .cadre-verification {
+    border-color: var(--encre-2);
+  }
+
+  /* Ligne de provenance : puce source, mention « non vérifié ». */
+  .provenance {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espace-1) var(--espace-2);
+  }
+
+  /*
+   * Mention « non vérifié » : en mode brouillon, le cadre tireté la montre à
+   * l'écran (expliqué dans la légende) ; le texte reste lu par les lecteurs
+   * d'écran.
+   */
+  .mention-non-verifie {
+    display: none;
+  }
+
+  :root[data-brouillon] .mention-non-verifie {
+    display: inline;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
