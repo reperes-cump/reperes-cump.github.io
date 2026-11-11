@@ -24,7 +24,7 @@ const valeurs = [
 ---
 
 <section class="legende" id="legende" aria-labelledby="legende-titre">
-  <h2 id="legende-titre" class="legende-titre">Comment lire le tableau</h2>
+  <h2 id="legende-titre" class="visuellement-cache">Comment lire le tableau</h2>
 
   <ul class="legende-liste">
     {
@@ -38,7 +38,10 @@ const valeurs = [
           <span class="entree-texte">
             <span class="entree-nom">{libellesVerdict[valeur]}</span>
             {explicationsVerdict[valeur] && (
-              <span class="entree-explication">{explicationsVerdict[valeur]}</span>
+              <span class="entree-explication">
+                {'\u202f: '}
+                {explicationsVerdict[valeur]}
+              </span>
             )}
           </span>
         </li>
@@ -50,7 +53,7 @@ const valeurs = [
           <span class="pastille pastille-brouillon" aria-hidden="true" />
           <span class="entree-texte">
             <span class="entree-nom">Cadre en tirets</span>
-            <span class="entree-explication">pas encore vérifié sur le texte</span>
+            <span class="entree-explication">{'\u202f: pas encore vérifié sur le texte'}</span>
           </span>
         </li>
       )
@@ -68,37 +71,26 @@ const valeurs = [
 </section>
 
 <style>
+  /* Légende compacte : une ligne de pastilles, chacune avec son nom et une courte explication. */
   .legende {
     display: grid;
-    gap: var(--espace-4);
-  }
-
-  .legende-titre {
-    font-size: var(--taille-0);
+    gap: var(--espace-2);
+    font-size: var(--taille--1);
   }
 
   .legende-liste {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--espace-2) var(--espace-5);
-  }
-
-  @media (width >= 48rem) {
-    .legende-liste {
-      row-gap: var(--espace-3);
-    }
   }
 
   .entree {
     display: flex;
-    align-items: flex-start;
-    gap: var(--espace-3);
+    align-items: center;
+    gap: var(--espace-2);
   }
 
   .entree-texte {
-    display: flex;
-    flex-direction: column;
-    padding-top: 0.2rem;
     line-height: var(--interligne-serre);
   }
 
@@ -107,9 +99,7 @@ const valeurs = [
   }
 
   .entree-explication {
-    margin-top: 0.2em;
     color: var(--encre-2);
-    font-size: var(--taille--1);
   }
 
   .pastille {
@@ -117,8 +107,8 @@ const valeurs = [
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 2.75rem;
-    height: 1.75rem;
+    width: 2rem;
+    height: 1.375rem;
   }
 
   .pastille .plaque {
@@ -150,5 +140,6 @@ const valeurs = [
     margin-top: var(--espace-3);
     padding: var(--espace-4);
     background: var(--papier-2);
+    font-size: var(--taille-0);
   }
 </style>

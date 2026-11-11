@@ -1,7 +1,7 @@
 ---
 /**
- * Barre de navigation commune. Sur l'accueil, le nom du site est déjà le titre de la page :
- * la barre ne montre que les liens. Sur téléphone, les intitulés courts tiennent sur une ligne.
+ * Barre commune : nom du site à gauche, navigation à droite. Sur l'accueil, le nom du site est
+ * le titre de la page (h1). Sur téléphone, les intitulés courts tiennent sur une ligne.
  */
 import { chemin } from '../lib/chemins.ts';
 import { type PageId, pagesSite } from '../lib/pages.ts';
@@ -16,7 +16,17 @@ const liens = pagesSite.filter((p) => p.chemin);
 ---
 
 <header class:list={['barre', { 'barre-accueil': accueil }]}>
-  {!accueil && <a class="nom-site" href={chemin()}>Repères CUMP</a>}
+  {
+    accueil ? (
+      <h1 class="nom-site">
+        Repères CUMP <span class="accroche">En connaissance de textes.</span>
+      </h1>
+    ) : (
+      <a class="nom-site" href={chemin()}>
+        Repères CUMP
+      </a>
+    )
+  }
   <nav aria-label="Navigation principale">
     <ul class="liens">
       {
@@ -65,6 +75,26 @@ const liens = pagesSite.filter((p) => p.chemin);
 
   .barre-accueil {
     padding-block: var(--espace-3);
+  }
+
+  h1.nom-site {
+    line-height: var(--interligne-serre);
+  }
+
+  .accroche {
+    margin-inline-start: var(--espace-2);
+    color: var(--encre-2);
+    font-size: var(--taille-0);
+    font-weight: 400;
+  }
+
+  /* Sur téléphone, l'accroche passe sous le nom, en petit, au lieu de se couper. */
+  @media (width < 40rem) {
+    .accroche {
+      display: block;
+      margin-inline-start: 0;
+      font-size: var(--taille--1);
+    }
   }
 
   .titre-court {

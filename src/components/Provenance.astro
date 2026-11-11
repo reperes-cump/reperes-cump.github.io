@@ -15,9 +15,11 @@ interface Props {
   colonne?: Colonne | 'fusion';
   colonneTitre?: string;
   verdict?: Verdict | null;
+  /** Ne pas afficher les puces : un autre élément (la case de la matrice) ouvre le panneau. */
+  sansPuces?: boolean;
 }
 
-const { affirmation, sources, titre, colonne, colonneTitre, verdict } = Astro.props;
+const { affirmation, sources, titre, colonne, colonneTitre, verdict, sansPuces } = Astro.props;
 const groupes = groupesSources(affirmation, colonne === 'fusion' ? undefined : colonne).flatMap(
   ({ sourceId, references }) => {
     const source = sources.get(sourceId);
@@ -26,11 +28,11 @@ const groupes = groupesSources(affirmation, colonne === 'fusion' ? undefined : c
 );
 ---
 
-<div class="provenance">
+<div class:list={['provenance', { 'provenance-integree': sansPuces }]}>
   {
     groupes.map(({ source, references, id }) => (
       <>
-        <PuceSource libelle={libellePuce(source, references)} panneau={id} />
+        {!sansPuces && <PuceSource libelle={libellePuce(source, references)} panneau={id} />}
         <ContenuPanneau
           id={id}
           titre={titre}

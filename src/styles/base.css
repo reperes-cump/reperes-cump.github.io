@@ -153,6 +153,11 @@
     gap: var(--espace-1) var(--espace-2);
   }
 
+  /* Sans puce visible (la case ouvre la source) : ne garde que la mention pour lecteurs d'écran. */
+  .provenance-integree {
+    display: contents;
+  }
+
   /*
    * Mention « non vérifié » : en mode brouillon, le cadre tireté la montre à
    * l'écran (expliqué dans la légende) ; le texte reste lu par les lecteurs

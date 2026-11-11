@@ -6,9 +6,14 @@ import Glyphe from './Glyphe.astro';
 
 interface Props {
   verdict: Verdict & { valeur: Exclude<Verdict['valeur'], 'information'> };
+  /** Panneau source à ouvrir : la tuile devient un bouton. */
+  panneau?: string;
+  /** Libellé de la source, affiché en petit dans la tuile (« SFMU 2017, p. 6 »). */
+  source?: string;
 }
 
-const { verdict } = Astro.props;
+const { verdict, panneau, source } = Astro.props;
+const Balise = panneau ? 'button' : 'div';
 const silence = verdict.valeur === 'silence';
 const libelle = typographie(
   silence ? phraseSilence : (verdict.libelle ?? libellesVerdict[verdict.valeur]),
@@ -16,16 +21,34 @@ const libelle = typographie(
 const grade = verdict.grade ? libellesGrade[verdict.grade] : null;
 ---
 
-<div class="tuile rendu" data-valeur={verdict.valeur}>
+<Balise
+  class:list={['tuile', 'rendu', { 'tuile-bouton': panneau }]}
+  data-valeur={verdict.valeur}
+  type={panneau ? 'button' : undefined}
+  data-panneau={panneau}
+  aria-haspopup={panneau ? 'dialog' : undefined}
+>
   <span class="plaque">
     <Glyphe valeur={verdict.valeur} class="tuile-glyphe" />
     <span class="texte">
       {silence && <span class="visuellement-cache">Silence des textes : </span>}
       <span class:list={['libelle', { 'libelle-silence': silence }]}>{libelle}</span>
-      {grade && <span class="grade">{grade}</span>}
+      {
+        (grade || source) && (
+          <span class="meta">
+            {grade && <span class="grade">{grade}</span>}
+            {source && (
+              <span class="tuile-source">
+                <span class="visuellement-cache">Source : </span>
+                {source}
+              </span>
+            )}
+          </span>
+        )
+      }
     </span>
   </span>
-</div>
+</Balise>
 
 <style>
   .tuile {
@@ -63,7 +86,36 @@ const grade = verdict.grade ? libellesGrade[verdict.grade] : null;
     font-weight: 400;
   }
 
-  .grade {
+  /* Grade et source côte à côte quand la place le permet. */
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--espace-3);
     margin-top: 0.15em;
+  }
+
+  /* Tuile-bouton : toute la case ouvre la source. */
+  .tuile-bouton {
+    width: 100%;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .tuile-source {
+    font-size: var(--taille--1);
+    font-weight: 400;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .tuile-bouton:hover .tuile-source {
+    text-decoration-thickness: 2px;
+  }
+
+  .tuile-bouton:hover {
+    filter: brightness(0.94);
   }
 </style>

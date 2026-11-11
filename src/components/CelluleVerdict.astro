@@ -1,6 +1,6 @@
 ---
 import type { Affirmation, Source } from '../../schemas/index.ts';
-import type { Colonne } from '../lib/affichage.ts';
+import { type Colonne, groupesSources, idPanneau, libellePuce } from '../lib/affichage.ts';
 import { colonnes } from '../lib/libelles.ts';
 import Provenance from './Provenance.astro';
 import TuileVerdict from './TuileVerdict.astro';
@@ -17,13 +17,30 @@ const titres = colonnes[colonne];
 if (!verdict || verdict.valeur === 'information') {
   throw new Error(`${ligne.id} : verdict de matrice manquant pour « ${colonne} »`);
 }
+
+// Une seule source pour la case : la tuile elle-même ouvre le panneau, sans puce à part.
+const groupes = groupesSources(ligne, colonne === 'fusion' ? undefined : colonne);
+const unique = groupes.length === 1 ? groupes[0] : undefined;
+const sourceUnique = unique ? sources.get(unique.sourceId) : undefined;
+const integree =
+  unique && sourceUnique
+    ? {
+        panneau: idPanneau(ligne.id, unique.sourceId, colonne),
+        libelle: libellePuce(sourceUnique, unique.references),
+      }
+    : undefined;
 ---
 
 <td class="cellule" role="cell" colspan={colonne === 'fusion' ? 2 : undefined} data-colonne={colonne}>
   <span class="etiquette-colonne" aria-hidden="true">{titres.court}</span>
   <div class:list={['cadre-verification', { 'non-verifie': !ligne.verifie_le }]}>
-    <TuileVerdict verdict={{ ...verdict, valeur: verdict.valeur }} />
+    <TuileVerdict
+      verdict={{ ...verdict, valeur: verdict.valeur }}
+      panneau={integree?.panneau}
+      source={integree?.libelle}
+    />
     <Provenance
+      sansPuces={Boolean(integree)}
       affirmation={ligne}
       sources={sources}
       titre={ligne.situation ?? ''}

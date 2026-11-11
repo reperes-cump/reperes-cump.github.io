@@ -1,83 +1,48 @@
 ---
-import type { Affirmation, InfosContenu, Source } from '../../schemas/index.ts';
-import { dateLisible, typographie } from '../lib/affichage.ts';
-import { chemin } from '../lib/chemins.ts';
+/**
+ * Bande d'accueil, sous la barre : l'avertissement permanent et la règle « toute demande passe
+ * par le SAMU-Centre 15 », avec sa source. Le reste (circuit, version) est dans le menu et le pied.
+ */
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { typographie } from '../lib/affichage.ts';
 import Provenance from './Provenance.astro';
 
 interface Props {
   /** Affirmation « toute demande s'adresse au SAMU-Centre 15 ». */
   demande: Affirmation;
-  infos: InfosContenu | null;
   sources: Map<string, Source>;
 }
 
-const { demande, infos, sources } = Astro.props;
-const etat =
-  infos?.version && infos.derniere_verification
-    ? `Version ${infos.version} du contenu, vérifiée le ${dateLisible(infos.derniere_verification)}.`
-    : 'Contenu en brouillon, pas encore vérifié.';
+const { demande, sources } = Astro.props;
 ---
 
-<header class="en-tete">
-  <div class="identite">
-    <h1 class="nom">Repères CUMP</h1>
-    <p class="accroche">En connaissance de textes.</p>
+<div class="bande">
+  <p class="avertissement">
+    Outil d'information. Il ne remplace ni la régulation médicale du SAMU-Centre&nbsp;15 ni la
+    décision du référent CUMP.
+  </p>
+  <div
+    id="demande-samu"
+    class:list={['cadre-verification', 'demande', { 'non-verifie': !demande.verifie_le }]}
+  >
+    <p>{typographie(demande.enonce ?? '')}</p>
+    <Provenance affirmation={demande} sources={sources} titre={demande.enonce ?? ''} />
   </div>
-
-  <div class="usage">
-    <p class="avertissement">
-      Outil d'information. Il ne remplace ni la régulation médicale du SAMU-Centre&nbsp;15 ni la
-      décision du référent CUMP.
-    </p>
-    <div
-      id="demande-samu"
-      class:list={['cadre-verification', 'demande', { 'non-verifie': !demande.verifie_le }]}
-    >
-      <p>{typographie(demande.enonce ?? '')}</p>
-      <Provenance affirmation={demande} sources={sources} titre={demande.enonce ?? ''} />
-    </div>
-    <p class="vers-circuit"><a href={chemin('circuit')}>Voir le circuit d'une demande</a></p>
-    <p class="etat">{etat}</p>
-  </div>
-</header>
+</div>
 
 <style>
-  .en-tete {
+  .bande {
     display: grid;
-    gap: var(--espace-4);
-    padding-block: var(--espace-5);
+    gap: var(--espace-2) var(--espace-6);
+    padding-block: var(--espace-3);
+    font-size: var(--taille--1);
   }
 
   @media (width >= 60rem) {
-    .en-tete {
-      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-      gap: var(--espace-7);
-      align-items: start;
-      padding-block: var(--espace-6);
+    .bande {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
     }
-  }
-
-  .nom {
-    font-size: var(--taille-3);
-    letter-spacing: -0.01em;
-  }
-
-  @media (width >= 48rem) {
-    .nom {
-      font-size: var(--taille-4);
-    }
-  }
-
-  .accroche {
-    margin-top: var(--espace-1);
-    color: var(--encre-2);
-    font-size: var(--taille-1);
-  }
-
-  .usage {
-    display: grid;
-    gap: var(--espace-2);
-    max-width: var(--mesure);
   }
 
   .avertissement {
@@ -91,14 +56,5 @@ const etat =
     gap: var(--espace-1) var(--espace-2);
     padding: var(--espace-1) var(--espace-2);
     margin-inline: calc(-1 * var(--espace-2));
-  }
-
-  .vers-circuit {
-    font-size: var(--taille--1);
-  }
-
-  .etat {
-    color: var(--encre-2);
-    font-size: var(--taille--1);
   }
 </style>
