@@ -141,3 +141,34 @@ describe('voir aussi', () => {
     expect(verifierCoherence(contenu({ affirmations }))).toEqual([]);
   });
 });
+
+describe('chemins du circuit', () => {
+  const a = affirmation();
+  const affirmations = new Map([[a.id, a]]);
+  const circuit = (chemins: unknown[]) =>
+    visuelSchema.parse({
+      elements: [
+        { id: 'depart', type: 'etape', affirmations: [a.id] },
+        { id: 'note', affirmations: [a.id], rattache_a: 'depart' },
+        { id: 'fin', type: 'issue', affirmations: [a.id] },
+      ],
+      chemins,
+    });
+
+  it('accepte un chemin complet', () => {
+    const visuels = new Map([
+      ['circuit', circuit([{ id: 'c', libelle: 'C', etapes: ['depart'], issues: ['fin'] }])],
+    ]);
+    expect(verifierCoherence(contenu({ affirmations, visuels }))).toEqual([]);
+  });
+
+  it('signale une étape inconnue, une issue qui n’en est pas une, un élément sur aucun chemin', () => {
+    const visuels = new Map([
+      ['circuit', circuit([{ id: 'c', libelle: 'C', etapes: ['absente'], issues: ['depart'] }])],
+    ]);
+    const liste = messages(verifierCoherence(contenu({ affirmations, visuels })));
+    expect(liste).toContain('chemin c : élément inconnu : absente');
+    expect(liste).toContain("chemin c : depart n'est pas une issue");
+    expect(liste).toContain('élément fin : sur aucun chemin');
+  });
+});

@@ -13,6 +13,14 @@ sources:
       page: null
     lien_profond: null
     extrait: null
+  - source_id: sfmu-2017
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: "La CUMP peut être déclenchée à la demande du Préfet auprès du SAMU dans le cadre des plans relevant de sa responsabilité comme le dispositif ORSEC"
 note_publique: null
 a_relever: []
 verifie_le: null

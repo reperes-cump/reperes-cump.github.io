@@ -1,37 +1,69 @@
-# Circuit d'une demande. Chaque élément affiche une ou plusieurs affirmations sourcées.
+# Circuit d'une demande, dans l'ordre du temps : départ, alerte du référent, évaluation conjointe,
+# issue (activation ou non-activation), puis intervention. Chaque élément affiche des affirmations
+# sourcées ; les chemins disent comment les éléments s'enchaînent selon le point de départ.
 elements:
   - id: demande
     type: etape
     affirmations: [circuit-demande-samu]
-  - id: regulateur-24-7
-    type: etape
-    affirmations: [circuit-regulateur-24-7]
-  - id: premier-filtre
-    type: etape
-    affirmations: [circuit-premier-filtre]
-  - id: suppleant
-    type: etape
-    affirmations: [circuit-suppleant]
-  - id: branche-orsec-novi
-    type: branche
-    affirmations: [circuit-orsec-novi]
   - id: branche-prefet-ars
     type: branche
     affirmations: [circuit-prefet-ars]
+  - id: branche-orsec-novi
+    type: branche
+    affirmations: [circuit-orsec-novi]
+  - id: alerte
+    type: etape
+    libelle: "Alerte du référent"
+    affirmations: [circuit-premier-filtre]
+  # Disponibilité permanente et suppléant : des notes de l'alerte, pas des étapes.
+  - id: regulateur-24-7
+    type: etape
+    rattache_a: alerte
+    affirmations: [circuit-regulateur-24-7]
+  - id: suppleant
+    type: etape
+    rattache_a: alerte
+    affirmations: [circuit-suppleant]
   - id: evaluation-conjointe
     type: etape
-    affirmations: [circuit-evaluation-conjointe]
+    libelle: "Évaluation conjointe"
+    affirmations: [circuit-evaluation-conjointe, cadre-indication]
+  # La décision du SAMU décrit l'activation elle-même : elle est dans l'issue, pas avant.
   - id: activation
     type: issue
     libelle: "Activation"
-    affirmations:
-      - delais-intervention-immediate
-      - delais-intervention-post-immediate
-      - cadre-ars-informee
+    affirmations: [circuit-decision-samu, cadre-ars-informee]
   - id: non-activation
     type: issue
     libelle: "Non-activation"
     affirmations: [circuit-non-activation]
+  - id: intervention-immediate
+    type: etape
+    apres: activation
+    affirmations: [delais-intervention-immediate]
+  - id: intervention-post-immediate
+    type: etape
+    apres: activation
+    affirmations: [delais-intervention-post-immediate]
 definitions:
   - circuit-definition-alerte
   - circuit-definition-activation
+chemins:
+  - id: demande-samu
+    libelle: "Demande au SAMU-Centre 15"
+    etapes: [demande, alerte, evaluation-conjointe]
+    issues: [activation, non-activation]
+    suites: [intervention-immediate, intervention-post-immediate]
+  # Préfet (ORSEC) ou ARS (ORSAN) : demande « auprès du SAMU », puis même procédure.
+  - id: prefet-ars
+    libelle: "Demande du préfet ou de l'ARS"
+    etapes: [branche-prefet-ars, alerte, evaluation-conjointe]
+    issues: [activation, non-activation]
+    suites: [intervention-immediate, intervention-post-immediate]
+  # Le texte dit « intervention immédiate (…) recommandée systématiquement » : ni alerte ni
+  # évaluation sur ce chemin, pas de non-activation, intervention immédiate seulement.
+  - id: orsec-novi
+    libelle: "Plan ORSEC NOVI déclenché"
+    etapes: [branche-orsec-novi]
+    issues: [activation]
+    suites: [intervention-immediate]

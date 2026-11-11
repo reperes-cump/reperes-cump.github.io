@@ -86,6 +86,47 @@ export function verifierCoherence(contenu: Contenu): Probleme[] {
         }
       }
     }
+    for (const element of visuel.elements) {
+      if (element.rattache_a && !ids.has(element.rattache_a)) {
+        signaler(
+          fichier,
+          `élément ${element.id} : rattaché à un élément inconnu : ${element.rattache_a}`,
+        );
+      }
+      if (element.apres && !ids.has(element.apres)) {
+        signaler(
+          fichier,
+          `élément ${element.id} : placé après un élément inconnu : ${element.apres}`,
+        );
+      }
+    }
+    const types = new Map(visuel.elements.map((e) => [e.id, e.type]));
+    const apres = new Map(visuel.elements.map((e) => [e.id, e.apres]));
+    const utilises = new Set<string>();
+    for (const chemin of visuel.chemins) {
+      for (const id of chemin.suites) {
+        const parent = apres.get(id);
+        if (ids.has(id) && (!parent || !chemin.issues.includes(parent))) {
+          signaler(fichier, `chemin ${chemin.id} : ${id} ne suit aucune issue de ce chemin`);
+        }
+      }
+      for (const id of [...chemin.etapes, ...chemin.issues, ...chemin.suites]) {
+        if (!ids.has(id)) signaler(fichier, `chemin ${chemin.id} : élément inconnu : ${id}`);
+        utilises.add(id);
+      }
+      for (const id of chemin.issues) {
+        if (ids.has(id) && types.get(id) !== 'issue') {
+          signaler(fichier, `chemin ${chemin.id} : ${id} n'est pas une issue`);
+        }
+      }
+    }
+    if (visuel.chemins.length) {
+      for (const element of visuel.elements) {
+        if (!element.rattache_a && !utilises.has(element.id)) {
+          signaler(fichier, `élément ${element.id} : sur aucun chemin`);
+        }
+      }
+    }
     for (const id of visuel.definitions) {
       if (!contenu.affirmations.has(id))
         signaler(fichier, `définition : affirmation inconnue : ${id}`);

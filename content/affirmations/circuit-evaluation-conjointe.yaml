@@ -1,7 +1,7 @@
 id: circuit-evaluation-conjointe
 categorie: circuit
 ordre: 70
-enonce: "Le référent CUMP et le demandeur évaluent ensemble la pertinence d'une intervention immédiate ou différée."
+enonce: "À partir des éléments du médecin régulateur, le référent CUMP et le demandeur évaluent ensemble la pertinence d'une intervention immédiate ou différée selon le schéma type d'intervention, les moyens humains et matériels nécessaires et la logistique."
 verdict:
   valeur: information
 sources:
@@ -16,6 +16,6 @@ sources:
 note_publique: null
 a_relever:
   - "formulation exacte"
-  - "grade"
+  - "absence de grade à confirmer (passage descriptif, non coté)"
 verifie_le: null
 verifie_par: null
