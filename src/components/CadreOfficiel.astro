@@ -1,5 +1,8 @@
 ---
-/** Le cadre officiel, avant les repères de la matrice : qui décide, sur quels critères, quelles situations. */
+/**
+ * Le cadre officiel, sous la matrice : qui décide, sur quels critères, quelles situations.
+ * Replié par défaut ; il s'ouvre aussi tout seul quand un lien mène à l'un de ses éléments.
+ */
 import type { Affirmation, Source } from '../../schemas/index.ts';
 import { typographie } from '../lib/affichage.ts';
 import Provenance from './Provenance.astro';
@@ -12,8 +15,11 @@ interface Props {
 const { elements, sources } = Astro.props;
 ---
 
-<section class="cadre-officiel" id="cadre-officiel" aria-labelledby="cadre-officiel-titre">
-  <h2 id="cadre-officiel-titre" class="cadre-titre">Le cadre officiel</h2>
+<details class="cadre-officiel" id="cadre-officiel">
+  <summary class="cadre-resume">
+    <h2 class="cadre-titre">Le cadre officiel</h2>
+    <span class="cadre-sous-titre">Qui décide, sur quels critères, pour quelles situations</span>
+  </summary>
   <ul class="cadre-liste">
     {
       elements.map(({ libelle, affirmation, texte }) => (
@@ -25,19 +31,67 @@ const { elements, sources } = Astro.props;
       ))
     }
   </ul>
-</section>
+</details>
+
+<script>
+  // Un lien vers le cadre (depuis la page Sources, par exemple) l'ouvre.
+  const ouvrirSiCible = () => {
+    const cadre = document.getElementById('cadre-officiel');
+    const cible = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+    if (cadre instanceof HTMLDetailsElement && cible && cadre.contains(cible)) cadre.open = true;
+  };
+  ouvrirSiCible();
+  window.addEventListener('hashchange', ouvrirSiCible);
+</script>
 
 <style>
   .cadre-officiel {
-    display: grid;
-    gap: var(--espace-3);
-    padding: var(--espace-5);
+    padding: var(--espace-4) var(--espace-5);
     border: var(--trait) solid var(--encre-2);
     border-radius: var(--rayon);
   }
 
+  .cadre-officiel[open] {
+    padding-bottom: var(--espace-5);
+  }
+
+  .cadre-resume {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--espace-3);
+    align-items: baseline;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .cadre-resume::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Signe + / − devant le titre, plus visible que le triangle par défaut. */
+  .cadre-resume::before {
+    content: "+" / "";
+    grid-row: span 2;
+    font-size: var(--taille-1);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cadre-officiel[open] .cadre-resume::before {
+    content: "−" / "";
+  }
+
   .cadre-titre {
     font-size: var(--taille-1);
+  }
+
+  .cadre-sous-titre {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .cadre-officiel[open] .cadre-liste {
+    margin-top: var(--espace-4);
   }
 
   .cadre-liste {

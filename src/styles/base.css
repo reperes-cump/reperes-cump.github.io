@@ -48,6 +48,9 @@
     font-size: 106.25%;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Marge en haut quand la page défile vers un élément (focus clavier, ancre) : rien ne passe
+       sous l'en-tête collant de la matrice. */
+    scroll-padding-top: 4.5rem;
   }
 
   html:has(dialog[open]) {

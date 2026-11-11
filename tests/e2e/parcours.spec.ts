@@ -200,3 +200,56 @@ test.describe('sources', () => {
     await expect(page.locator(`article.fiche[id="${ancre}"]`)).toBeVisible();
   });
 });
+
+test.describe('navigation et recherche', () => {
+  test('l’accueil a le menu des pages, comme les autres pages', async ({ page }) => {
+    await ouvrir(page, '');
+    const menu = page.getByRole('navigation', { name: 'Navigation principale' });
+    for (const titre of ['Circuit', 'Carte', 'Sources', 'À propos']) {
+      await expect(menu.getByRole('link', { name: new RegExp(titre) })).toBeVisible();
+    }
+  });
+
+  test('la recherche filtre la matrice, sans tenir compte des accents', async ({ page }) => {
+    await ouvrir(page, '');
+    const lignes = page.locator('.matrice tbody tr:visible');
+    const total = await page.locator('.matrice tbody tr').count();
+    const champ = page.getByRole('searchbox', { name: 'Chercher une situation' });
+    await champ.fill('deces');
+    await expect(lignes).toHaveCount(1);
+    await expect(lignes.first()).toContainText('Décès accidentel');
+    await champ.fill('introuvable');
+    await expect(page.getByText('Aucune situation ne correspond.')).toBeVisible();
+    await page.getByText('Filtrer', { exact: true }).click();
+    await page.getByRole('button', { name: 'Tout afficher' }).click();
+    await expect(champ).toHaveValue('');
+    await expect(lignes).toHaveCount(total);
+  });
+
+  test('le cadre officiel est replié sous la matrice et s’ouvre par un lien', async ({ page }) => {
+    await ouvrir(page, '');
+    const cadre = page.locator('details#cadre-officiel');
+    await expect(cadre).not.toHaveAttribute('open');
+    await ouvrir(page, '#cadre-officiel');
+    await expect(cadre).toHaveAttribute('open');
+  });
+
+  test('« Mon département » ouvre la fiche, par numéro ou par nom', async ({ page }) => {
+    await ouvrir(page, 'carte/');
+    const champ = page.getByLabel('Mon département');
+    const panneau = page.locator('#panneau-source');
+    await champ.fill('33');
+    await champ.press('Enter');
+    await expect(panneau.locator('.contexte-titre')).toHaveText('Gironde (33)');
+    await page.keyboard.press('Escape');
+    await expect(champ).toBeFocused();
+    await champ.fill("cote d'or");
+    await champ.press('Enter');
+    await expect(panneau.locator('.contexte-titre')).toHaveText("Côte-d'Or (21)");
+    await page.keyboard.press('Escape');
+    await champ.fill('xyz');
+    await champ.press('Enter');
+    await expect(page.getByText('Aucun département ne correspond.')).toBeVisible();
+    await expect(panneau).toBeHidden();
+  });
+});

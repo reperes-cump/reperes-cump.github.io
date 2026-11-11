@@ -25,6 +25,12 @@ for (const theme of THEMES) {
         await radio.check({ force: true });
         await auditer(page, `accueil, colonnes ${await radio.inputValue()}`);
       }
+      const recherche = page.getByRole('searchbox', { name: 'Chercher une situation' });
+      await recherche.fill('nourrisson');
+      await auditer(page, 'accueil, recherche');
+      await recherche.fill('');
+      await page.locator('#cadre-officiel summary').click();
+      await auditer(page, 'accueil, cadre officiel ouvert');
       await page.locator('.matrice [data-panneau]').first().click();
       await expect(page.locator('#panneau-source')).toBeVisible();
       await auditer(page, 'accueil, panneau ouvert');

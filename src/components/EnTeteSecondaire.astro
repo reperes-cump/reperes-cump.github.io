@@ -1,5 +1,8 @@
 ---
-/** En-tête léger des pages autres que l'accueil : nom du site et navigation. */
+/**
+ * Barre de navigation commune. Sur l'accueil, le nom du site est déjà le titre de la page :
+ * la barre ne montre que les liens. Sur téléphone, les intitulés courts tiennent sur une ligne.
+ */
 import { chemin } from '../lib/chemins.ts';
 import { type PageId, pagesSite } from '../lib/pages.ts';
 
@@ -8,18 +11,20 @@ interface Props {
 }
 
 const { courante } = Astro.props;
+const accueil = courante === 'accueil';
 const liens = pagesSite.filter((p) => p.chemin);
 ---
 
-<header class="barre">
-  <a class="nom-site" href={chemin()}>Repères CUMP</a>
+<header class:list={['barre', { 'barre-accueil': accueil }]}>
+  {!accueil && <a class="nom-site" href={chemin()}>Repères CUMP</a>}
   <nav aria-label="Navigation principale">
     <ul class="liens">
       {
         liens.map((page) => (
           <li>
             <a href={chemin(page.chemin ?? '')} aria-current={page.id === courante ? 'page' : undefined}>
-              {page.titre}
+              <span class="titre-long">{page.titre}</span>
+              <span class="titre-court">{page.court}</span>
             </a>
           </li>
         ))
@@ -56,6 +61,28 @@ const liens = pagesSite.filter((p) => p.chemin);
     display: inline-flex;
     align-items: center;
     min-height: 2rem;
+  }
+
+  .barre-accueil {
+    padding-block: var(--espace-3);
+  }
+
+  .titre-court {
+    display: none;
+  }
+
+  @media (width < 40rem) {
+    .liens {
+      gap: var(--espace-1) var(--espace-4);
+    }
+
+    .titre-long {
+      display: none;
+    }
+
+    .titre-court {
+      display: inline;
+    }
   }
 
   .liens a[aria-current="page"] {

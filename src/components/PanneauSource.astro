@@ -24,19 +24,30 @@
   if (panneau instanceof HTMLDialogElement && zone) {
     let declencheur: HTMLElement | null = null;
 
+    /** Ouvre le panneau avec le contenu préparé `id` ; le focus revient ensuite à `source`. */
+    const ouvrir = (id: string, source: HTMLElement) => {
+      const modele = document.getElementById(id);
+      if (!(modele instanceof HTMLTemplateElement)) return false;
+      if (titre) titre.textContent = modele.dataset.titre ?? 'Source';
+      zone.replaceChildren(modele.content.cloneNode(true));
+      declencheur = source;
+      panneau.showModal();
+      titre?.focus();
+      return true;
+    };
+
     document.addEventListener('click', (evenement) => {
       if (!(evenement.target instanceof Element)) return;
       const puce = evenement.target.closest<HTMLElement>('[data-panneau]');
       if (!puce?.dataset.panneau) return;
-      const modele = document.getElementById(puce.dataset.panneau);
-      if (!(modele instanceof HTMLTemplateElement)) return;
       // Sans JavaScript, un lien mène à sa cible ; avec, il ouvre le panneau.
-      evenement.preventDefault();
-      if (titre) titre.textContent = modele.dataset.titre ?? 'Source';
-      zone.replaceChildren(modele.content.cloneNode(true));
-      declencheur = puce;
-      panneau.showModal();
-      titre?.focus();
+      if (ouvrir(puce.dataset.panneau, puce)) evenement.preventDefault();
+    });
+
+    // Ouverture demandée par un autre script (recherche d'un département, par exemple).
+    document.addEventListener('panneau:ouvrir', (evenement) => {
+      const id = (evenement as CustomEvent<string>).detail;
+      if (evenement.target instanceof HTMLElement) ouvrir(id, evenement.target);
     });
 
     panneau.querySelector('[data-fermer]')?.addEventListener('click', () => panneau.close());

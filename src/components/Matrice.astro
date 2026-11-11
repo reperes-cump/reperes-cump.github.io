@@ -43,6 +43,16 @@ const modes = [
 
 <div class="conteneur-matrice" data-matrice>
   <div class="filtres" data-filtres hidden>
+    <label class="recherche">
+      <span class="visuellement-cache">Chercher une situation</span>
+      <input
+        type="search"
+        name="recherche"
+        placeholder="Chercher une situation (suicide, nourrisson…)"
+        autocomplete="off"
+        enterkeyhint="search"
+      />
+    </label>
     <fieldset class="bascule">
       <legend class="visuellement-cache">Colonnes affichées</legend>
       {
@@ -134,7 +144,7 @@ const modes = [
       }
     </tbody>
   </table>
-  <p class="filtre-vide" data-vide hidden>Aucune situation ne correspond à ces filtres.</p>
+  <p class="filtre-vide" data-vide hidden>Aucune situation ne correspond.</p>
 </div>
 
 <script>
@@ -153,12 +163,22 @@ const modes = [
         ),
       );
     const autoritesFiltrees = filtres.querySelector('input[name="autorite"]') !== null;
+    const recherche = filtres.querySelector<HTMLInputElement>('input[name="recherche"]');
+    // Recherche sans accents ni majuscules : « deces » trouve « Décès ».
+    const simple = (texte: string) =>
+      texte.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    const textes = new Map(
+      [...corps.rows].map((ligne) => [ligne, simple(ligne.cells[0]?.textContent ?? '')]),
+    );
 
     const appliquer = () => {
       const mode =
         filtres.querySelector<HTMLInputElement>('input[name="colonnes"]:checked')?.value ?? 'deux';
       const verdicts = coches('verdict');
       const autorites = coches('autorite');
+      const mots = simple(recherche?.value ?? '')
+        .split(/\s+/)
+        .filter(Boolean);
       table.dataset.colonnes = mode;
       for (const cellule of table.querySelectorAll<HTMLTableCellElement>(
         'td[data-colonne="fusion"]',
@@ -176,7 +196,8 @@ const modes = [
         const autoriteRetenue =
           !autoritesFiltrees ||
           (ligne.dataset.autorites ?? '').split(' ').some((a) => autorites.has(a));
-        ligne.hidden = !(verdictRetenu && autoriteRetenue);
+        const texteRetenu = mots.every((mot) => textes.get(ligne)?.includes(mot));
+        ligne.hidden = !(verdictRetenu && autoriteRetenue && texteRetenu);
         if (!ligne.hidden) visibles += 1;
       }
 
@@ -189,10 +210,12 @@ const modes = [
     };
 
     filtres.addEventListener('change', appliquer);
+    recherche?.addEventListener('input', appliquer);
     filtres.querySelector('[data-tout]')?.addEventListener('click', () => {
       for (const champ of filtres.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')) {
         champ.checked = true;
       }
+      if (recherche) recherche.value = '';
       appliquer();
     });
     filtres.hidden = false;
@@ -219,6 +242,27 @@ const modes = [
   .filtres[hidden],
   .filtre-vide[hidden] {
     display: none;
+  }
+
+  .recherche {
+    flex: 1 1 100%;
+  }
+
+  .recherche input {
+    width: 100%;
+    max-width: 28rem;
+    min-height: 2.75rem;
+    padding: var(--espace-2) var(--espace-3);
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon);
+    background: var(--papier);
+    color: var(--encre);
+    font: inherit;
+  }
+
+  .recherche input::placeholder {
+    color: var(--encre-2);
+    opacity: 1;
   }
 
   .bascule {

@@ -40,7 +40,7 @@ const titreComplet = titre
     <Glyphes />
     <BandeauBrouillon visible={brouillon} />
     <div class="page">
-      {courante !== 'accueil' && <EnTeteSecondaire courante={courante} />}
+      <EnTeteSecondaire courante={courante} />
       <slot />
       <PiedDePage courante={courante} infos={infos} />
     </div>

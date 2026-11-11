@@ -50,6 +50,23 @@ const niveaux = [
       }
     </fieldset>
     {!zonesDisponibles && <p class="note">Composition des zones en cours de vérification.</p>}
+    <form class="recherche-dep" data-recherche-dep hidden>
+      <label for="recherche-departement">Mon département</label>
+      <div class="recherche-ligne">
+        <input
+          id="recherche-departement"
+          list="liste-departements"
+          placeholder="Nom ou numéro"
+          autocomplete="off"
+          enterkeyhint="go"
+        />
+        <button type="submit">Ouvrir</button>
+      </div>
+      <datalist id="liste-departements">
+        {carte.departements.map((d) => <option value={`${d.nom} (${d.code})`} />)}
+      </datalist>
+      <p class="recherche-message" data-message aria-live="polite"></p>
+    </form>
     <a class="evitement" href="#tableau-departements">Aller au tableau des départements</a>
   </div>
 
@@ -154,6 +171,63 @@ const niveaux = [
       }
     });
   }
+
+  // « Mon département » : nom ou numéro, puis ouverture de sa fiche dans le panneau commun.
+  for (const formulaire of document.querySelectorAll<HTMLFormElement>('[data-recherche-dep]')) {
+    const champ = formulaire.querySelector('input');
+    const message = formulaire.querySelector<HTMLElement>('[data-message]');
+    if (!champ) continue;
+    // Sans accents, ponctuation ni majuscules : « cote d'or » trouve « Côte-d'Or ».
+    const simple = (texte: string) =>
+      texte
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    const departements = [...formulaire.querySelectorAll('option')].map((option) => {
+      const [, nom = '', code = ''] = option.value.match(/^(.*) \(([^)]+)\)$/) ?? [];
+      return { libelle: simple(option.value), nom: simple(nom), code };
+    });
+    const trouver = (saisie: string) => {
+      const s = simple(saisie);
+      if (!s) return undefined;
+      const numero = /^\d$/.test(s) ? `0${s}` : s;
+      const commencent = departements.filter((d) => d.nom.startsWith(s));
+      return (
+        departements.find((d) => d.libelle === s) ??
+        departements.find((d) => d.code.toLowerCase() === numero) ??
+        departements.find((d) => d.nom === s) ??
+        (commencent.length === 1 ? commencent[0] : undefined)
+      );
+    };
+    const ouvrir = () => {
+      const departement = trouver(champ.value);
+      if (message) {
+        message.textContent = departement
+          ? ''
+          : 'Aucun département ne correspond. Essayez son nom ou son numéro.';
+      }
+      if (!departement) return;
+      champ.dispatchEvent(
+        new CustomEvent('panneau:ouvrir', {
+          bubbles: true,
+          detail: `panneau-dep-${departement.code}`,
+        }),
+      );
+    };
+    formulaire.addEventListener('submit', (evenement) => {
+      evenement.preventDefault();
+      ouvrir();
+    });
+    // Une suggestion choisie dans la liste ouvre directement la fiche.
+    champ.addEventListener('input', (evenement) => {
+      const choisie = (evenement as InputEvent).inputType === 'insertReplacementText';
+      if (choisie || departements.some((d) => d.libelle === simple(champ.value) && /\)$/.test(champ.value)))
+        ouvrir();
+    });
+    formulaire.hidden = false;
+  }
 </script>
 
 <style>
@@ -167,6 +241,66 @@ const niveaux = [
     flex-wrap: wrap;
     align-items: center;
     gap: var(--espace-2) var(--espace-4);
+  }
+
+  .recherche-dep {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--espace-1);
+    flex: 1 1 100%;
+    max-width: 26rem;
+  }
+
+  .recherche-dep[hidden] {
+    display: none;
+  }
+
+  .recherche-dep label {
+    font-weight: 650;
+  }
+
+  .recherche-ligne {
+    display: flex;
+    gap: var(--espace-2);
+  }
+
+  .recherche-ligne input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: var(--espace-2) var(--espace-3);
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon);
+    background: var(--papier);
+    color: var(--encre);
+    font: inherit;
+  }
+
+  .recherche-ligne input::placeholder {
+    color: var(--encre-2);
+    opacity: 1;
+  }
+
+  .recherche-ligne button {
+    min-height: 2.75rem;
+    padding: var(--espace-2) var(--espace-4);
+    border: var(--trait) solid var(--encre);
+    border-radius: var(--rayon);
+    background: var(--encre);
+    color: var(--papier);
+    font: inherit;
+    font-weight: 650;
+    cursor: pointer;
+  }
+
+  .recherche-message:empty {
+    display: none;
+  }
+
+  .recherche-message {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
   }
 
   .niveaux {

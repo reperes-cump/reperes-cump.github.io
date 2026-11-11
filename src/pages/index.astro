@@ -15,7 +15,6 @@ const nonVerifie = affichees.some((a) => !a.verifie_le);
 <Base courante="accueil" brouillon={nonVerifie || !infos?.version} infos={infos}>
   <EnTete demande={demande} infos={infos} sources={sources} />
   <main class="accueil">
-    <CadreOfficiel elements={cadre} sources={sources} />
     <div class="intro">
       <p class="intro-question">
         Les repères de la recommandation professionnelle&nbsp;: pour chaque situation, ce que dit
@@ -29,6 +28,7 @@ const nonVerifie = affichees.some((a) => !a.verifie_le);
     </div>
     <Legende grades={grades} sources={sources} brouillon={nonVerifie} />
     <Matrice lignes={lignes} sources={sources} affirmations={affirmations} />
+    <CadreOfficiel elements={cadre} sources={sources} />
     <EncadreSilence elements={elementsEncadre} sources={sources} />
   </main>
 </Base>
