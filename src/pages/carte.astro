@@ -1,0 +1,98 @@
+---
+import CarteCUMP from '../components/CarteCUMP.astro';
+import DepartementPanneau from '../components/DepartementPanneau.astro';
+import Provenance from '../components/Provenance.astro';
+import TableauDepartements from '../components/TableauDepartements.astro';
+import Base from '../layouts/Base.astro';
+import { typographie } from '../lib/affichage.ts';
+import { donnees, pageCarte } from '../lib/donnees.ts';
+
+const { sources, infos } = await donnees();
+const { carte, designations, referentiel, zones, regle } = await pageCarte();
+const brouillon =
+  !designations.verifie_le || !zones?.verifie_le || !regle.verifie_le || !infos?.version;
+const sourcesPanneau = {
+  arrete: sources.get(designations.source_id),
+  csp: sources.get('csp-r6311'),
+  cog: sources.get(referentiel.source_id),
+  defense: zones ? sources.get(zones.source_id) : undefined,
+};
+---
+
+<Base
+  courante="carte"
+  titre="Carte des CUMP"
+  description="Les CUMP régionales, renforcées et zonales désignées par arrêté, département par département."
+  brouillon={brouillon}
+  infos={infos}
+>
+  <main class="page-carte">
+    <h1>Carte des CUMP</h1>
+    <p class="intro">
+      Les CUMP régionales, renforcées et zonales désignées par l'arrêté du 27 décembre 2016, dans
+      sa version en vigueur depuis le 10 avril 2024. Choisissez un département pour voir sa
+      désignation et ses sources.
+    </p>
+
+    <div
+      id="regle-generale"
+      class:list={['cadre-verification', 'regle', { 'non-verifie': !regle.verifie_le }]}
+    >
+      <p>{typographie(regle.enonce ?? '')}</p>
+      {regle.note_publique && <p class="note">{typographie(regle.note_publique)}</p>}
+      <Provenance affirmation={regle} sources={sources} titre={regle.enonce ?? ''} />
+    </div>
+
+    <div class:list={['cadre-verification', 'cadre-carte', { 'non-verifie': brouillon }]}>
+      <CarteCUMP carte={carte} zonesDisponibles={Boolean(zones)} />
+    </div>
+
+    <TableauDepartements departements={carte.departements} referentiel={referentiel} zones={zones} />
+
+    {
+      carte.departements.map((d) => (
+        <DepartementPanneau
+          departement={d}
+          regle={regle}
+          sources={sourcesPanneau}
+          verifieLe={designations.verifie_le}
+        />
+      ))
+    }
+  </main>
+</Base>
+
+<style>
+  .page-carte {
+    display: grid;
+    gap: var(--espace-5);
+    padding-top: var(--espace-5);
+  }
+
+  h1 {
+    font-size: var(--taille-3);
+  }
+
+  .intro {
+    max-width: var(--mesure);
+    font-size: var(--taille-1);
+    line-height: var(--interligne-serre);
+  }
+
+  .regle {
+    gap: var(--espace-1);
+    max-width: var(--mesure);
+    padding: var(--espace-2) var(--espace-3);
+    margin-inline: calc(-1 * var(--espace-3));
+  }
+
+  .note {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .cadre-carte {
+    padding: var(--espace-3);
+    margin-inline: calc(-1 * var(--espace-3));
+  }
+</style>

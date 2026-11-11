@@ -5,12 +5,13 @@ import Base from '../layouts/Base.astro';
 import { nombre, typographie } from '../lib/affichage.ts';
 import { chemin } from '../lib/chemins.ts';
 import { citationsParSource } from '../lib/citations.ts';
-import { accueil, donnees, pageCircuit } from '../lib/donnees.ts';
+import { accueil, donnees, pageCarte, pageCircuit } from '../lib/donnees.ts';
 import { groupesAutorite, ordreCategories, ordreTypes } from '../lib/libelles.ts';
 
 const { sources, affirmations, infos, designations } = await donnees();
 // Où chaque information est affichée : le circuit d'abord, l'accueil l'emporte en cas de doublon.
 const emplacements = new Map([
+  ...(await pageCarte()).emplacements,
   ...(await pageCircuit()).emplacements,
   ...(await accueil()).emplacements,
 ]);

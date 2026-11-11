@@ -1,0 +1,330 @@
+---
+/** Tableau des départements : alternative à la carte, avec les mêmes informations et les mêmes sources. */
+import type { Referentiel, Zones } from '../../schemas/index.ts';
+import type { DepartementCarte } from '../lib/carte.ts';
+import { libellesDesignation } from '../lib/libelles.ts';
+import PastilleDesignation from './PastilleDesignation.astro';
+
+interface Props {
+  departements: DepartementCarte[];
+  referentiel: Referentiel;
+  zones: Zones | null;
+}
+
+const { departements, referentiel, zones } = Astro.props;
+const regions = [...referentiel.regions].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+const types = ['regionale', 'renforcee', 'zonale', 'aucune'] as const;
+const libelleType = (t: (typeof types)[number]) =>
+  t === 'aucune' ? 'Aucune désignation' : libellesDesignation[t];
+---
+
+<section class="tableau-bloc" id="tableau-departements" aria-labelledby="tableau-titre">
+  <h2 id="tableau-titre" class="tableau-titre">Tableau des départements</h2>
+
+  <div class="filtres" data-filtres hidden>
+    <label class="filtre">
+      <span>Région</span>
+      <select name="region">
+        <option value="">Toutes</option>
+        {regions.map((r) => <option value={r.code}>{r.nom}</option>)}
+      </select>
+    </label>
+    {
+      zones && (
+        <label class="filtre">
+          <span>Zone de défense</span>
+          <select name="zone">
+            <option value="">Toutes</option>
+            {zones.zones.map((z) => (
+              <option value={z.id}>{z.nom}</option>
+            ))}
+          </select>
+        </label>
+      )
+    }
+    <fieldset class="filtre-types">
+      <legend>Désignation</legend>
+      {
+        types.map((t) => (
+          <label class="filtre-type">
+            <input type="checkbox" name="type" value={t} checked />
+            <PastilleDesignation valeur={t} />
+            <span>{libelleType(t)}</span>
+          </label>
+        ))
+      }
+    </fieldset>
+    <p class="resultat" aria-live="polite" data-resultat></p>
+  </div>
+
+  <div class="conteneur-tableau">
+    <table class="tableau">
+      <caption class="visuellement-cache">
+        Départements, région, zone de défense et désignations de CUMP dans l'arrêté
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Département</th>
+          <th scope="col">Région</th>
+          <th scope="col">Zone</th>
+          <th scope="col">Désignations dans l'arrêté</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          departements.map((d) => (
+            <tr
+              id={`dep-${d.code}`}
+              data-region={d.region.code}
+              data-zone={d.zone?.id ?? ''}
+              data-types={d.designations.length ? d.designations.map((x) => x.designation).join(' ') : 'aucune'}
+            >
+              <th scope="row">
+                <button type="button" class="lien-dep" data-panneau={`panneau-dep-${d.code}`} aria-haspopup="dialog">
+                  {d.nom} ({d.code})
+                </button>
+              </th>
+              <td>{d.region.nom}</td>
+              <td>{d.zone?.nom ?? '—'}</td>
+              <td>
+                {d.designations.length ? (
+                  <ul class="designations">
+                    {d.designations.map((x) => (
+                      <li>
+                        <span class="type">
+                          <PastilleDesignation valeur={x.designation} />
+                          {libellesDesignation[x.designation]}, annexe {x.annexe}
+                        </span>
+                        <span class="etablissement">{x.etablissement}</span>
+                        {x.deduit && <span class="deduit">département déduit</span>}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span class="aucune">Aucune</span>
+                )}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="vide" data-vide hidden>Aucun département ne correspond à ces filtres.</p>
+</section>
+
+<script>
+  for (const bloc of document.querySelectorAll<HTMLElement>('#tableau-departements')) {
+    const filtres = bloc.querySelector<HTMLElement>('[data-filtres]');
+    const lignes = [...bloc.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+    const resultat = bloc.querySelector<HTMLElement>('[data-resultat]');
+    const vide = bloc.querySelector<HTMLElement>('[data-vide]');
+    if (!filtres) continue;
+    const valeur = (nom: string) => filtres.querySelector<HTMLSelectElement>(`select[name="${nom}"]`)?.value ?? '';
+    const appliquer = () => {
+      const region = valeur('region');
+      const zone = valeur('zone');
+      const types = new Set(
+        [...filtres.querySelectorAll<HTMLInputElement>('input[name="type"]:checked')].map((c) => c.value),
+      );
+      let visibles = 0;
+      for (const ligne of lignes) {
+        const d = ligne.dataset;
+        const ok =
+          (!region || d.region === region) &&
+          (!zone || d.zone === zone) &&
+          (d.types ?? '').split(' ').some((t) => types.has(t));
+        ligne.hidden = !ok;
+        if (ok) visibles += 1;
+      }
+      if (resultat) {
+        resultat.textContent =
+          visibles === lignes.length ? '' : `${visibles} département${visibles > 1 ? 's' : ''} sur ${lignes.length}`;
+      }
+      if (vide) vide.hidden = visibles > 0;
+    };
+    filtres.addEventListener('change', appliquer);
+    filtres.hidden = false;
+  }
+</script>
+
+<style>
+  .tableau-bloc {
+    display: grid;
+    gap: var(--espace-3);
+    scroll-margin-top: var(--espace-4);
+  }
+
+  .tableau-titre {
+    font-size: var(--taille-2);
+  }
+
+  .filtres {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--espace-3) var(--espace-5);
+  }
+
+  .filtres[hidden],
+  .vide[hidden] {
+    display: none;
+  }
+
+  .filtre {
+    display: grid;
+    gap: var(--espace-1);
+    font-size: var(--taille--1);
+  }
+
+  .filtre select {
+    min-height: 2.25rem;
+    padding-inline: var(--espace-2);
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon);
+    background: var(--papier);
+  }
+
+  .filtre-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-4);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: var(--taille--1);
+  }
+
+  .filtre-types legend {
+    width: 100%;
+    margin-bottom: var(--espace-1);
+  }
+
+  .filtre-type {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+    min-height: 2rem;
+    cursor: pointer;
+  }
+
+  .filtre-type input {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--encre);
+  }
+
+  .resultat,
+  .vide {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .conteneur-tableau {
+    container-type: inline-size;
+  }
+
+  .tableau {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--taille--1);
+  }
+
+  .tableau th,
+  .tableau td {
+    padding: var(--espace-2) var(--espace-2) var(--espace-2) 0;
+    border-bottom: var(--trait) solid var(--filet);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  .tableau thead th {
+    border-bottom: var(--trait-fort) solid var(--encre);
+  }
+
+  .tableau tr[hidden] {
+    display: none;
+  }
+
+  .tableau tr:target {
+    background: var(--papier-2);
+  }
+
+  .lien-dep {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--source);
+    font-weight: 650;
+    text-align: start;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    cursor: pointer;
+  }
+
+  .designations {
+    display: grid;
+    gap: var(--espace-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .designations li {
+    display: grid;
+    gap: 2px;
+  }
+
+  .type {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+  }
+
+  /* Intitulé de l'établissement, tel qu'écrit dans l'arrêté. */
+  .etablissement {
+    font-family: var(--police-source);
+  }
+
+  .deduit,
+  .aucune {
+    color: var(--encre-2);
+    font-style: italic;
+  }
+
+  /* Petit écran : une carte par département. */
+  @container (width < 40rem) {
+    .tableau,
+    .tableau tbody,
+    .tableau tr,
+    .tableau th,
+    .tableau td {
+      display: block;
+    }
+
+    .tableau thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .tableau tbody tr {
+      padding: var(--espace-3) 0;
+      border-bottom: var(--trait) solid var(--filet);
+    }
+
+    .tableau tbody tr[hidden] {
+      display: none;
+    }
+
+    .tableau th,
+    .tableau td {
+      padding: 2px 0;
+      border: 0;
+    }
+  }
+</style>

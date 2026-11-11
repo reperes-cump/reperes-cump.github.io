@@ -26,10 +26,13 @@
 
     document.addEventListener('click', (evenement) => {
       if (!(evenement.target instanceof Element)) return;
-      const puce = evenement.target.closest<HTMLElement>('button.puce-source[data-panneau]');
+      const puce = evenement.target.closest<HTMLElement>('[data-panneau]');
       if (!puce?.dataset.panneau) return;
       const modele = document.getElementById(puce.dataset.panneau);
       if (!(modele instanceof HTMLTemplateElement)) return;
+      // Sans JavaScript, un lien mène à sa cible ; avec, il ouvre le panneau.
+      evenement.preventDefault();
+      if (titre) titre.textContent = modele.dataset.titre ?? 'Source';
       zone.replaceChildren(modele.content.cloneNode(true));
       declencheur = puce;
       panneau.showModal();

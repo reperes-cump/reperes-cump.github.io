@@ -1,6 +1,9 @@
 import { getCollection, getEntry } from 'astro:content';
+import type { Topology } from 'topojson-specification';
+import topologie from '../../content/geo/departements.topo.json';
 import type { Affirmation } from '../../schemas/index.ts';
 import { lignesMatrice } from './affichage.ts';
+import { calculerCarte } from './carte.ts';
 import { preparerCircuit } from './circuit.ts';
 import type { Emplacement } from './citations.ts';
 
@@ -12,7 +15,9 @@ async function lire() {
   const encadre = (await getEntry('visuels', 'encadre-silence'))?.data ?? null;
   const circuit = (await getEntry('visuels', 'circuit'))?.data ?? null;
   const designations = (await getEntry('designations', 'designations'))?.data ?? null;
-  return { sources, affirmations, infos, encadre, circuit, designations };
+  const referentiel = (await getEntry('referentiel', 'departements'))?.data ?? null;
+  const zones = (await getEntry('zones', 'zones'))?.data ?? null;
+  return { sources, affirmations, infos, encadre, circuit, designations, referentiel, zones };
 }
 
 let promesse: ReturnType<typeof lire> | null = null;
@@ -99,4 +104,18 @@ export async function pageCircuit() {
   ];
   const renvois = affichees.flatMap((a) => a.voir_aussi.map(requise));
   return { circuit: prepare, definitions, emplacements, affichees: [...affichees, ...renvois] };
+}
+
+/** Ce que la page Carte affiche. */
+export async function pageCarte() {
+  const { affirmations, designations, referentiel, zones } = await donnees();
+  if (!designations || !referentiel)
+    throw new Error('Carte : désignations ou départements introuvables');
+  const regle = affirmations.get('cadre-cump-departementale');
+  if (!regle) throw new Error('Carte : affirmation introuvable : cadre-cump-departementale');
+  const carte = calculerCarte(topologie as unknown as Topology, referentiel, zones, designations);
+  const emplacements = new Map<string, Emplacement>([
+    [regle.id, { page: 'carte', ancre: 'regle-generale' }],
+  ]);
+  return { carte, designations, referentiel, zones, regle, emplacements };
 }

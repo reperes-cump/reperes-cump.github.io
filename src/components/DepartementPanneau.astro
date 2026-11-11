@@ -1,0 +1,169 @@
+---
+/** Panneau d'un département, préparé au build : désignations, règle générale, sources. */
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { dateLisible, hote, typographie } from '../lib/affichage.ts';
+import type { DepartementCarte } from '../lib/carte.ts';
+import { chemin } from '../lib/chemins.ts';
+import { libellesDesignation, libellesStatut } from '../lib/libelles.ts';
+import PastilleDesignation from './PastilleDesignation.astro';
+
+interface Props {
+  departement: DepartementCarte;
+  regle: Affirmation;
+  sources: { arrete?: Source; csp?: Source; cog?: Source; defense?: Source };
+  verifieLe: string | null;
+}
+
+const { departement: d, regle, sources, verifieLe } = Astro.props;
+const arrete = sources.arrete;
+const lienArrete = arrete?.url
+  ? { href: arrete.url, texte: `Lire le texte sur ${hote(arrete.url)}` }
+  : null;
+---
+
+<template id={`panneau-dep-${d.code}`} data-titre="Département">
+  <div class="contexte">
+    <p class="contexte-titre">{d.nom} ({d.code})</p>
+    <p>Région&nbsp;: {d.region.nom}</p>
+    <p>Zone de défense et de sécurité&nbsp;: {d.zone?.nom ?? 'composition en cours de vérification'}</p>
+  </div>
+
+  <div class="bloc">
+    <h3 class="bloc-titre">Désignations dans l'arrêté</h3>
+    {
+      d.designations.length ? (
+        d.designations.map((x) => (
+          <div class="designation">
+            <p class="designation-nom">
+              <PastilleDesignation valeur={x.designation} />
+              <span>
+                {libellesDesignation[x.designation]} ({typographie(x.territoire)}), annexe {x.annexe}
+              </span>
+            </p>
+            <p class="extrait">{x.etablissement}</p>
+            {x.deduit && (
+              <p class="note">
+                L'annexe ne nomme pas le département&nbsp;: il est déduit de la commune de l'établissement, à vérifier.
+              </p>
+            )}
+          </div>
+        ))
+      ) : (
+        <p>Aucune désignation régionale, renforcée ou zonale dans l'arrêté.</p>
+      )
+    }
+  </div>
+
+  <div class="bloc">
+    <p>{typographie(regle.enonce ?? '')}</p>
+    {regle.note_publique && <p class="note">{typographie(regle.note_publique)}</p>}
+  </div>
+
+  <div class="bloc">
+    <h3 class="bloc-titre">Sources</h3>
+    <ul class="sources-dep">
+      {
+        sources.arrete && (
+          <li>
+            <span class="source-nom">{typographie(sources.arrete.titre)}</span>, annexes 1, 2 et 4 ;{' '}
+            {libellesStatut[sources.arrete.statut]}.{' '}
+            {lienArrete && (
+              <a href={lienArrete.href} rel="noreferrer">
+                {lienArrete.texte}
+              </a>
+            )}
+          </li>
+        )
+      }
+      {
+        sources.csp && (
+          <li>
+            <span class="source-nom">{typographie(sources.csp.titre)}</span>, article R6311-25 (règle
+            générale).
+          </li>
+        )
+      }
+      {
+        sources.cog && (
+          <li>
+            <span class="source-nom">{typographie(sources.cog.titre)}</span> (région).
+          </li>
+        )
+      }
+      {
+        sources.defense && (
+          <li>
+            <span class="source-nom">{typographie(sources.defense.titre)}</span> (zone).
+          </li>
+        )
+      }
+    </ul>
+    <p><a href={chemin('sources')}>Voir les fiches des sources</a></p>
+  </div>
+
+  <p class="verification">
+    {verifieLe ? `Vérifié sur le texte le ${dateLisible(verifieLe)}.` : 'Pas encore vérifié sur le texte.'}
+  </p>
+</template>
+
+<style>
+  .contexte {
+    display: grid;
+    gap: var(--espace-1);
+    padding: var(--espace-3) var(--espace-4);
+    border-radius: var(--rayon);
+    background: var(--papier-2);
+  }
+
+  .contexte-titre {
+    font-weight: 650;
+  }
+
+  .bloc,
+  .designation {
+    display: grid;
+    gap: var(--espace-2);
+  }
+
+  .bloc-titre {
+    font-size: var(--taille-0);
+  }
+
+  .designation + .designation {
+    padding-top: var(--espace-2);
+    border-top: var(--trait) solid var(--filet);
+  }
+
+  .designation-nom {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+    font-weight: 650;
+  }
+
+  /* Intitulé de l'établissement, tel qu'écrit dans l'arrêté : texte de la source. */
+  .extrait {
+    padding: var(--espace-1) var(--espace-2);
+    background: var(--surligneur);
+    color: var(--sur-surligneur);
+    font-family: var(--police-source);
+  }
+
+  .note,
+  .verification,
+  .sources-dep {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .sources-dep {
+    display: grid;
+    gap: var(--espace-1);
+    margin: 0;
+    padding-inline-start: 1.25em;
+  }
+
+  .source-nom {
+    color: var(--encre);
+  }
+</style>

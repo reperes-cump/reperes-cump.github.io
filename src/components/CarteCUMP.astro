@@ -1,0 +1,364 @@
+---
+/**
+ * Carte des CUMP, en SVG calculé au build. Chaque département est un lien vers sa ligne du
+ * tableau ; avec JavaScript, il ouvre son panneau. La bascule de niveau épaissit et nomme les
+ * frontières des régions ou des zones.
+ */
+import { type CarteCalculee, HAUTEUR, LARGEUR } from '../lib/carte.ts';
+import { libellesDesignation } from '../lib/libelles.ts';
+import PastilleDesignation from './PastilleDesignation.astro';
+
+interface Props {
+  carte: CarteCalculee;
+  zonesDisponibles: boolean;
+}
+
+const { carte, zonesDisponibles } = Astro.props;
+const zonales = carte.departements.filter((d) =>
+  d.designations.some((x) => x.designation === 'zonale'),
+);
+const description = (d: CarteCalculee['departements'][number]) =>
+  `${d.nom} (${d.code}). ${
+    d.designations.length
+      ? d.designations.map((x) => libellesDesignation[x.designation]).join(', ')
+      : 'Aucune désignation'
+  }.`;
+const niveaux = [
+  { valeur: 'departements', libelle: 'Départements' },
+  { valeur: 'regions', libelle: 'Régions' },
+  { valeur: 'zones', libelle: 'Zones de défense' },
+];
+---
+
+<div class="carte-bloc" data-carte data-niveau="departements">
+  <div class="carte-commandes">
+    <fieldset class="niveaux">
+      <legend class="visuellement-cache">Frontières affichées</legend>
+      {
+        niveaux.map((n, i) => (
+          <label class="niveau">
+            <input
+              type="radio"
+              name="niveau"
+              value={n.valeur}
+              checked={i === 0}
+              disabled={n.valeur === 'zones' && !zonesDisponibles}
+            />
+            <span>{n.libelle}</span>
+          </label>
+        ))
+      }
+    </fieldset>
+    {!zonesDisponibles && <p class="note">Composition des zones en cours de vérification.</p>}
+    <a class="evitement" href="#tableau-departements">Aller au tableau des départements</a>
+  </div>
+
+  <ul class="legende-carte" aria-label="Légende de la carte">
+    <li><PastilleDesignation valeur="regionale" /> {libellesDesignation.regionale} (siège)</li>
+    <li><PastilleDesignation valeur="renforcee" /> {libellesDesignation.renforcee} (siège)</li>
+    <li><PastilleDesignation valeur="zonale" /> {libellesDesignation.zonale} (siège)</li>
+    <li><PastilleDesignation valeur="aucune" /> Aucune désignation dans l'arrêté</li>
+  </ul>
+
+  <figure class="carte-figure">
+    <svg
+      class="carte"
+      viewBox={`0 0 ${LARGEUR} ${HAUTEUR}`}
+      role="group"
+      aria-labelledby="carte-titre"
+    >
+      <title id="carte-titre">Départements et désignations de CUMP</title>
+      <defs>
+        <pattern id="trame-points" width="5" height="5" patternUnits="userSpaceOnUse">
+          <rect width="5" height="5" style="fill: var(--papier)"></rect>
+          <circle cx="2.5" cy="2.5" r="1.15" style="fill: var(--encre)"></circle>
+        </pattern>
+      </defs>
+
+      <g class="departements">
+        {
+          carte.departements.map((d) => (
+            <a
+              href={`#dep-${d.code}`}
+              data-panneau={`panneau-dep-${d.code}`}
+              class:list={['dep', ...d.designations.map((x) => x.designation)]}
+              aria-label={description(d)}
+            >
+              <path d={d.d} />
+            </a>
+          ))
+        }
+      </g>
+
+      <g class="frontieres frontieres-regions" aria-hidden="true">
+        <path class="halo" d={carte.frontieresRegions}></path>
+        <path class="trait" d={carte.frontieresRegions}></path>
+      </g>
+      <g class="frontieres frontieres-zones" aria-hidden="true">
+        <path class="halo" d={carte.frontieresZones}></path>
+        <path class="trait" d={carte.frontieresZones}></path>
+      </g>
+
+      <g class="symboles" aria-hidden="true">
+        {
+          zonales.map((d) => (
+            <g transform={`translate(${d.centre[0]} ${d.centre[1]})`}>
+              <circle r="6.5" class="fond" />
+              <circle r="2.3" class="point" />
+            </g>
+          ))
+        }
+      </g>
+
+      <g class="etiquettes etiquettes-regions" aria-hidden="true">
+        {carte.etiquettesRegions.map((e) => <text x={e.x} y={e.y}>{e.nom}</text>)}
+      </g>
+      <g class="etiquettes etiquettes-zones" aria-hidden="true">
+        {carte.etiquettesZones.map((e) => <text x={e.x} y={e.y}>{e.nom}</text>)}
+      </g>
+
+      <g class="encarts" aria-hidden="true">
+        {
+          carte.encarts.map((e) => (
+            <g>
+              <rect x={e.x} y={e.y} width={e.largeur} height={e.hauteur} />
+              <text class="encart-nom" x={e.x + 6} y={e.y + 13}>
+                {e.nom}
+              </text>
+              {e.zone && (
+                <text class="encart-zone" x={e.x + 6} y={e.y + e.hauteur - 6}>
+                  {`Zone ${e.zone}`}
+                </text>
+              )}
+            </g>
+          ))
+        }
+      </g>
+    </svg>
+    <figcaption class="carte-legende">
+      <p>
+        Départements d'outre-mer en encarts, à des échelles différentes. Collectivités d'outre-mer
+        non représentées dans cette version.
+      </p>
+      <p>Contours&nbsp;: data.gouv.fr, d'après ADMIN EXPRESS (IGN), licence ODbL.</p>
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+  for (const bloc of document.querySelectorAll<HTMLElement>('[data-carte]')) {
+    bloc.addEventListener('change', (evenement) => {
+      const champ = evenement.target;
+      if (champ instanceof HTMLInputElement && champ.name === 'niveau') {
+        bloc.dataset.niveau = champ.value;
+      }
+    });
+  }
+</script>
+
+<style>
+  .carte-bloc {
+    display: grid;
+    gap: var(--espace-3);
+  }
+
+  .carte-commandes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espace-2) var(--espace-4);
+  }
+
+  .niveaux {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 2px;
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon-puce);
+  }
+
+  .niveau {
+    position: relative;
+  }
+
+  .niveau input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .niveau span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 var(--espace-3);
+    border-radius: var(--rayon-puce);
+    font-size: var(--taille--1);
+  }
+
+  .niveau input:checked + span {
+    background: var(--encre);
+    color: var(--papier);
+    font-weight: 650;
+  }
+
+  .niveau input:disabled + span {
+    color: var(--encre-2);
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  .niveau input:focus-visible + span {
+    outline: 3px solid var(--source);
+    outline-offset: 2px;
+  }
+
+  .note {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+
+  .evitement {
+    font-size: var(--taille--1);
+  }
+
+  .legende-carte {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--taille--1);
+  }
+
+  .legende-carte li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+  }
+
+  .carte-figure {
+    display: grid;
+    gap: var(--espace-2);
+    margin: 0;
+    max-width: 44rem;
+  }
+
+  .carte {
+    width: 100%;
+    height: auto;
+    color: var(--encre);
+  }
+
+  .dep path {
+    fill: var(--papier);
+    stroke: var(--encre-2);
+    stroke-width: 0.5;
+  }
+
+  .dep.regionale path {
+    fill: var(--encre);
+    stroke: var(--papier);
+  }
+
+  .dep.renforcee path {
+    fill: url(#trame-points);
+  }
+
+  .dep:focus {
+    outline: none;
+  }
+
+  .dep:hover path,
+  .dep:focus-visible path {
+    stroke: var(--source);
+    stroke-width: 2.5;
+  }
+
+  .frontieres,
+  .etiquettes {
+    display: none;
+    pointer-events: none;
+  }
+
+  [data-niveau="regions"] .frontieres-regions,
+  [data-niveau="regions"] .etiquettes-regions,
+  [data-niveau="zones"] .frontieres-zones,
+  [data-niveau="zones"] .etiquettes-zones {
+    display: inline;
+  }
+
+  .frontieres path {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .frontieres .halo {
+    stroke: var(--papier);
+    stroke-width: 4.5;
+  }
+
+  .frontieres .trait {
+    stroke: var(--encre);
+    stroke-width: 2;
+  }
+
+  .symboles {
+    pointer-events: none;
+  }
+
+  .symboles .fond {
+    fill: var(--papier);
+    stroke: var(--encre);
+    stroke-width: 1.8;
+  }
+
+  .symboles .point {
+    fill: var(--encre);
+  }
+
+  .etiquettes text {
+    fill: var(--encre);
+    font-size: 12px;
+    font-weight: 700;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: var(--papier);
+    stroke-width: 3.5px;
+    stroke-linejoin: round;
+  }
+
+  .encarts {
+    pointer-events: none;
+  }
+
+  .encarts rect {
+    fill: none;
+    stroke: var(--filet);
+  }
+
+  .encarts text {
+    fill: var(--encre-2);
+    font-size: 11px;
+  }
+
+  .encart-zone {
+    display: none;
+  }
+
+  [data-niveau="zones"] .encart-zone {
+    display: inline;
+  }
+
+  .carte-legende {
+    display: grid;
+    gap: var(--espace-1);
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+</style>

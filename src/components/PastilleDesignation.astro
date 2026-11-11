@@ -1,0 +1,55 @@
+---
+/** Petit échantillon de l'encodage de la carte : aplat, trame de points, symbole cerclé, fond papier. */
+interface Props {
+  valeur: 'regionale' | 'renforcee' | 'zonale' | 'aucune';
+}
+
+const { valeur } = Astro.props;
+---
+
+<svg class="pastille-carte" viewBox="0 0 22 16" width="22" height="16" aria-hidden="true" focusable="false">
+  {valeur === 'regionale' && <rect x="1" y="1" width="20" height="14" class="p-regionale" />}
+  {valeur === 'renforcee' && <rect x="1" y="1" width="20" height="14" class="p-renforcee" />}
+  {valeur === 'aucune' && <rect x="1" y="1" width="20" height="14" class="p-aucune" />}
+  {
+    valeur === 'zonale' && (
+      <>
+        <circle cx="11" cy="8" r="6" class="p-zonale-fond" />
+        <circle cx="11" cy="8" r="2.1" class="p-zonale-point" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .pastille-carte {
+    flex: none;
+    vertical-align: middle;
+  }
+
+  .p-regionale {
+    fill: var(--encre);
+  }
+
+  .p-renforcee {
+    fill: url(#trame-points);
+    stroke: var(--encre-2);
+    stroke-width: 0.8;
+  }
+
+  .p-aucune {
+    fill: var(--papier);
+    stroke: var(--encre-2);
+    stroke-width: 0.8;
+  }
+
+  .p-zonale-fond {
+    fill: var(--papier);
+    stroke: var(--encre);
+    stroke-width: 1.6;
+  }
+
+  .p-zonale-point {
+    fill: var(--encre);
+  }
+</style>
