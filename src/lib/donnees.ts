@@ -1,6 +1,7 @@
 import { getCollection, getEntry } from 'astro:content';
 import type { Affirmation } from '../../schemas/index.ts';
 import { lignesMatrice } from './affichage.ts';
+import { preparerCircuit } from './circuit.ts';
 import type { Emplacement } from './citations.ts';
 
 /** Toutes les données du contenu, lues une fois par build. */
@@ -9,8 +10,9 @@ async function lire() {
   const affirmations = new Map((await getCollection('affirmations')).map((e) => [e.id, e.data]));
   const infos = (await getEntry('infos', 'contenu'))?.data ?? null;
   const encadre = (await getEntry('visuels', 'encadre-silence'))?.data ?? null;
+  const circuit = (await getEntry('visuels', 'circuit'))?.data ?? null;
   const designations = (await getEntry('designations', 'designations'))?.data ?? null;
-  return { sources, affirmations, infos, encadre, designations };
+  return { sources, affirmations, infos, encadre, circuit, designations };
 }
 
 let promesse: ReturnType<typeof lire> | null = null;
@@ -70,4 +72,31 @@ export async function accueil() {
     ...elementsEncadre,
   ];
   return { cadre, lignes, demande, grades, elementsEncadre, affichees, emplacements };
+}
+
+/** Ce que la page Circuit affiche, et l'ancre de chaque information. */
+export async function pageCircuit() {
+  const { affirmations, circuit } = await donnees();
+  if (!circuit) throw new Error('Circuit : content/visuels/circuit.yaml introuvable');
+  const requise = (id: string): Affirmation => {
+    const affirmation = affirmations.get(id);
+    if (!affirmation) throw new Error(`Circuit : affirmation introuvable : ${id}`);
+    return affirmation;
+  };
+  const prepare = preparerCircuit(circuit, requise);
+  const definitions = circuit.definitions.map(requise);
+
+  const emplacements = new Map<string, Emplacement>();
+  for (const element of circuit.elements) {
+    const ancre = `etape-${element.rattache_a ?? element.id}`;
+    for (const id of element.affirmations) emplacements.set(id, { page: 'circuit', ancre });
+  }
+  for (const d of definitions) emplacements.set(d.id, { page: 'circuit', ancre: 'deux-mots' });
+
+  const affichees = [
+    ...circuit.elements.flatMap((e) => e.affirmations.map(requise)),
+    ...definitions,
+  ];
+  const renvois = affichees.flatMap((a) => a.voir_aussi.map(requise));
+  return { circuit: prepare, definitions, emplacements, affichees: [...affichees, ...renvois] };
 }

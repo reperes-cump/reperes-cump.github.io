@@ -1,0 +1,237 @@
+---
+/**
+ * Circuit d'une demande : points de départ, étapes communes, issues.
+ * Choisir un point de départ allume son chemin étape par étape (seul mouvement du site).
+ * Sans JavaScript, tout reste visible ; le premier chemin est allumé.
+ */
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import type { CircuitPrepare } from '../lib/circuit.ts';
+import CircuitNoeud from './CircuitNoeud.astro';
+
+interface Props {
+  circuit: CircuitPrepare;
+  sources: Map<string, Source>;
+  affirmations: Map<string, Affirmation>;
+}
+
+const { circuit, sources, affirmations } = Astro.props;
+const actif = circuit.chemins[0]?.id ?? '';
+// Rangées communes ; les issues forment la dernière rangée, chacune suivie de ses suites.
+const rangees = [circuit.entrees, ...circuit.suite.map((n) => [n])];
+---
+
+<div class="circuit" data-circuit data-ordres={JSON.stringify(circuit.ordres)}>
+  <fieldset class="choix">
+    <legend class="choix-titre">Point de départ</legend>
+    <div class="choix-options">
+      {
+        circuit.chemins.map((c) => (
+          <label class="choix-option">
+            <input type="radio" name="chemin" value={c.id} checked={c.id === actif} />
+            <span>{c.libelle}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+  <p class="visuellement-cache" aria-live="polite" data-annonce></p>
+
+  <div class="schema">
+    {
+      rangees.map((rangee, index) => (
+        <>
+          {index > 0 && <div class="fleche" aria-hidden="true" />}
+          <div class:list={['rangee', { 'rangee-multiple': rangee.length > 1 }]}>
+            {rangee.map((noeud) => (
+              <CircuitNoeud noeud={noeud} actif={actif} sources={sources} affirmations={affirmations} />
+            ))}
+          </div>
+        </>
+      ))
+    }
+    <div class="fleche" aria-hidden="true"></div>
+    <div class="rangee rangee-issues">
+      {
+        circuit.issues.map((issue) => (
+          <div class="colonne-issue">
+            <div class="rangee">
+              <CircuitNoeud noeud={issue} actif={actif} sources={sources} affirmations={affirmations} />
+            </div>
+            {issue.suites.length > 0 && (
+              <>
+                <div class="fleche" aria-hidden="true" />
+                <div class:list={['rangee', { 'rangee-multiple': issue.suites.length > 1 }]}>
+                  {issue.suites.map((suite) => (
+                    <CircuitNoeud noeud={suite} actif={actif} sources={sources} affirmations={affirmations} />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  const PAS = 250;
+  for (const racine of document.querySelectorAll<HTMLElement>('[data-circuit]')) {
+    const ordres = JSON.parse(racine.dataset.ordres ?? '{}') as Record<string, string[]>;
+    const annonce = racine.querySelector<HTMLElement>('[data-annonce]');
+    const noeuds = [...racine.querySelectorAll<HTMLElement>('[data-noeud]')];
+    let minuteurs: number[] = [];
+
+    racine.addEventListener('change', (evenement) => {
+      const champ = evenement.target;
+      if (!(champ instanceof HTMLInputElement) || champ.name !== 'chemin') return;
+      const ordre = ordres[champ.value] ?? [];
+      const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      for (const m of minuteurs) window.clearTimeout(m);
+      minuteurs = [];
+      for (const n of noeuds) n.classList.remove('allume');
+
+      ordre.forEach((id, rang) => {
+        const noeud = noeuds.find((n) => n.dataset.noeud === id);
+        if (!noeud) return;
+        if (reduit) noeud.classList.add('allume');
+        else minuteurs.push(window.setTimeout(() => noeud.classList.add('allume'), rang * PAS));
+      });
+
+      const libelle = champ.closest('label')?.textContent?.trim() ?? '';
+      if (annonce) annonce.textContent = `Chemin « ${libelle} » : ${ordre.length} étapes allumées.`;
+    });
+  }
+</script>
+
+<style>
+  .circuit {
+    display: grid;
+    gap: var(--espace-4);
+  }
+
+  .choix {
+    display: grid;
+    gap: var(--espace-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .choix-titre {
+    margin-bottom: var(--espace-2);
+    font-weight: 650;
+  }
+
+  .choix-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-2);
+  }
+
+  .choix-option {
+    position: relative;
+  }
+
+  .choix-option input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .choix-option span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0 var(--espace-4);
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon-puce);
+  }
+
+  .choix-option input:checked + span {
+    border-color: var(--encre);
+    background: var(--encre);
+    color: var(--papier);
+    font-weight: 650;
+  }
+
+  .choix-option input:focus-visible + span {
+    outline: 3px solid var(--source);
+    outline-offset: 2px;
+  }
+
+  .schema {
+    display: grid;
+    justify-items: center;
+  }
+
+  .rangee {
+    display: grid;
+    gap: var(--espace-3);
+    width: 100%;
+    max-width: 40rem;
+  }
+
+  .rangee-multiple {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    max-width: none;
+  }
+
+  /* Dernière rangée : une colonne par issue, avec ce qui la suit (l'intervention, après l'activation). */
+  .rangee-issues {
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    align-items: start;
+    max-width: none;
+  }
+
+  .colonne-issue {
+    display: grid;
+    justify-items: center;
+  }
+
+  .colonne-issue > .rangee {
+    max-width: none;
+  }
+
+  .colonne-issue .rangee-multiple {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
+
+  /* Flèche entre deux rangées : discrète, sauf entre deux étapes allumées du chemin choisi. */
+  .fleche {
+    position: relative;
+    width: 2px;
+    height: var(--espace-6);
+    background: var(--filet);
+    transition: background-color var(--duree) var(--courbe);
+  }
+
+  .rangee:has(:global(.allume)) + .fleche:has(+ .rangee :global(.allume)) {
+    background: var(--encre);
+  }
+
+  .rangee:has(:global(.allume)) + .fleche:has(+ .rangee :global(.allume))::after {
+    border-top-color: var(--encre);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fleche {
+      transition: none;
+    }
+  }
+
+  .fleche::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-inline: 6px solid transparent;
+    border-top: 8px solid var(--filet);
+    transform: translateX(-50%);
+  }
+</style>

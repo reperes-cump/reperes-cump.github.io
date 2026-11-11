@@ -1,6 +1,7 @@
 ---
 import type { Affirmation, InfosContenu, Source } from '../../schemas/index.ts';
 import { dateLisible, typographie } from '../lib/affichage.ts';
+import { chemin } from '../lib/chemins.ts';
 import Provenance from './Provenance.astro';
 
 interface Props {
@@ -35,6 +36,7 @@ const etat =
       <p>{typographie(demande.enonce ?? '')}</p>
       <Provenance affirmation={demande} sources={sources} titre={demande.enonce ?? ''} />
     </div>
+    <p class="vers-circuit"><a href={chemin('circuit')}>Voir le circuit d'une demande</a></p>
     <p class="etat">{etat}</p>
   </div>
 </header>
@@ -89,6 +91,10 @@ const etat =
     gap: var(--espace-1) var(--espace-2);
     padding: var(--espace-1) var(--espace-2);
     margin-inline: calc(-1 * var(--espace-2));
+  }
+
+  .vers-circuit {
+    font-size: var(--taille--1);
   }
 
   .etat {

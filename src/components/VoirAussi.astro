@@ -1,7 +1,8 @@
 ---
 /**
- * Renvois d'une ligne de matrice vers d'autres textes qui parlent de la même situation.
- * Chaque renvoi ouvre un panneau qui montre l'information et sa source, sans verdict commun.
+ * Renvois d'une information (ligne de matrice, étape du circuit) vers d'autres textes qui parlent
+ * de la même chose. Chaque renvoi ouvre un panneau qui montre l'information et sa source, sans
+ * verdict commun.
  */
 import type { Affirmation, Source } from '../../schemas/index.ts';
 import { groupesSources } from '../lib/affichage.ts';
@@ -9,13 +10,24 @@ import ContenuPanneau from './ContenuPanneau.astro';
 import PuceSource from './PuceSource.astro';
 
 interface Props {
-  ligne: Affirmation;
+  /** Information qui porte les renvois (champ voir_aussi). */
+  porteur: Affirmation;
+  /** Titre du panneau : la situation, ou l'étape. */
+  titre: string;
+  /** Précision sous le titre du panneau. */
+  mention?: string;
   affirmations: Map<string, Affirmation>;
   sources: Map<string, Source>;
 }
 
-const { ligne, affirmations, sources } = Astro.props;
-const renvois = ligne.voir_aussi.flatMap((id) => {
+const {
+  porteur,
+  titre,
+  mention = "Autre texte sur cette situation. Ce n'est pas un verdict du tableau.",
+  affirmations,
+  sources,
+} = Astro.props;
+const renvois = porteur.voir_aussi.flatMap((id) => {
   const affirmation = affirmations.get(id);
   if (!affirmation) return [];
   return groupesSources(affirmation).flatMap(({ sourceId, references }) => {
@@ -26,7 +38,7 @@ const renvois = ligne.voir_aussi.flatMap((id) => {
             affirmation,
             source,
             references,
-            id: `panneau-${ligne.id}-voir-${affirmation.id}-${sourceId}`,
+            id: `panneau-${porteur.id}-voir-${affirmation.id}-${sourceId}`,
           },
         ]
       : [];
@@ -42,8 +54,8 @@ const renvois = ligne.voir_aussi.flatMap((id) => {
           <PuceSource libelle={`Voir aussi : ${source.libelle_court}`} panneau={id} variante="voir-aussi" />
           <ContenuPanneau
             id={id}
-            titre={ligne.situation ?? ''}
-            mention="Autre texte sur cette situation. Ce n'est pas un verdict du tableau."
+            titre={titre}
+            mention={mention}
             texte={affirmation.enonce ?? ''}
             verdict={affirmation.verdict}
             source={source}

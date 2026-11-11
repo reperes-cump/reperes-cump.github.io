@@ -1,0 +1,169 @@
+---
+import Circuit from '../components/Circuit.astro';
+import Provenance from '../components/Provenance.astro';
+import Base from '../layouts/Base.astro';
+import { typographie } from '../lib/affichage.ts';
+import { donnees, pageCircuit } from '../lib/donnees.ts';
+
+const { sources, affirmations, infos } = await donnees();
+const { circuit, definitions, affichees } = await pageCircuit();
+const brouillon = affichees.some((a) => !a.verifie_le) || !infos?.version;
+
+// Version texte : chaque chemin en liste ordonnée.
+const parId = new Map(
+  [
+    ...circuit.entrees,
+    ...circuit.suite,
+    ...circuit.issues,
+    ...circuit.issues.flatMap((i) => i.suites),
+  ].map((n) => [n.element.id, n]),
+);
+const textes = (id: string) =>
+  (parId.get(id)?.affirmations ?? []).map((a) => typographie(a.enonce ?? '')).join(' ');
+const notes = (id: string) =>
+  (parId.get(id)?.notes ?? []).flatMap((n) =>
+    n.affirmations.map((a) => typographie(a.enonce ?? '')),
+  );
+const libelleIssue = (id: string) => parId.get(id)?.element.libelle ?? id;
+---
+
+<Base
+  courante="circuit"
+  titre="Circuit d'une demande"
+  description="Comment une demande d'intervention de la CUMP est traitée, d'après les textes."
+  brouillon={brouillon}
+  infos={infos}
+>
+  <main class="page-circuit">
+    <h1>Circuit d'une demande</h1>
+    <p class="intro">
+      Comment une demande d'intervention de la CUMP est traitée, d'après les textes. Choisissez un
+      point de départ&nbsp;: le chemin s'allume étape par étape.
+    </p>
+
+    <section class="deux-mots" id="deux-mots" aria-labelledby="deux-mots-titre">
+      <h2 id="deux-mots-titre" class="deux-mots-titre">Deux mots à distinguer</h2>
+      <ul class="deux-mots-liste">
+        {
+          definitions.map((d) => (
+            <li class:list={['cadre-verification', 'definition', { 'non-verifie': !d.verifie_le }]}>
+              <p>{typographie(d.enonce ?? '')}</p>
+              <Provenance affirmation={d} sources={sources} titre={d.enonce ?? ''} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <Circuit circuit={circuit} sources={sources} affirmations={affirmations} />
+
+    <details class="version-texte">
+      <summary>Version texte des chemins</summary>
+      <div class="version-texte-corps">
+        {
+          circuit.chemins.map((c) => (
+            <section aria-labelledby={`texte-${c.id}`}>
+              <h3 id={`texte-${c.id}`}>{c.libelle}</h3>
+              <ol>
+                {c.etapes.map((id) => (
+                  <li>
+                    {textes(id)}
+                    {notes(id).map((n) => (
+                      <p class="note">{n}</p>
+                    ))}
+                  </li>
+                ))}
+                {c.issues.length > 0 && (
+                  <li>Issue&nbsp;: {c.issues.map(libelleIssue).join(' ou ')}.</li>
+                )}
+                {c.suites.length > 0 && (
+                  <li>
+                    Après l'activation&nbsp;:
+                    {c.suites.map((id) => (
+                      <p class="note">{textes(id)}</p>
+                    ))}
+                  </li>
+                )}
+              </ol>
+            </section>
+          ))
+        }
+      </div>
+    </details>
+  </main>
+</Base>
+
+<style>
+  .page-circuit {
+    display: grid;
+    gap: var(--espace-5);
+    padding-top: var(--espace-5);
+  }
+
+  h1 {
+    font-size: var(--taille-3);
+  }
+
+  .intro {
+    max-width: var(--mesure);
+    font-size: var(--taille-1);
+    line-height: var(--interligne-serre);
+  }
+
+  .deux-mots {
+    display: grid;
+    gap: var(--espace-3);
+    max-width: var(--mesure);
+  }
+
+  .deux-mots-titre {
+    font-size: var(--taille-0);
+  }
+
+  .deux-mots-liste {
+    display: grid;
+    gap: var(--espace-2);
+  }
+
+  .definition {
+    gap: var(--espace-1);
+    padding: var(--espace-2) var(--espace-3);
+    margin-inline: calc(-1 * var(--espace-3));
+  }
+
+  .version-texte {
+    max-width: var(--mesure);
+  }
+
+  .version-texte summary {
+    width: fit-content;
+    color: var(--source);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .version-texte-corps {
+    display: grid;
+    gap: var(--espace-4);
+    margin-top: var(--espace-3);
+  }
+
+  .version-texte-corps h3 {
+    font-size: var(--taille-0);
+  }
+
+  .version-texte-corps ol {
+    display: grid;
+    gap: var(--espace-2);
+    margin: var(--espace-2) 0 0;
+    padding-inline-start: 1.5em;
+  }
+
+  .note {
+    margin-top: var(--espace-1);
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+  }
+</style>

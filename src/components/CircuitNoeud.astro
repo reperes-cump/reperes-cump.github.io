@@ -1,0 +1,149 @@
+---
+/** Un nœud du circuit : une ou plusieurs informations sourcées, et ses notes rattachées. */
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { typographie } from '../lib/affichage.ts';
+import type { Noeud } from '../lib/circuit.ts';
+import { libellesGrade, libellesVerdict } from '../lib/libelles.ts';
+import Glyphe from './Glyphe.astro';
+import Provenance from './Provenance.astro';
+import VoirAussi from './VoirAussi.astro';
+
+interface Props {
+  noeud: Noeud;
+  /** Chemin allumé au chargement de la page. */
+  actif: string;
+  sources: Map<string, Source>;
+  affirmations: Map<string, Affirmation>;
+}
+
+const { noeud, actif, sources, affirmations } = Astro.props;
+const { element } = noeud;
+const nonVerifie = [...noeud.affirmations, ...noeud.notes.flatMap((n) => n.affirmations)].some(
+  (a) => !a.verifie_le,
+);
+
+const ligneVerdict = (a: Affirmation) => {
+  const v = a.verdict;
+  if (!v) return null;
+  const grade = v.grade ? libellesGrade[v.grade] : null;
+  if (v.valeur === 'information')
+    return grade ? grade.charAt(0).toUpperCase() + grade.slice(1) : null;
+  return [v.libelle ?? libellesVerdict[v.valeur], grade].filter(Boolean).join(', ');
+};
+const glyphe = (a: Affirmation) =>
+  a.verdict && a.verdict.valeur !== 'information' ? a.verdict.valeur : null;
+---
+
+<div
+  id={`etape-${element.id}`}
+  class:list={[
+    'noeud',
+    `noeud-${element.type ?? 'etape'}`,
+    'cadre-verification',
+    { 'non-verifie': nonVerifie, allume: noeud.chemins.includes(actif) },
+  ]}
+  data-noeud={element.id}
+  data-chemins={noeud.chemins.join(' ')}
+>
+  {element.libelle && <h3 class="noeud-titre">{element.libelle}</h3>}
+  {
+    noeud.affirmations.map((a) => {
+      const g = glyphe(a);
+      const verdict = ligneVerdict(a);
+      return (
+        <div class="noeud-info">
+          <p>{typographie(a.enonce ?? '')}</p>
+          {verdict && (
+            <p class="noeud-verdict">
+              {g && <Glyphe valeur={g} />}
+              <span>{verdict}</span>
+            </p>
+          )}
+          <Provenance affirmation={a} sources={sources} titre={a.enonce ?? ''} />
+          <VoirAussi
+            porteur={a}
+            titre={a.enonce ?? ''}
+            mention="Autre texte sur cette étape."
+            affirmations={affirmations}
+            sources={sources}
+          />
+        </div>
+      );
+    })
+  }
+  {
+    noeud.notes.map((note) => (
+      <div class="noeud-note">
+        {note.affirmations.map((a) => (
+          <div class="noeud-info">
+            <p>{typographie(a.enonce ?? '')}</p>
+            {ligneVerdict(a) && <p class="noeud-verdict">{ligneVerdict(a)}</p>}
+            <Provenance affirmation={a} sources={sources} titre={a.enonce ?? ''} />
+          </div>
+        ))}
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .noeud {
+    display: grid;
+    gap: var(--espace-3);
+    padding: var(--espace-3) var(--espace-4);
+    border-radius: 6px;
+    background: var(--papier);
+    color: var(--encre-2);
+    scroll-margin-top: var(--espace-6);
+    transition:
+      background-color var(--duree) var(--courbe),
+      box-shadow var(--duree) var(--courbe),
+      color var(--duree) var(--courbe);
+  }
+
+  /* Hors du chemin choisi : bord discret, texte secondaire (contraste AA conservé). */
+  .noeud:not(.non-verifie) {
+    border-style: solid;
+    border-color: var(--filet);
+  }
+
+  /* Sur le chemin choisi : texte plein, fond teinté, trait épais. */
+  .noeud.allume {
+    background: var(--papier-2);
+    color: var(--encre);
+    box-shadow: 0 0 0 var(--trait-fort) var(--encre);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .noeud {
+      transition: none;
+    }
+  }
+
+  .noeud-titre {
+    font-size: var(--taille-0);
+  }
+
+  .noeud-issue .noeud-info + .noeud-info {
+    padding-top: var(--espace-3);
+    border-top: var(--trait) solid var(--filet);
+  }
+
+  .noeud-info {
+    display: grid;
+    gap: var(--espace-1);
+  }
+
+  .noeud-verdict {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+    font-size: var(--taille--1);
+  }
+
+  .noeud-note {
+    padding: var(--espace-2) var(--espace-3);
+    border-inline-start: var(--trait-fort) solid var(--filet);
+    font-size: var(--taille--1);
+  }
+</style>
