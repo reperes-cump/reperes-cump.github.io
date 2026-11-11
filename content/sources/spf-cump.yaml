@@ -9,7 +9,6 @@ url: "https://www.santepubliquefrance.fr/stress-post-traumatique/quels-sont-les-
 url_archive: null
 sha256: null
 consulte_le: "2026-11-11"
-reutilisation: null
-a_relever:
-  - "conditions de réutilisation"
+reutilisation: courte_citation
+a_relever: []
 date_publication: "2020-10-09"

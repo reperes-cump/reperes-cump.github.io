@@ -10,11 +10,10 @@ sources:
       article: null
       annexe: null
       section: "Plan ORSAN MÉDICO-PSY, déclenchement du plan et conduite de crise"
-      page: null
+      page: 167
     lien_profond: null
     extrait: "Le déclenchement du plan ORSAN MÉDICO-PSY doit donc être envisagé dès lors qu’un Préfet de département déclenche la plan ORSEC NOVI."
 note_publique: null
-a_relever:
-  - "page (p. 158 du guide imprimé)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

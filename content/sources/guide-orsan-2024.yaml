@@ -5,14 +5,10 @@ type: guide
 autorite: information_institutionnelle
 editeur: "Direction générale de la santé, Direction générale de l'offre de soins"
 date_publication: "2024"
-statut: a_verifier
-# Seule une copie sur un site tiers a été trouvée : le lien officiel reste à relever.
-url: null
+statut: en_vigueur
+url: "https://sante.gouv.fr/IMG/pdf/guide_orsan_2024.pdf"
 url_archive: null
-sha256: null
-consulte_le: null
-reutilisation: null
-a_relever:
-  - "lien officiel (seule une copie sur un site tiers a été trouvée)"
-  - "date exacte de publication"
-  - "conditions de réutilisation"
+sha256: "07d65c3301dd751e8426df8b74eb53cf0cd6ca59fc86ee1d2c08a1c5e9d84e0a"
+consulte_le: "2026-11-11"
+reutilisation: courte_citation
+a_relever: []

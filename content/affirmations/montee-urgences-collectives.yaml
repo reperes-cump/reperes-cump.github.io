@@ -10,11 +10,10 @@ sources:
       article: null
       annexe: null
       section: "Plan ORSAN MÉDICO-PSY, présentation synthétique du plan"
-      page: null
+      page: 153
     lien_profond: null
-    extrait: null
+    extrait: "Les urgences collectives médico-psychologiques peuvent être la conséquence"
 note_publique: null
-a_relever:
-  - "page (p. 144 du guide imprimé ; la p. 24 en donne une variante pour le conflit armé)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly
