@@ -67,7 +67,7 @@ const passages = [
   ).values(),
 ];
 const manque = (p: { lieu: string | null; extrait: string | null }) =>
-  !p.lieu && !p.extrait ? 'Extrait et page à relever.' : !p.lieu ? 'Page à relever.' : null;
+  !p.lieu && !p.extrait ? 'Extrait et page non précisés.' : !p.lieu ? 'Page non précisée.' : null;
 
 const avecPage = references.find((r) => r.lien_profond || r.localisation.page) ?? references[0];
 const lien = lienDirect(source, avecPage);
@@ -124,7 +124,7 @@ const texteLien =
         </a>
       </p>
     ) : (
-      <p class="a-relever">Lien vers le texte à relever.</p>
+      <p class="a-relever">Lien vers le texte non disponible.</p>
     )
   }
   <p>

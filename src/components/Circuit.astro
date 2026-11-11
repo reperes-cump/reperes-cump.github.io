@@ -22,7 +22,7 @@ const rangees = [circuit.entrees, ...circuit.suite.map((n) => [n])];
 
 <div class="circuit" data-circuit data-ordres={JSON.stringify(circuit.ordres)}>
   <fieldset class="choix">
-    <legend class="choix-titre">Point de départ</legend>
+    <legend class="choix-titre">Origine de la demande</legend>
     <div class="choix-options">
       {
         circuit.chemins.map((c) => (
@@ -100,7 +100,7 @@ const rangees = [circuit.entrees, ...circuit.suite.map((n) => [n])];
       });
 
       const libelle = champ.closest('label')?.textContent?.trim() ?? '';
-      if (annonce) annonce.textContent = `Chemin « ${libelle} » : ${ordre.length} étapes allumées.`;
+      if (annonce) annonce.textContent = `${libelle} : ${ordre.length} étapes affichées.`;
     });
   }
 </script>

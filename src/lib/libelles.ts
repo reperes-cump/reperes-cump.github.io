@@ -14,7 +14,7 @@ export const libellesVerdict = {
 /** Explication courte de chaque verdict, affichée dans la légende. */
 export const explicationsVerdict: Partial<Record<keyof typeof libellesVerdict, string>> = {
   pas_de_consensus: "les experts ne sont pas d'accord entre eux",
-  pas_de_conclusion: 'données insuffisantes',
+  pas_de_conclusion: "l'état des connaissances ne permet pas de conclure",
   silence: "les textes consultés n'en parlent pas",
 };
 
@@ -28,7 +28,7 @@ export const libellesGrade = {
 export const libellesAutorite: Record<Source['autorite'], string> = {
   reglementaire: 'Texte réglementaire',
   recommandation_pro: 'Recommandation professionnelle',
-  information_institutionnelle: 'Information institutionnelle',
+  information_institutionnelle: "Document d'un organisme public",
   donnees_publiques: 'Données publiques',
 };
 
@@ -65,7 +65,7 @@ export const libellesReutilisation: Record<NonNullable<Source['reutilisation']>,
 export const groupesAutorite: { autorite: Source['autorite']; titre: string }[] = [
   { autorite: 'reglementaire', titre: 'Textes réglementaires' },
   { autorite: 'recommandation_pro', titre: 'Recommandations professionnelles' },
-  { autorite: 'information_institutionnelle', titre: 'Information institutionnelle' },
+  { autorite: 'information_institutionnelle', titre: "Documents d'organismes publics" },
   { autorite: 'donnees_publiques', titre: 'Données publiques' },
 ];
 

@@ -21,7 +21,7 @@ const description = (d: CarteCalculee['departements'][number]) =>
   `${d.nom} (${d.code}). ${
     d.designations.length
       ? d.designations.map((x) => libellesDesignation[x.designation]).join(', ')
-      : 'Aucune désignation'
+      : 'Aucune désignation régionale, renforcée ou zonale'
   }.`;
 const niveaux = [
   { valeur: 'departements', libelle: 'Départements' },
@@ -33,7 +33,7 @@ const niveaux = [
 <div class="carte-bloc" data-carte data-niveau="departements">
   <div class="carte-commandes">
     <fieldset class="niveaux">
-      <legend class="visuellement-cache">Frontières affichées</legend>
+      <legend class="visuellement-cache">Limites affichées sur la carte</legend>
       {
         niveaux.map((n, i) => (
           <label class="niveau">
@@ -51,7 +51,7 @@ const niveaux = [
     </fieldset>
     {!zonesDisponibles && <p class="note">Composition des zones en cours de vérification.</p>}
     <form class="recherche-dep" data-recherche-dep hidden>
-      <label for="recherche-departement">Mon département</label>
+      <label for="recherche-departement">Rechercher un département</label>
       <div class="recherche-ligne">
         <input
           id="recherche-departement"
@@ -71,10 +71,10 @@ const niveaux = [
   </div>
 
   <ul class="legende-carte" aria-label="Légende de la carte">
-    <li><PastilleDesignation valeur="regionale" /> {libellesDesignation.regionale} (siège)</li>
-    <li><PastilleDesignation valeur="renforcee" /> {libellesDesignation.renforcee} (siège)</li>
-    <li><PastilleDesignation valeur="zonale" /> {libellesDesignation.zonale} (siège)</li>
-    <li><PastilleDesignation valeur="aucune" /> Aucune désignation dans l'arrêté</li>
+    <li><PastilleDesignation valeur="regionale" /> Siège d'une CUMP régionale</li>
+    <li><PastilleDesignation valeur="renforcee" /> Siège d'une CUMP départementale renforcée</li>
+    <li><PastilleDesignation valeur="zonale" /> Siège d'une CUMP zonale</li>
+    <li><PastilleDesignation valeur="aucune" /> Aucune désignation régionale, renforcée ou zonale</li>
   </ul>
 
   <figure class="carte-figure">
@@ -84,7 +84,7 @@ const niveaux = [
       role="group"
       aria-labelledby="carte-titre"
     >
-      <title id="carte-titre">Départements et désignations de CUMP</title>
+      <title id="carte-titre">Départements et statut de leur CUMP</title>
       <defs>
         <pattern id="trame-points" width="5" height="5" patternUnits="userSpaceOnUse">
           <rect width="5" height="5" style="fill: var(--papier)"></rect>
@@ -154,10 +154,11 @@ const niveaux = [
     </svg>
     <figcaption class="carte-legende">
       <p>
-        Départements d'outre-mer en encarts, à des échelles différentes. Collectivités d'outre-mer
-        non représentées dans cette version.
+        Départements d'outre-mer représentés en médaillon, à des échelles différentes. Les
+        collectivités d'outre-mer (Polynésie française, Saint-Pierre-et-Miquelon…) ne sont pas
+        représentées.
       </p>
-      <p>Contours&nbsp;: data.gouv.fr, d'après ADMIN EXPRESS (IGN), licence ODbL.</p>
+      <p>Fond de carte&nbsp;: data.gouv.fr, d'après ADMIN EXPRESS (IGN), licence ODbL.</p>
     </figcaption>
   </figure>
 </div>
@@ -172,7 +173,7 @@ const niveaux = [
     });
   }
 
-  // « Mon département » : nom ou numéro, puis ouverture de sa fiche dans le panneau commun.
+  // « Rechercher un département » : nom ou numéro, puis ouverture de sa fiche dans le panneau commun.
   for (const formulaire of document.querySelectorAll<HTMLFormElement>('[data-recherche-dep]')) {
     const champ = formulaire.querySelector('input');
     const message = formulaire.querySelector<HTMLElement>('[data-message]');
@@ -206,7 +207,7 @@ const niveaux = [
       if (message) {
         message.textContent = departement
           ? ''
-          : 'Aucun département ne correspond. Essayez son nom ou son numéro.';
+          : 'Aucun département ne correspond. Saisissez un nom ou un numéro.';
       }
       if (!departement) return;
       champ.dispatchEvent(

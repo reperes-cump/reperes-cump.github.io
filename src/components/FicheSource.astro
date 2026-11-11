@@ -1,6 +1,7 @@
 ---
 /** Fiche d'une source sur la page Sources : identité, statut, vérification, informations qui la citent. */
 import type { Source } from '../../schemas/index.ts';
+import { estLegifrance } from '../../scripts/lib/regles.ts';
 import {
   dateLisible,
   datePublication,
@@ -34,8 +35,12 @@ const lienTexte = source.url
 
 const manquesVerification = [
   !source.consulte_le && 'date de consultation',
-  !source.url_archive && 'archive',
-  !source.sha256 && 'empreinte du fichier',
+  !source.url_archive && 'copie archivée',
+  // Légifrance et les pages web n'ont pas de fichier : pas d'empreinte à calculer.
+  !source.sha256 &&
+    source.type !== 'page_institutionnelle' &&
+    !(source.url && estLegifrance(source.url)) &&
+    'empreinte du fichier',
 ].filter((m): m is string => Boolean(m));
 
 const parCategorie = ordreCategories
@@ -94,7 +99,7 @@ const resume = [
               {lienTexte}
             </a>
           ) : (
-            <span class="a-relever">lien à relever</span>
+            <span class="a-relever">lien non disponible</span>
           )
         }
       </dd>
@@ -106,7 +111,7 @@ const resume = [
           source.reutilisation ? (
             libellesReutilisation[source.reutilisation]
           ) : (
-            <span class="a-relever">à relever</span>
+            <span class="a-relever">non précisée</span>
           )
         }
       </dd>
@@ -127,14 +132,14 @@ const resume = [
         {
           source.sha256 && (
             <span>
-              Empreinte SHA-256&nbsp;: <code class="empreinte">{source.sha256}</code>
+              Empreinte SHA-256 du fichier consulté&nbsp;: <code class="empreinte">{source.sha256}</code>
             </span>
           )
         }
         {
           manquesVerification.length > 0 && (
             <span class="a-relever">
-              {manquesVerification.join(', ').replace(/^./, (c) => c.toUpperCase())} à relever.
+              Non disponible pour le moment&nbsp;: {manquesVerification.join(', ')}.
             </span>
           )
         }
@@ -172,13 +177,14 @@ const resume = [
           ))}
           {designations > 0 && (
             <p>
-              Liste des CUMP régionales, renforcées et zonales ({nombre(designations, 'désignation')}),
+              Liste des CUMP régionales, renforcées et zonales ({nombre(designations, 'CUMP', 'CUMP')}),
               affichée sur la <a href={chemin('carte')}>carte des CUMP</a>.
             </p>
           )}
           {sansLien && (
             <p class="citations-note">
-              Les informations sans lien seront affichées avec les prochaines pages.
+              Les informations sans lien ne sont pas encore affichées&nbsp;; elles le seront dans une
+              prochaine version.
             </p>
           )}
         </div>

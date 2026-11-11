@@ -98,7 +98,7 @@ test.describe('circuit', () => {
     const radio = page.locator('input[name="chemin"]').last();
     await radio.focus();
     await page.keyboard.press('Space');
-    await expect(page.locator('[data-annonce]')).toContainText('étapes allumées');
+    await expect(page.locator('[data-annonce]')).toContainText('étapes affichées');
   });
 });
 
@@ -214,7 +214,7 @@ test.describe('navigation et recherche', () => {
     await ouvrir(page, '');
     const lignes = page.locator('.matrice tbody tr:visible');
     const total = await page.locator('.matrice tbody tr').count();
-    const champ = page.getByRole('searchbox', { name: 'Chercher une situation' });
+    const champ = page.getByRole('searchbox', { name: 'Rechercher une situation' });
     await champ.fill('deces');
     await expect(lignes).toHaveCount(1);
     await expect(lignes.first()).toContainText('Décès accidentel');
@@ -234,9 +234,9 @@ test.describe('navigation et recherche', () => {
     await expect(cadre).toHaveAttribute('open');
   });
 
-  test('« Mon département » ouvre la fiche, par numéro ou par nom', async ({ page }) => {
+  test('« Rechercher un département » ouvre la fiche, par numéro ou par nom', async ({ page }) => {
     await ouvrir(page, 'carte/');
-    const champ = page.getByLabel('Mon département');
+    const champ = page.getByLabel('Rechercher un département');
     const panneau = page.locator('#panneau-source');
     await champ.fill('33');
     await champ.press('Enter');

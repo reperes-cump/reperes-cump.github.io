@@ -2,12 +2,12 @@
 
 Ce fichier suit les versions du **contenu** (sources et informations affichées), pas celles du code.
 
-## Non publié
+## Version 1.0.0, 11 novembre 2026
 
-- Retirée pour l'instant : l'instruction Santé/Justice du 15 novembre 2017 sur l'articulation des CUMP et des associations d'aide aux victimes. Aucune information ne la citait, et son lien officiel ne fonctionne plus ; elle reviendra avec un lien valide.
-- Vérification sur les textes par le mainteneur (11 novembre 2026) : les 55 informations, les désignations de CUMP et la composition des zones. Pages, articles, extraits et liens Légifrance relevés pour chaque information ; les 15 textes marqués en vigueur, avec leur date de consultation. Guide ORSAN 2024 cité d'après son PDF sur le site du ministère. Une note explique le silence des textes sur l'alerte pour un cas individuel. Version prévue : 1.0.0.
-- Transcription initiale des textes : 13 sources, 49 informations, 55 désignations de CUMP. Aucune n'est encore vérifiée.
-- Lecture des grades écrite en langage courant ; « recommandation SFMU » écrit en toutes lettres dans l'encadré « Ce que les textes ne disent pas ».
-- Trois sources ajoutées : décret n° 2024-8 du 3 janvier 2024, guide ORSAN régional 2024, recommandations HAS 2007 sur la mort inattendue du nourrisson. Quatre informations ajoutées (indication de l'intervention, plan ORSAN MÉDICO-PSY, urgences collectives, soutien de l'équipe d'urgence après une mort inattendue du nourrisson). Sources croisées pour le déclenchement, l'information de l'ARS et le schéma type. Rien n'est encore vérifié.
-- Circuit d'une demande, dans l'ordre du temps : départ, alerte du référent, évaluation conjointe, activation ou non-activation, puis intervention immédiate ou post-immédiate. Trois chemins (demande au SAMU-Centre 15, demande du préfet ou de l'ARS, plan ORSEC NOVI) validés par le mainteneur. La décision du SAMU sur indication du référent figure dans l'issue « Activation ». Énoncés précisés pour l'alerte du référent (« lorsqu'un recours à la CUMP est indiqué ») et l'évaluation conjointe (moyens et logistique) ; la SFMU est citée en seconde source pour la demande du préfet ou de l'ARS. Rien n'est encore vérifié sur les textes.
-- Carte des CUMP : départements et régions du Code officiel géographique 2026 (INSEE), contours 2026 de data.gouv.fr (licence ODbL), composition des zones de défense et de sécurité relevée dans le code de la défense (articles R*1211-4 et R1211-8), règle générale sur la CUMP départementale. Rien n'est encore vérifié.
+Première version publiée. Tout le contenu a été vérifié sur les textes par le mainteneur.
+
+- Le tableau « Alerter le référent ? Activer la CUMP ? » : 16 situations, d'après la recommandation de la SFMU (2017).
+- Le circuit d'une demande, de l'appel au SAMU-Centre 15 jusqu'à l'intervention, selon trois points de départ.
+- La carte des CUMP régionales, renforcées et zonales fixées par l'arrêté du 27 décembre 2016.
+- La liste des 15 textes utilisés, avec leur lien et leur date de consultation.
+- Pas encore repris : l'instruction Santé/Justice du 15 novembre 2017 sur les CUMP et les associations d'aide aux victimes, dont le lien officiel ne fonctionne plus.

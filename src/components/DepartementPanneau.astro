@@ -29,7 +29,7 @@ const lienArrete = arrete?.url
   </div>
 
   <div class="bloc">
-    <h3 class="bloc-titre">Désignations dans l'arrêté</h3>
+    <h3 class="bloc-titre">Statut fixé par l'arrêté</h3>
     {
       d.designations.length ? (
         d.designations.map((x) => (
@@ -43,13 +43,13 @@ const lienArrete = arrete?.url
             <p class="extrait">{x.etablissement}</p>
             {x.deduit && (
               <p class="note">
-                L'annexe ne nomme pas le département&nbsp;: il est déduit de la commune de l'établissement, à vérifier.
+                L'annexe ne mentionne pas le département&nbsp;; il est déduit de la commune d'implantation de l'établissement.
               </p>
             )}
           </div>
         ))
       ) : (
-        <p>Aucune désignation régionale, renforcée ou zonale dans l'arrêté.</p>
+        <p>Selon l'arrêté, ce département n'accueille ni CUMP régionale, ni CUMP renforcée, ni CUMP zonale.</p>
       )
     }
   </div>

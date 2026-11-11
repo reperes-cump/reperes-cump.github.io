@@ -37,8 +37,8 @@ const libelleIssue = (id: string) => parId.get(id)?.element.libelle ?? id;
   <main class="page-circuit">
     <h1>Circuit d'une demande</h1>
     <p class="intro">
-      Comment une demande d'intervention de la CUMP est traitée, d'après les textes. Choisissez un
-      point de départ&nbsp;: le chemin s'allume étape par étape.
+      Traitement d'une demande d'intervention de la CUMP, d'après les textes. Sélectionnez l'origine
+      de la demande pour afficher ses étapes dans l'ordre.
     </p>
 
     <section class="deux-mots" id="deux-mots" aria-labelledby="deux-mots-titre">
@@ -58,7 +58,7 @@ const libelleIssue = (id: string) => parId.get(id)?.element.libelle ?? id;
     <Circuit circuit={circuit} sources={sources} affirmations={affirmations} />
 
     <details class="version-texte">
-      <summary>Version texte des chemins</summary>
+      <summary>Étapes sous forme de liste</summary>
       <div class="version-texte-corps">
         {
           circuit.chemins.map((c) => (
@@ -74,7 +74,7 @@ const libelleIssue = (id: string) => parId.get(id)?.element.libelle ?? id;
                   </li>
                 ))}
                 {c.issues.length > 0 && (
-                  <li>Issue&nbsp;: {c.issues.map(libelleIssue).join(' ou ')}.</li>
+                  <li>Décision&nbsp;: {c.issues.map(libelleIssue).join(' ou ').toLowerCase()}.</li>
                 )}
                 {c.suites.length > 0 && (
                   <li>

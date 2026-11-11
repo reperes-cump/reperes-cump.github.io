@@ -35,7 +35,7 @@ const presents = new Set(lignes.flatMap((l) => Object.values(valeursLigne(l))));
 const verdictsFiltre = ordreVerdicts.filter((v) => presents.has(v));
 const autorites = [...new Set(lignes.flatMap(autoritesLigne))];
 const modes = [
-  { valeur: 'deux', libelle: 'Les deux' },
+  { valeur: 'deux', libelle: 'Alerter et activer' },
   { valeur: 'alerte', libelle: colonnes.alerte.court },
   { valeur: 'activation', libelle: colonnes.activation.court },
 ];
@@ -44,11 +44,11 @@ const modes = [
 <div class="conteneur-matrice" data-matrice>
   <div class="filtres" data-filtres hidden>
     <label class="recherche">
-      <span class="visuellement-cache">Chercher une situation</span>
+      <span class="visuellement-cache">Rechercher une situation</span>
       <input
         type="search"
         name="recherche"
-        placeholder="Chercher une situation (suicide, nourrisson…)"
+        placeholder="Rechercher une situation (suicide, nourrisson…)"
         autocomplete="off"
         enterkeyhint="search"
       />
@@ -68,7 +68,7 @@ const modes = [
       <summary>Filtrer</summary>
       <div class="filtre-corps">
         <fieldset class="filtre-groupe">
-          <legend>Verdicts</legend>
+          <legend>Position</legend>
           {
             verdictsFiltre.map((valeur) => (
               <label class="filtre-option">
@@ -100,7 +100,7 @@ const modes = [
 
   <table class="matrice" role="table" data-colonnes="deux">
     <caption class="visuellement-cache">
-      Alerter le référent, activer la CUMP : verdict de la recommandation SFMU 2017 pour chaque
+      Alerter le référent, activer la CUMP : position de la recommandation SFMU 2017 pour chaque
       situation
     </caption>
     <thead role="rowgroup">

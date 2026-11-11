@@ -15,7 +15,7 @@ const { departements, referentiel, zones } = Astro.props;
 const regions = [...referentiel.regions].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 const types = ['regionale', 'renforcee', 'zonale', 'aucune'] as const;
 const libelleType = (t: (typeof types)[number]) =>
-  t === 'aucune' ? 'Aucune désignation' : libellesDesignation[t];
+  t === 'aucune' ? 'Aucune désignation régionale, renforcée ou zonale' : libellesDesignation[t];
 ---
 
 <section class="tableau-bloc" id="tableau-departements" aria-labelledby="tableau-titre">
@@ -43,7 +43,7 @@ const libelleType = (t: (typeof types)[number]) =>
       )
     }
     <fieldset class="filtre-types">
-      <legend>Désignation</legend>
+      <legend>Statut</legend>
       {
         types.map((t) => (
           <label class="filtre-type">
@@ -60,14 +60,14 @@ const libelleType = (t: (typeof types)[number]) =>
   <div class="conteneur-tableau">
     <table class="tableau">
       <caption class="visuellement-cache">
-        Départements, région, zone de défense et désignations de CUMP dans l'arrêté
+        Départements, région, zone de défense et statut de leur CUMP dans l'arrêté
       </caption>
       <thead>
         <tr>
           <th scope="col">Département</th>
           <th scope="col">Région</th>
           <th scope="col">Zone</th>
-          <th scope="col">Désignations dans l'arrêté</th>
+          <th scope="col">Statut dans l'arrêté</th>
         </tr>
       </thead>
       <tbody>
@@ -96,7 +96,7 @@ const libelleType = (t: (typeof types)[number]) =>
                           {libellesDesignation[x.designation]}, annexe {x.annexe}
                         </span>
                         <span class="etablissement">{x.etablissement}</span>
-                        {x.deduit && <span class="deduit">département déduit</span>}
+                        {x.deduit && <span class="deduit">département déduit de la commune</span>}
                       </li>
                     ))}
                   </ul>

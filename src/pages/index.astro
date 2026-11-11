@@ -18,15 +18,16 @@ const nonVerifie = affichees.some((a) => !a.verifie_le);
     <div class="titre-matrice">
       <h2>Alerter le référent&#8239;? Activer la CUMP&#8239;?</h2>
       <p class="sous-titre">
-        Ce que dit la recommandation SFMU 2017, situation par situation. Chaque case ouvre le
-        passage du texte.
+        Position de la recommandation de la SFMU (2017) pour chaque situation. Sélectionnez une case
+        pour afficher l'extrait du texte source et sa page.
       </p>
     </div>
     <Legende grades={grades} sources={sources} brouillon={nonVerifie} />
     <Matrice lignes={lignes} sources={sources} affirmations={affirmations} />
     <p class="note-matrice">
-      La recommandation SFMU 2017 est le seul texte consulté qui détaille les situations. Quand un
-      autre texte parle de la même situation, il est signalé sous son nom.
+      Ce tableau s'appuie sur la recommandation de la SFMU (2017), seul texte consulté à traiter les
+      situations de façon détaillée. Lorsqu'un autre texte aborde l'une d'elles, il est mentionné
+      sous l'intitulé de la situation («&#8239;Voir aussi&#8239;»).
     </p>
     <CadreOfficiel elements={cadre} sources={sources} />
     <EncadreSilence elements={elementsEncadre} sources={sources} />

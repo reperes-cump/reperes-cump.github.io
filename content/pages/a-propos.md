@@ -37,7 +37,7 @@ Pour chaque texte, le site conserve :
 
 Chaque information est relue sur le texte avant d'être publiée, et porte la date de cette vérification. Tant qu'un élément n'est pas vérifié, le site ne peut pas être publié.
 
-Les passages cités mot pour mot sont composés dans une police à empattements, sur fond surligné. Le reste est une reformulation du site : on voit d'un coup d'œil qui parle.
+Les citations littérales apparaissent sur fond surligné, dans une police distincte ; le reste du texte est une reformulation. La provenance de chaque phrase est ainsi identifiable d'un coup d'œil.
 
 Les textes officiels peuvent être cités. La recommandation de la SFMU est reformulée ; seuls de courts extraits en sont cités, avec leur source.
 
@@ -61,7 +61,7 @@ Le code est sous licence MIT. Le contenu rédigé et le jeu de données sont sou
 
 ## Contribuer ou signaler une erreur
 
-Une erreur, un lien mort, un texte qui manque ? [Signalez-le sur GitHub](https://github.com/reperes-cump/reperes-cump.github.io/issues), en indiquant le passage exact du texte. Le code et le contenu sont ouverts : le [dépôt du projet](https://github.com/reperes-cump/reperes-cump.github.io) explique comment proposer une modification.
+Une erreur, un lien mort, un texte qui manque ? [Signalez-le sur GitHub](https://github.com/reperes-cump/reperes-cump.github.io/issues), en indiquant le passage exact du texte. Le code et le contenu sont ouverts : la [page du projet sur GitHub](https://github.com/reperes-cump/reperes-cump.github.io) explique comment proposer une modification.
 
 ## Qui porte ce projet
 

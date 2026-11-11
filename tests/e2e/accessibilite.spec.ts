@@ -25,7 +25,7 @@ for (const theme of THEMES) {
         await radio.check({ force: true });
         await auditer(page, `accueil, colonnes ${await radio.inputValue()}`);
       }
-      const recherche = page.getByRole('searchbox', { name: 'Chercher une situation' });
+      const recherche = page.getByRole('searchbox', { name: 'Rechercher une situation' });
       await recherche.fill('nourrisson');
       await auditer(page, 'accueil, recherche');
       await recherche.fill('');
@@ -42,7 +42,7 @@ for (const theme of THEMES) {
         await radio.check({ force: true });
         await auditer(page, `circuit, chemin ${await radio.inputValue()}`);
       }
-      await page.getByText('Version texte des chemins').click();
+      await page.getByText('Étapes sous forme de liste').click();
       await auditer(page, 'circuit, version texte');
       await page.locator('.circuit [data-panneau]').first().click();
       await expect(page.locator('#panneau-source')).toBeVisible();
