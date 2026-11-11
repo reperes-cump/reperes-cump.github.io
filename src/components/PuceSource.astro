@@ -4,12 +4,19 @@ interface Props {
   libelle: string;
   /** Identifiant du modèle de panneau à ouvrir. */
   panneau: string;
+  /** « voir-aussi » : renvoi vers un autre texte, distinct des sources de la case. */
+  variante?: 'voir-aussi';
 }
 
-const { libelle, panneau } = Astro.props;
+const { libelle, panneau, variante } = Astro.props;
 ---
 
-<button type="button" class="puce-source" aria-haspopup="dialog" data-panneau={panneau}>
+<button
+  type="button"
+  class:list={['puce-source', variante && `puce-${variante}`]}
+  aria-haspopup="dialog"
+  data-panneau={panneau}
+>
   {libelle}
 </button>
 
@@ -31,5 +38,15 @@ const { libelle, panneau } = Astro.props;
 
   .puce-source:hover {
     background: var(--source-survol);
+  }
+
+  /* Renvoi vers un autre texte : trait en tirets, couleur discrète. */
+  .puce-voir-aussi {
+    border-style: dashed;
+    color: var(--encre-2);
+  }
+
+  .puce-voir-aussi:hover {
+    background: var(--papier-2);
   }
 </style>

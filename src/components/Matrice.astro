@@ -4,13 +4,16 @@ import { typographie } from '../lib/affichage.ts';
 import { colonnes, libellesAutorite, libellesVerdict } from '../lib/libelles.ts';
 import CelluleVerdict from './CelluleVerdict.astro';
 import Glyphe from './Glyphe.astro';
+import VoirAussi from './VoirAussi.astro';
 
 interface Props {
   lignes: Affirmation[];
   sources: Map<string, Source>;
+  /** Toutes les informations : pour les renvois « voir aussi » vers d'autres textes. */
+  affirmations: Map<string, Affirmation>;
 }
 
-const { lignes, sources } = Astro.props;
+const { lignes, sources, affirmations } = Astro.props;
 
 const valeursLigne = (l: Affirmation) =>
   l.fusion
@@ -111,6 +114,7 @@ const modes = [
           >
             <th scope="row" role="rowheader">
               {typographie(ligne.situation ?? '')}
+              <VoirAussi ligne={ligne} affirmations={affirmations} sources={sources} />
             </th>
             {ligne.fusion ? (
               <CelluleVerdict ligne={ligne} colonne="fusion" sources={sources} />

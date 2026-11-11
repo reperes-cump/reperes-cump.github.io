@@ -29,6 +29,18 @@ export async function accueil() {
   };
 
   const lignes = lignesMatrice(affirmations.values());
+  const cadre = [
+    { libelle: 'Qui décide', affirmation: requise('cadre-declenchement') },
+    { libelle: 'Sur quels critères', affirmation: requise('cadre-indication') },
+    { libelle: 'Quelles situations', affirmation: requise('cadre-schema-type') },
+  ].map((element) => ({
+    ...element,
+    // Pour le schéma type, le site affiche la note publique : le schéma local n'est pas repris.
+    texte: element.affirmation.note_publique ?? element.affirmation.enonce ?? '',
+  }));
+  const voirAussi = lignes.flatMap((ligne) =>
+    ligne.voir_aussi.map((id) => ({ ligne, affirmation: requise(id) })),
+  );
   const demande = requise('circuit-demande-samu');
   const grades = requise('methode-grades');
   const elementsEncadre = (encadre?.elements ?? []).flatMap((e) => e.affirmations.map(requise));
@@ -37,12 +49,25 @@ export async function accueil() {
   for (const ligne of lignes) {
     emplacements.set(ligne.id, { page: '', ancre: `situation-${ligne.critere_explorateur}` });
   }
+  for (const { ligne, affirmation } of voirAussi) {
+    emplacements.set(affirmation.id, { page: '', ancre: `situation-${ligne.critere_explorateur}` });
+  }
+  for (const { affirmation } of cadre) {
+    emplacements.set(affirmation.id, { page: '', ancre: 'cadre-officiel' });
+  }
   emplacements.set(demande.id, { page: '', ancre: 'demande-samu' });
   emplacements.set(grades.id, { page: '', ancre: 'lecture-des-grades' });
   for (const element of elementsEncadre) {
     emplacements.set(element.id, { page: '', ancre: 'ce-que-les-textes-ne-disent-pas' });
   }
 
-  const affichees = [...lignes, demande, grades, ...elementsEncadre];
-  return { lignes, demande, grades, elementsEncadre, affichees, emplacements };
+  const affichees = [
+    ...cadre.map((c) => c.affirmation),
+    ...lignes,
+    ...voirAussi.map((v) => v.affirmation),
+    demande,
+    grades,
+    ...elementsEncadre,
+  ];
+  return { cadre, lignes, demande, grades, elementsEncadre, affichees, emplacements };
 }

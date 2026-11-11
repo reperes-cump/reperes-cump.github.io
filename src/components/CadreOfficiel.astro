@@ -1,0 +1,66 @@
+---
+/** Le cadre officiel, avant les repères de la matrice : qui décide, sur quels critères, quelles situations. */
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { typographie } from '../lib/affichage.ts';
+import Provenance from './Provenance.astro';
+
+interface Props {
+  elements: { libelle: string; affirmation: Affirmation; texte: string }[];
+  sources: Map<string, Source>;
+}
+
+const { elements, sources } = Astro.props;
+---
+
+<section class="cadre-officiel" id="cadre-officiel" aria-labelledby="cadre-officiel-titre">
+  <h2 id="cadre-officiel-titre" class="cadre-titre">Le cadre officiel</h2>
+  <ul class="cadre-liste">
+    {
+      elements.map(({ libelle, affirmation, texte }) => (
+        <li class:list={['cadre-verification', 'cadre-element', { 'non-verifie': !affirmation.verifie_le }]}>
+          <p class="cadre-libelle">{libelle}</p>
+          <p>{typographie(texte)}</p>
+          <Provenance affirmation={affirmation} sources={sources} titre={texte} />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .cadre-officiel {
+    display: grid;
+    gap: var(--espace-3);
+    padding: var(--espace-5);
+    border: var(--trait) solid var(--encre-2);
+    border-radius: var(--rayon);
+  }
+
+  .cadre-titre {
+    font-size: var(--taille-1);
+  }
+
+  .cadre-liste {
+    display: grid;
+    gap: var(--espace-3);
+    max-width: var(--mesure);
+  }
+
+  .cadre-element {
+    gap: var(--espace-1);
+    padding: var(--espace-2) var(--espace-3);
+    margin-inline: calc(-1 * var(--espace-3));
+  }
+
+  .cadre-libelle {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
+    font-weight: 650;
+  }
+
+  @media (width < 40rem) {
+    .cadre-officiel {
+      padding: var(--espace-4);
+    }
+  }
+</style>

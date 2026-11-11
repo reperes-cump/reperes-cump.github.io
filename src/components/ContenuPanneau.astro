@@ -33,9 +33,13 @@ interface Props {
   source: Source;
   references: Reference[];
   verifieLe: string | null;
+  /** Précision sous le titre (ex. « Autre texte sur cette situation »). */
+  mention?: string;
+  /** Énoncé de l'information, quand le titre est autre chose (ex. la situation). */
+  texte?: string;
 }
 
-const { id, titre, colonne, verdict, source, references, verifieLe } = Astro.props;
+const { id, titre, colonne, verdict, source, references, verifieLe, mention, texte } = Astro.props;
 
 const minuscule = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
 const majuscule = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
@@ -81,6 +85,8 @@ const texteLien =
 <template id={id}>
   <div class="contexte">
     <p class="contexte-titre">{typographie(titre)}</p>
+    {mention && <p class="contexte-mention">{mention}</p>}
+    {texte && <p>{typographie(texte)}</p>}
     {
       ligneVerdict && (
         <p class="contexte-verdict">
@@ -144,6 +150,11 @@ const texteLien =
 
   .contexte-titre {
     font-weight: 650;
+  }
+
+  .contexte-mention {
+    color: var(--encre-2);
+    font-size: var(--taille--1);
   }
 
   .contexte-verdict {

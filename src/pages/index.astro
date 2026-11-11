@@ -1,4 +1,5 @@
 ---
+import CadreOfficiel from '../components/CadreOfficiel.astro';
 import EncadreSilence from '../components/EncadreSilence.astro';
 import EnTete from '../components/EnTete.astro';
 import Legende from '../components/Legende.astro';
@@ -6,23 +7,28 @@ import Matrice from '../components/Matrice.astro';
 import Base from '../layouts/Base.astro';
 import { accueil, donnees } from '../lib/donnees.ts';
 
-const { sources, infos } = await donnees();
-const { lignes, demande, grades, elementsEncadre, affichees } = await accueil();
+const { sources, affirmations, infos } = await donnees();
+const { cadre, lignes, demande, grades, elementsEncadre, affichees } = await accueil();
 const nonVerifie = affichees.some((a) => !a.verifie_le);
 ---
 
 <Base courante="accueil" brouillon={nonVerifie || !infos?.version} infos={infos}>
   <EnTete demande={demande} infos={infos} sources={sources} />
   <main class="accueil">
+    <CadreOfficiel elements={cadre} sources={sources} />
     <div class="intro">
       <p class="intro-question">
-        Pour chaque situation, ce que dit la recommandation de la SFMU (2017)&nbsp;: faut-il
-        alerter le référent&#8239;? Faut-il activer la CUMP&#8239;?
+        Les repères de la recommandation professionnelle&nbsp;: pour chaque situation, ce que dit
+        la SFMU (2017), seul texte consulté qui détaille les situations. Faut-il alerter le
+        référent&#8239;? Faut-il activer la CUMP&#8239;?
       </p>
-      <p class="intro-aide">Dans chaque case, «&#8239;SFMU 2017&#8239;» ouvre la source.</p>
+      <p class="intro-aide">
+        Dans chaque case, «&#8239;SFMU 2017&#8239;» ouvre la source. Quand un autre texte parle de
+        la même situation, il est signalé sous son nom.
+      </p>
     </div>
     <Legende grades={grades} sources={sources} brouillon={nonVerifie} />
-    <Matrice lignes={lignes} sources={sources} />
+    <Matrice lignes={lignes} sources={sources} affirmations={affirmations} />
     <EncadreSilence elements={elementsEncadre} sources={sources} />
   </main>
 </Base>

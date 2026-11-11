@@ -1,0 +1,68 @@
+---
+/**
+ * Renvois d'une ligne de matrice vers d'autres textes qui parlent de la même situation.
+ * Chaque renvoi ouvre un panneau qui montre l'information et sa source, sans verdict commun.
+ */
+import type { Affirmation, Source } from '../../schemas/index.ts';
+import { groupesSources } from '../lib/affichage.ts';
+import ContenuPanneau from './ContenuPanneau.astro';
+import PuceSource from './PuceSource.astro';
+
+interface Props {
+  ligne: Affirmation;
+  affirmations: Map<string, Affirmation>;
+  sources: Map<string, Source>;
+}
+
+const { ligne, affirmations, sources } = Astro.props;
+const renvois = ligne.voir_aussi.flatMap((id) => {
+  const affirmation = affirmations.get(id);
+  if (!affirmation) return [];
+  return groupesSources(affirmation).flatMap(({ sourceId, references }) => {
+    const source = sources.get(sourceId);
+    return source
+      ? [
+          {
+            affirmation,
+            source,
+            references,
+            id: `panneau-${ligne.id}-voir-${affirmation.id}-${sourceId}`,
+          },
+        ]
+      : [];
+  });
+});
+---
+
+{
+  renvois.length > 0 && (
+    <div class="voir-aussi">
+      {renvois.map(({ affirmation, source, references, id }) => (
+        <>
+          <PuceSource libelle={`Voir aussi : ${source.libelle_court}`} panneau={id} variante="voir-aussi" />
+          <ContenuPanneau
+            id={id}
+            titre={ligne.situation ?? ''}
+            mention="Autre texte sur cette situation. Ce n'est pas un verdict du tableau."
+            texte={affirmation.enonce ?? ''}
+            verdict={affirmation.verdict}
+            source={source}
+            references={references}
+            verifieLe={affirmation.verifie_le}
+          />
+          {!affirmation.verifie_le && <span class="mention-non-verifie">non vérifié</span>}
+        </>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .voir-aussi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1);
+    margin-top: var(--espace-2);
+    font-weight: 400;
+  }
+</style>

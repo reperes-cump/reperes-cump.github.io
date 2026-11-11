@@ -76,6 +76,7 @@ export const ordreCategories = [
   'montee',
   'silence',
   'methode',
+  'complement',
 ] as const;
 
 /** Intitulés des catégories d'information, dans les listes « Cité par ». */
@@ -87,6 +88,7 @@ export const libellesCategorie: Record<(typeof ordreCategories)[number] | 'gloss
   montee: 'Montée en puissance',
   silence: 'Ce que les textes ne disent pas',
   methode: 'Lecture des grades',
+  complement: 'Autres textes sur une situation',
   glossaire: 'Glossaire',
 };
 
@@ -98,5 +100,6 @@ export const ordreTypes: Source['type'][] = [
   'instruction',
   'recommandation',
   'page_institutionnelle',
+  'guide',
   'jeu_de_donnees',
 ];
