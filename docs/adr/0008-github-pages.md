@@ -8,7 +8,7 @@ Le site est statique et le dépôt public. L'hébergement ne doit demander ni co
 
 ## Décision
 
-**GitHub Pages**, déployé par GitHub Actions à chaque fusion sur `main`, à l'adresse `arthurwelly.github.io/reperes-cump`. Le build de déploiement se fait en mode publication : il échoue tant qu'un élément n'est pas vérifié.
+**GitHub Pages**, déployé par GitHub Actions à chaque fusion sur `main`, à l'adresse `reperes-cump.github.io`. Le dépôt appartient à l'organisation GitHub `reperes-cump` et s'appelle `reperes-cump.github.io` : le site est ainsi servi à la racine, sous un nom de projet plutôt que sous le nom d'une personne. Le build de déploiement se fait en mode publication : il échoue tant qu'un élément n'est pas vérifié.
 
 ## Alternatives écartées
 

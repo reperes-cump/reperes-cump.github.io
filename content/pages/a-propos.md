@@ -61,7 +61,7 @@ Le code est sous licence MIT. Le contenu rédigé et le jeu de données sont sou
 
 ## Contribuer ou signaler une erreur
 
-Une erreur, un lien mort, un texte qui manque ? [Signalez-le sur GitHub](https://github.com/arthurwelly/reperes-cump/issues), en indiquant le passage exact du texte. Le code et le contenu sont ouverts : le [dépôt du projet](https://github.com/arthurwelly/reperes-cump) explique comment proposer une modification.
+Une erreur, un lien mort, un texte qui manque ? [Signalez-le sur GitHub](https://github.com/reperes-cump/reperes-cump.github.io/issues), en indiquant le passage exact du texte. Le code et le contenu sont ouverts : le [dépôt du projet](https://github.com/reperes-cump/reperes-cump.github.io) explique comment proposer une modification.
 
 ## Qui porte ce projet
 

@@ -15,7 +15,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['list'], ['github']] : 'list',
   use: {
-    baseURL: `http://127.0.0.1:${PORT}/reperes-cump/`,
+    baseURL: `http://127.0.0.1:${PORT}/`,
     channel: 'chrome',
     locale: 'fr-FR',
     trace: 'retain-on-failure',
@@ -27,7 +27,7 @@ export default defineConfig({
   webServer: {
     // --ignore-lock : serveur au premier plan, même quand Astro croit être lancé par un agent.
     command: `npm run preview -- --host 127.0.0.1 --port ${PORT} --ignore-lock`,
-    url: `http://127.0.0.1:${PORT}/reperes-cump/`,
+    url: `http://127.0.0.1:${PORT}/`,
     reuseExistingServer: !process.env.CI,
     env: { ASTRO_TELEMETRY_DISABLED: '1' },
   },
