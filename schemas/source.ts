@@ -8,6 +8,7 @@ export const typesSource = [
   'instruction',
   'recommandation',
   'page_institutionnelle',
+  'guide',
   'jeu_de_donnees',
 ] as const;
 

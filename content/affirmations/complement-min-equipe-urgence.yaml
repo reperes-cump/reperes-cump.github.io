@@ -1,0 +1,19 @@
+id: complement-min-equipe-urgence
+categorie: complement
+ordre: 10
+enonce: "Après l'intervention pour une mort inattendue du nourrisson, un soutien psychologique peut être proposé à l'équipe d'urgence, notamment dans le cadre des CUMP."
+verdict:
+  valeur: information
+sources:
+  - source_id: has-min-2007
+    localisation:
+      article: null
+      annexe: null
+      section: null
+      page: 15
+    lien_profond: null
+    extrait: "Dans les suites de l’intervention, le vécu de cette situation pouvant être difficile pour l’équipe d’urgence, un soutien psychologique peut lui être proposé, notamment dans le cadre des cellules d’urgence médico-psychologique (CUMP)."
+note_publique: null
+a_relever: []
+verifie_le: null
+verifie_par: null

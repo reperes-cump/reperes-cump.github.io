@@ -12,9 +12,18 @@ sources:
       section: null
       page: null
     lien_profond: null
+    extrait: "Cette intervention est déclenchée par le SAMU après évaluation de la situation et indication d’intervention posée par le référent de la CUMP."
+  - source_id: csp-r6311
+    localisation:
+      article: "R6311-27"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
     extrait: null
 note_publique: null
 a_relever:
-  - "formulation exacte"
+  - "formulation exacte (l'extrait relevé dit « référent de la CUMP »)"
+  - "page sur le Bulletin officiel (p. 8 de la copie consultée)"
 verifie_le: null
 verifie_par: null

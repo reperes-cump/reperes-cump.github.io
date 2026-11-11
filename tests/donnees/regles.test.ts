@@ -123,3 +123,21 @@ describe('mode publication', () => {
     expect(messages(problemes)).toContain('statut « à vérifier »');
   });
 });
+
+describe('voir aussi', () => {
+  it('signale un renvoi vers une information inconnue', () => {
+    const a = affirmation({ voir_aussi: ['absente'] });
+    const problemes = verifierCoherence(contenu({ affirmations: new Map([[a.id, a]]) }));
+    expect(messages(problemes)).toContain('voir_aussi : affirmation inconnue : absente');
+  });
+
+  it('accepte un renvoi vers une autre information', () => {
+    const a = affirmation({ voir_aussi: ['autre'] });
+    const b = affirmation({ id: 'autre' });
+    const affirmations = new Map([
+      [a.id, a],
+      [b.id, b],
+    ]);
+    expect(verifierCoherence(contenu({ affirmations }))).toEqual([]);
+  });
+});

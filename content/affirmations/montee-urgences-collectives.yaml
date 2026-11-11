@@ -1,0 +1,20 @@
+id: montee-urgences-collectives
+categorie: montee
+ordre: 26
+enonce: "Les urgences collectives médico-psychologiques peuvent être la conséquence d'un accident (accident collectif de circulation, explosion, incendie, catastrophe naturelle…), d'une action terroriste, d'une épidémie importante ou d'un conflit armé."
+verdict:
+  valeur: information
+sources:
+  - source_id: guide-orsan-2024
+    localisation:
+      article: null
+      annexe: null
+      section: "Plan ORSAN MÉDICO-PSY, présentation synthétique du plan"
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: null
+a_relever:
+  - "page (p. 144 du guide imprimé ; la p. 24 en donne une variante pour le conflit armé)"
+verifie_le: null
+verifie_par: null

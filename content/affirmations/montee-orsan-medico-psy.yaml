@@ -1,0 +1,20 @@
+id: montee-orsan-medico-psy
+categorie: montee
+ordre: 25
+enonce: "Le déclenchement du plan ORSAN MÉDICO-PSY doit être envisagé dès qu'un préfet de département déclenche le plan ORSEC NOVI. Ce plan est déclenché par le directeur général de l'ARS, également à la demande du préfet de département ou du ministre chargé de la santé."
+verdict:
+  valeur: information
+sources:
+  - source_id: guide-orsan-2024
+    localisation:
+      article: null
+      annexe: null
+      section: "Plan ORSAN MÉDICO-PSY, déclenchement du plan et conduite de crise"
+      page: null
+    lien_profond: null
+    extrait: "Le déclenchement du plan ORSAN MÉDICO-PSY doit donc être envisagé dès lors qu’un Préfet de département déclenche la plan ORSEC NOVI."
+note_publique: null
+a_relever:
+  - "page (p. 158 du guide imprimé)"
+verifie_le: null
+verifie_par: null

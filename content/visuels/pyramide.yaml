@@ -5,7 +5,7 @@ elements:
     affirmations: [montee-cump-departementale]
   - id: niveau-regional
     type: niveau
-    affirmations: [montee-niveau-regional]
+    affirmations: [montee-niveau-regional, montee-orsan-medico-psy]
   - id: cump-zonale
     type: niveau
     affirmations: [montee-cump-zonale]

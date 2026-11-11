@@ -54,6 +54,14 @@ export function verifierCoherence(contenu: Contenu): Probleme[] {
       }
     }
 
+    for (const id of a.voir_aussi) {
+      const cible = contenu.affirmations.get(id);
+      if (!cible) signaler(fichier, `voir_aussi : affirmation inconnue : ${id}`);
+      else if (cible.categorie === 'matrice') {
+        signaler(fichier, `voir_aussi : ${id} est une ligne de matrice`);
+      }
+    }
+
     if (a.critere_explorateur) {
       const deja = criteres.get(a.critere_explorateur);
       if (deja) {

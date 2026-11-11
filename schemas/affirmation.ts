@@ -21,6 +21,8 @@ export const categories = [
   'silence',
   'glossaire',
   'methode',
+  /** Autre texte sur une situation de la matrice, affiché à côté de ses repères. */
+  'complement',
 ] as const;
 
 export const colonnes = ['alerte', 'activation'] as const;
@@ -72,6 +74,8 @@ export const affirmationSchema = z
       .array(referenceSourceSchema)
       .min(1, 'une affirmation doit citer au moins une source'),
     critere_explorateur: identifiant.nullable().default(null),
+    /** Autres informations, tirées d'autres textes, à montrer à côté de celle-ci. */
+    voir_aussi: z.array(identifiant).default([]),
     note_publique: z.string().min(1).nullable().default(null),
     a_relever: aRelever,
     verifie_le: date.nullable().default(null),
@@ -135,6 +139,9 @@ export const affirmationSchema = z
     if (silence && !a.note_publique && !signale(a.a_relever, 'note publique')) {
       absent(ctx, 'note_publique', 'un silence des textes doit dire ce qui manque (note_publique)');
     }
+
+    if (a.voir_aussi.includes(a.id))
+      absent(ctx, 'voir_aussi', 'une information ne peut pas renvoyer à elle-même');
 
     if (Boolean(a.verifie_le) !== Boolean(a.verifie_par)) {
       absent(ctx, 'verifie_par', '« verifie_le » et « verifie_par » vont ensemble');

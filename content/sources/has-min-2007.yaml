@@ -1,0 +1,15 @@
+id: has-min-2007
+titre: "Prise en charge en cas de mort inattendue du nourrisson (moins de 2 ans). Recommandations professionnelles"
+libelle_court: "HAS 2007"
+type: recommandation
+autorite: recommandation_pro
+editeur: "Haute Autorité de santé"
+date_publication: "2007-02"
+statut: a_verifier
+url: "https://has-sante.fr/upload/docs/application/pdf/recommandations_mort_inattendue_nourrisson.pdf"
+url_archive: null
+sha256: null
+consulte_le: null
+reutilisation: courte_citation
+a_relever:
+  - "statut actuel sur le site de la HAS"

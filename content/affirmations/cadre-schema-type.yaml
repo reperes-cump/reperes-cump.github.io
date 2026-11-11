@@ -29,6 +29,14 @@ sources:
       page: null
     lien_profond: null
     extrait: null
+  - source_id: arrete-2014-02-24
+    localisation:
+      article: "2"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
 note_publique: "Chaque département dispose d'un schéma type qui précise localement les situations de déclenchement. Il n'est pas public et n'est pas repris ici."
 a_relever: []
 verifie_le: null
