@@ -1,0 +1,164 @@
+# Zones de défense et de sécurité : code de la défense, article R*1211-4 (métropole, version en
+# vigueur depuis le 14 avril 2021) et article R1211-8 (outre-mer, version en vigueur depuis le
+# 24 février 2024). Relevé sur Légifrance le 11/11/2026, à vérifier sur le texte.
+# Les zones de Nouvelle-Calédonie et de Polynésie française ne comptent aucun département :
+# elles ne sont pas reprises dans cette version de la carte.
+source_id: code-defense-zones
+verifie_le: null
+verifie_par: null
+zones:
+  - id: paris
+    nom: "Paris"
+    siege: "Paris"
+    article: "R*1211-4"
+    departements:
+      [
+        Essonne,
+        Hauts-de-Seine,
+        Paris,
+        Seine-et-Marne,
+        Seine-Saint-Denis,
+        Val-de-Marne,
+        Val-d'Oise,
+        Yvelines,
+      ]
+  - id: nord
+    nom: "Nord"
+    siege: "Lille"
+    article: "R*1211-4"
+    departements: [Aisne, Nord, Oise, Pas-de-Calais, Somme]
+  - id: ouest
+    nom: "Ouest"
+    siege: "Rennes"
+    article: "R*1211-4"
+    departements:
+      [
+        Côtes-d'Armor,
+        Finistère,
+        Ille-et-Vilaine,
+        Morbihan,
+        Cher,
+        Eure-et-Loir,
+        Indre,
+        Indre-et-Loire,
+        Loir-et-Cher,
+        Loiret,
+        Calvados,
+        Eure,
+        Manche,
+        Orne,
+        Seine-Maritime,
+        Loire-Atlantique,
+        Maine-et-Loire,
+        Mayenne,
+        Sarthe,
+        Vendée,
+      ]
+  - id: sud-ouest
+    nom: "Sud-Ouest"
+    siege: "Bordeaux"
+    article: "R*1211-4"
+    departements:
+      [
+        Charente,
+        Charente-Maritime,
+        Corrèze,
+        Creuse,
+        Deux-Sèvres,
+        Dordogne,
+        Gironde,
+        Haute-Vienne,
+        Landes,
+        Lot-et-Garonne,
+        Pyrénées-Atlantiques,
+        Vienne,
+      ]
+  - id: sud
+    nom: "Sud"
+    siege: "Marseille"
+    article: "R*1211-4"
+    departements:
+      [
+        Corse-du-Sud,
+        Haute-Corse,
+        Aude,
+        Ariège,
+        Aveyron,
+        Gard,
+        Gers,
+        Haute-Garonne,
+        Hautes-Pyrénées,
+        Hérault,
+        Lot,
+        Lozère,
+        Pyrénées-Orientales,
+        Tarn,
+        Tarn-et-Garonne,
+        Alpes-de-Haute-Provence,
+        Alpes-Maritimes,
+        Bouches-du-Rhône,
+        Hautes-Alpes,
+        Var,
+        Vaucluse,
+      ]
+  - id: sud-est
+    nom: "Sud-Est"
+    siege: "Lyon"
+    article: "R*1211-4"
+    departements:
+      [
+        Ain,
+        Allier,
+        Ardèche,
+        Cantal,
+        Drôme,
+        Haute-Loire,
+        Haute-Savoie,
+        Isère,
+        Loire,
+        Puy-de-Dôme,
+        Rhône,
+        Savoie,
+      ]
+  - id: est
+    nom: "Est"
+    siege: "Strasbourg"
+    article: "R*1211-4"
+    departements:
+      [
+        Aube,
+        Ardennes,
+        Bas-Rhin,
+        Haut-Rhin,
+        Haute-Marne,
+        Marne,
+        Meurthe-et-Moselle,
+        Meuse,
+        Moselle,
+        Vosges,
+        Côte-d'Or,
+        Doubs,
+        Haute-Saône,
+        Jura,
+        Nièvre,
+        Saône-et-Loire,
+        Territoire de Belfort,
+        Yonne,
+      ]
+  - id: antilles
+    nom: "Antilles"
+    siege: "Fort-de-France"
+    article: "R1211-8"
+    departements: [Martinique, Guadeloupe]
+    autres_territoires: [Saint-Barthélemy, Saint-Martin]
+  - id: guyane
+    nom: "Guyane"
+    siege: "Cayenne"
+    article: "R1211-8"
+    departements: [Guyane]
+  - id: sud-ocean-indien
+    nom: "Sud de l'océan Indien"
+    siege: "Saint-Denis de La Réunion"
+    article: "R1211-8"
+    departements: [La Réunion, Mayotte]
+    autres_territoires: [Terres australes et antarctiques françaises]

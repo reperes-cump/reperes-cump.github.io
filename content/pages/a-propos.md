@@ -57,7 +57,7 @@ Les informations et les sources sont téléchargeables en JSON et en CSV, sous l
 
 ## Licences
 
-Le code est sous licence MIT. Le contenu rédigé et le jeu de données sont sous licence CC BY 4.0. Les extraits de sources restent soumis aux droits de leurs auteurs.
+Le code est sous licence MIT. Le contenu rédigé et le jeu de données sont sous licence CC BY 4.0. Les extraits de sources restent soumis aux droits de leurs auteurs. Les contours des départements utilisés pour la carte viennent de data.gouv.fr, d'après ADMIN EXPRESS (IGN), sous licence ODbL.
 
 ## Contribuer ou signaler une erreur
 

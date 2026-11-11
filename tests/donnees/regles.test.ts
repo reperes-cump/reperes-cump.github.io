@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { designationsSchema, visuelSchema } from '../../schemas/index.ts';
-import { verifierCoherence, verifierPublication } from '../../scripts/lib/regles.ts';
+import {
+  departementsSchema,
+  designationsSchema,
+  visuelSchema,
+  zonesSchema,
+} from '../../schemas/index.ts';
+import {
+  verifierCoherence,
+  verifierPublication,
+  zoneParDepartement,
+} from '../../scripts/lib/regles.ts';
 import { affirmation, contenu, source } from './fabrique.ts';
 
 const messages = (problemes: { message: string }[]) => problemes.map((p) => p.message);
@@ -170,5 +179,43 @@ describe('chemins du circuit', () => {
     expect(liste).toContain('chemin c : élément inconnu : absente');
     expect(liste).toContain("chemin c : depart n'est pas une issue");
     expect(liste).toContain('élément fin : sur aucun chemin');
+  });
+});
+
+describe('départements et zones', () => {
+  const referentiel = departementsSchema.parse({
+    source_id: 'reco',
+    millesime: '2026',
+    regions: [{ code: '84', nom: 'Auvergne-Rhône-Alpes' }],
+    departements: [
+      { code: '69', nom: 'Rhône', region: '84' },
+      { code: '01', nom: 'Ain', region: '84' },
+    ],
+  });
+  const zones = (departements: string[][]) =>
+    zonesSchema.parse({
+      source_id: 'reco',
+      zones: departements.map((liste, i) => ({
+        id: `z${i}`,
+        nom: `Z${i}`,
+        siege: 'Lyon',
+        article: 'R*1211-4',
+        departements: liste,
+      })),
+    });
+
+  it('accepte une composition complète, avec les noms du texte', () => {
+    const c = contenu({ referentiel, zones: zones([['Rhône', 'Ain']]) });
+    expect(verifierCoherence(c)).toEqual([]);
+    expect(zoneParDepartement(c).get('69')).toBe('z0');
+  });
+
+  it('signale un nom inconnu, un département dans deux zones, un département sans zone', () => {
+    const liste = messages(
+      verifierCoherence(contenu({ referentiel, zones: zones([['Rhône', 'Savoie'], ['Rhône']]) })),
+    );
+    expect(liste).toContain('zone z0 : département inconnu du COG : Savoie');
+    expect(liste).toContain('Rhône est dans deux zones : z0 et z1');
+    expect(liste).toContain("Ain (01) n'est dans aucune zone");
   });
 });

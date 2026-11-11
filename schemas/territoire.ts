@@ -44,3 +44,49 @@ export const designationsSchema = z
   });
 
 export type Designations = z.output<typeof designationsSchema>;
+
+const codeRegion = z.string().regex(/^\d{2}$/, 'code de région invalide');
+
+/** Départements et régions du Code officiel géographique (COG) de l'INSEE. */
+export const departementsSchema = z.strictObject({
+  source_id: identifiant,
+  millesime: z.string().regex(/^\d{4}$/, 'millésime attendu sous la forme AAAA'),
+  regions: z.array(z.strictObject({ code: codeRegion, nom: z.string().min(1) })).min(1),
+  departements: z
+    .array(z.strictObject({ code: codeDepartement, nom: z.string().min(1), region: codeRegion }))
+    .min(1),
+});
+
+/** Composition des zones de défense et de sécurité, telle qu'écrite dans le code de la défense. */
+export const zonesSchema = z
+  .strictObject({
+    source_id: identifiant,
+    verifie_le: date.nullable().default(null),
+    verifie_par: z.string().min(1).nullable().default(null),
+    zones: z
+      .array(
+        z.strictObject({
+          id: identifiant,
+          nom: z.string().min(1),
+          siege: z.string().min(1),
+          article: z.string().min(1),
+          /** Départements, nommés comme dans le texte. */
+          departements: z.array(z.string().min(1)).min(1),
+          /** Autres territoires de la zone, hors du périmètre de la carte. */
+          autres_territoires: z.array(z.string().min(1)).default([]),
+        }),
+      )
+      .min(1),
+  })
+  .superRefine((z0, ctx) => {
+    if (Boolean(z0.verifie_le) !== Boolean(z0.verifie_par)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['verifie_par'],
+        message: '« verifie_le » et « verifie_par » vont ensemble',
+      });
+    }
+  });
+
+export type Referentiel = z.output<typeof departementsSchema>;
+export type Zones = z.output<typeof zonesSchema>;

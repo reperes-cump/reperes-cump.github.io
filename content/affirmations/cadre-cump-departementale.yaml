@@ -1,0 +1,19 @@
+id: cadre-cump-departementale
+categorie: cadre
+ordre: 15
+enonce: "Une CUMP départementale est constituée dans chaque établissement de santé siège de SAMU."
+verdict:
+  valeur: information
+sources:
+  - source_id: csp-r6311
+    localisation:
+      article: "R6311-25"
+      annexe: null
+      section: null
+      page: null
+    lien_profond: null
+    extrait: null
+note_publique: "Aucune liste nationale de ces établissements n'a été identifiée à ce stade : cette version ne les liste donc pas."
+a_relever: []
+verifie_le: null
+verifie_par: null

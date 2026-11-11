@@ -33,5 +33,7 @@ export const contenu = (morceaux: Partial<Contenu> = {}): Contenu => ({
   glossaire: null,
   designations: null,
   departements: null,
+  referentiel: null,
+  zones: null,
   ...morceaux,
 });

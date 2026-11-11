@@ -2,22 +2,29 @@ import { z } from 'zod';
 import {
   affirmationSchema,
   contenuSchema,
+  departementsSchema,
   designationsSchema,
   exclusionsSchema,
   glossaireSchema,
   pageSchema,
   sourceSchema,
   visuelSchema,
+  zonesSchema,
 } from '../../schemas/index.ts';
 import { existe, type FichierYaml, lireDossier, lireMarkdown, lireYaml } from './lecture.ts';
 import { listerARelever, verifierCoherence, verifierPublication } from './regles.ts';
-import { CHEMIN_DESIGNATIONS, CHEMIN_INFOS, type Contenu, type Probleme } from './types.ts';
+import {
+  CHEMIN_DEPARTEMENTS,
+  CHEMIN_DESIGNATIONS,
+  CHEMIN_INFOS,
+  CHEMIN_ZONES,
+  type Contenu,
+  type Probleme,
+} from './types.ts';
 
 z.config(z.locales.fr());
 
 export const VISUELS = ['circuit', 'frise', 'pyramide', 'encadre-silence'] as const;
-const CHEMIN_DEPARTEMENTS = 'content/territoires/departements.yaml';
-const CHEMIN_ZONES = 'content/territoires/zones.yaml';
 const CHEMIN_A_PROPOS = 'content/pages/a-propos.md';
 const CHEMIN_EXCLUSIONS = 'content/pages/sources-exclues.yaml';
 
@@ -130,15 +137,23 @@ export async function chargerContenu(
     erreurs.push({ fichier: CHEMIN_DESIGNATIONS, message: 'fichier absent' });
   }
 
-  // Liste des départements (COG) et composition des zones : ajoutées avec la carte.
-  const departements: Contenu['departements'] = null;
-  if (!(await existe(racine, CHEMIN_DEPARTEMENTS))) {
+  // Départements et régions (COG), composition des zones de défense et de sécurité.
+  let referentiel: Contenu['referentiel'] = null;
+  if (await existe(racine, CHEMIN_DEPARTEMENTS)) {
+    referentiel = valider(departementsSchema, await lireYaml(racine, CHEMIN_DEPARTEMENTS), erreurs);
+  } else {
     avertissements.push({
       fichier: CHEMIN_DEPARTEMENTS,
       message: 'absent : l’existence des codes de département n’est pas encore contrôlée',
     });
   }
-  if (!(await existe(racine, CHEMIN_ZONES))) {
+  const departements: Contenu['departements'] = referentiel
+    ? new Set(referentiel.departements.map((d) => d.code))
+    : null;
+  let zones: Contenu['zones'] = null;
+  if (await existe(racine, CHEMIN_ZONES)) {
+    zones = valider(zonesSchema, await lireYaml(racine, CHEMIN_ZONES), erreurs);
+  } else {
     avertissements.push({
       fichier: CHEMIN_ZONES,
       message: 'absent : le niveau « zones » de la carte reste désactivé',
@@ -165,6 +180,8 @@ export async function chargerContenu(
     glossaire,
     designations,
     departements,
+    referentiel,
+    zones,
   };
   erreurs.push(...verifierCoherence(contenu));
   if (publication) erreurs.push(...verifierPublication(contenu));

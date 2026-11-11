@@ -1,8 +1,10 @@
 import type { Affirmation, Verdict } from '../../schemas/index.ts';
 import { signale } from '../../schemas/index.ts';
 import {
+  CHEMIN_DEPARTEMENTS,
   CHEMIN_DESIGNATIONS,
   CHEMIN_INFOS,
+  CHEMIN_ZONES,
   type Contenu,
   cheminAffirmation,
   cheminSource,
@@ -200,6 +202,70 @@ export function verifierCoherence(contenu: Contenu): Probleme[] {
     }
   }
 
+  problemes.push(...verifierTerritoires(contenu));
+  return problemes;
+}
+
+/** Normalise un nom pour comparer les écritures (apostrophes, espaces). */
+export const normaliserNom = (nom: string) =>
+  nom.replaceAll('’', "'").replace(/\s+/g, ' ').trim().toLowerCase();
+
+/** Rattache chaque département à sa zone, d'après les noms écrits dans le texte. */
+export function zoneParDepartement(contenu: Contenu): Map<string, string> {
+  const parNom = new Map(
+    (contenu.referentiel?.departements ?? []).map((d) => [normaliserNom(d.nom), d.code]),
+  );
+  const resultat = new Map<string, string>();
+  for (const zone of contenu.zones?.zones ?? []) {
+    for (const nom of zone.departements) {
+      const code = parNom.get(normaliserNom(nom));
+      if (code) resultat.set(code, zone.id);
+    }
+  }
+  return resultat;
+}
+
+/** Contrôles du référentiel des départements et de la composition des zones. */
+function verifierTerritoires(contenu: Contenu): Probleme[] {
+  const problemes: Probleme[] = [];
+  const signaler = (fichier: string, message: string) => problemes.push({ fichier, message });
+  const referentiel = contenu.referentiel;
+  if (referentiel) {
+    if (!contenu.sources.has(referentiel.source_id)) {
+      signaler(CHEMIN_DEPARTEMENTS, `source inconnue : ${referentiel.source_id}`);
+    }
+    const regions = new Set(referentiel.regions.map((r) => r.code));
+    const vus = new Set<string>();
+    for (const d of referentiel.departements) {
+      if (vus.has(d.code)) signaler(CHEMIN_DEPARTEMENTS, `département en double : ${d.code}`);
+      vus.add(d.code);
+      if (!regions.has(d.region))
+        signaler(CHEMIN_DEPARTEMENTS, `${d.code} : région inconnue : ${d.region}`);
+    }
+  }
+  const zones = contenu.zones;
+  if (zones && referentiel) {
+    if (!contenu.sources.has(zones.source_id))
+      signaler(CHEMIN_ZONES, `source inconnue : ${zones.source_id}`);
+    const parNom = new Map(referentiel.departements.map((d) => [normaliserNom(d.nom), d.code]));
+    const zoneDe = new Map<string, string>();
+    for (const zone of zones.zones) {
+      for (const nom of zone.departements) {
+        const code = parNom.get(normaliserNom(nom));
+        if (!code) {
+          signaler(CHEMIN_ZONES, `zone ${zone.id} : département inconnu du COG : ${nom}`);
+          continue;
+        }
+        const deja = zoneDe.get(code);
+        if (deja) signaler(CHEMIN_ZONES, `${nom} est dans deux zones : ${deja} et ${zone.id}`);
+        zoneDe.set(code, zone.id);
+      }
+    }
+    for (const d of referentiel.departements) {
+      if (!zoneDe.has(d.code))
+        signaler(CHEMIN_ZONES, `${d.nom} (${d.code}) n'est dans aucune zone`);
+    }
+  }
   return problemes;
 }
 
@@ -242,8 +308,17 @@ export function verifierPublication(contenu: Contenu): Probleme[] {
       signaler(CHEMIN_DESIGNATIONS, `verifie_par doit être ${mainteneur ?? 'le mainteneur'}`);
     }
   }
-  if (!contenu.departements) {
-    signaler('content/territoires/departements.yaml', 'liste des départements (COG) absente');
+  if (!contenu.referentiel) {
+    signaler(CHEMIN_DEPARTEMENTS, 'liste des départements (COG) absente');
+  } else {
+    citees.add(contenu.referentiel.source_id);
+  }
+  if (contenu.zones) {
+    citees.add(contenu.zones.source_id);
+    if (!contenu.zones.verifie_le) signaler(CHEMIN_ZONES, 'composition des zones non vérifiée');
+    else if (contenu.zones.verifie_par !== mainteneur) {
+      signaler(CHEMIN_ZONES, `verifie_par doit être ${mainteneur ?? 'le mainteneur'}`);
+    }
   }
 
   for (const id of citees) {

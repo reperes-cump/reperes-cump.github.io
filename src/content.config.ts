@@ -6,12 +6,14 @@ import { z } from 'zod';
 import {
   affirmationSchema,
   contenuSchema,
+  departementsSchema,
   designationsSchema,
   exclusionsSchema,
   glossaireSchema,
   pageSchema,
   sourceSchema,
   visuelSchema,
+  zonesSchema,
 } from '../schemas/index.ts';
 import { type FichierYaml, lireDossier, lireMarkdown, lireYaml } from '../scripts/lib/lecture.ts';
 import { typographie } from './lib/affichage.ts';
@@ -106,6 +108,14 @@ export const collections = {
     schema: glossaireSchema,
   }),
   infos: defineCollection({ loader: fichier('content/contenu.yaml'), schema: contenuSchema }),
+  referentiel: defineCollection({
+    loader: fichier('content/territoires/departements.yaml'),
+    schema: departementsSchema,
+  }),
+  zones: defineCollection({
+    loader: fichier('content/territoires/zones.yaml'),
+    schema: zonesSchema,
+  }),
   designations: defineCollection({
     loader: fichier('content/territoires/designations.yaml'),
     schema: designationsSchema,

@@ -21,7 +21,12 @@ export const autorites = [
 
 export const statutsSource = ['en_vigueur', 'abroge', 'modifie', 'a_verifier'] as const;
 
-export const reutilisations = ['texte_officiel', 'courte_citation', 'licence_ouverte'] as const;
+export const reutilisations = [
+  'texte_officiel',
+  'courte_citation',
+  'licence_ouverte',
+  'licence_odbl',
+] as const;
 
 export const designations = ['regionale', 'renforcee', 'zonale'] as const;
 

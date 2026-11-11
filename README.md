@@ -27,7 +27,8 @@ Tout le contenu est dans le dossier [`content/`](content/), en fichiers YAML. Il
 | `content/sources/`      | Une source par fichier : titre, statut, lien, empreinte du fichier consulté.                          |
 | `content/affirmations/` | Une information sourcée par fichier : énoncé ou ligne de matrice, verdict, sources avec localisation. |
 | `content/visuels/`      | L'ordre des éléments du circuit, de la frise, de la pyramide, de l'encadré et du glossaire.           |
-| `content/territoires/`  | Les désignations de CUMP relevées dans l'arrêté.                                                      |
+| `content/territoires/`  | Les désignations de CUMP, les départements (COG) et les zones de défense.                             |
+| `content/geo/`          | Les contours des départements (licence ODbL) et leur origine.                                         |
 | `content/pages/`        | Le texte de la page À propos et la liste des documents écartés.                                       |
 | `content/contenu.yaml`  | Version du contenu, date de dernière vérification, mainteneur.                                        |
 
@@ -69,16 +70,17 @@ npm ci
 npm run dev
 ```
 
-| Commande                           | Rôle                                                                                                   |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `npm run dev`                      | Site en local, rechargé à chaque modification.                                                         |
-| `npm run build`                    | Valide le contenu, construit le site dans `dist/` et publie les données ouvertes dans `dist/donnees/`. |
-| `npm run check`                    | Vérifie les types.                                                                                     |
-| `npm run lint`                     | Lint et format (Biome). `npm run format` corrige.                                                      |
-| `npm run validate`                 | Valide le contenu.                                                                                     |
-| `npm run a-relever`                | Liste ce qui reste à relever ou à vérifier.                                                            |
-| `npm test`                         | Tests des données (Vitest).                                                                            |
-| `npm run source:hash -- <fichier>` | Empreinte SHA-256 d'un PDF de source.                                                                  |
+| Commande                                   | Rôle                                                                                                   |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `npm run dev`                              | Site en local, rechargé à chaque modification.                                                         |
+| `npm run build`                            | Valide le contenu, construit le site dans `dist/` et publie les données ouvertes dans `dist/donnees/`. |
+| `npm run check`                            | Vérifie les types.                                                                                     |
+| `npm run lint`                             | Lint et format (Biome). `npm run format` corrige.                                                      |
+| `npm run validate`                         | Valide le contenu.                                                                                     |
+| `npm run a-relever`                        | Liste ce qui reste à relever ou à vérifier.                                                            |
+| `npm test`                                 | Tests des données (Vitest).                                                                            |
+| `npm run source:hash -- <fichier>`         | Empreinte SHA-256 d'un PDF de source.                                                                  |
+| `npm run geo:preparer -- <COG> <contours>` | Prépare départements et contours de la carte depuis `sources-local/`.                                  |
 
 **Mode publication.** Avec `PUBLISH=1`, le build exige que tout soit vérifié : chaque information doit avoir une date de vérification et une localisation précise, et aucune source citée ne doit rester « à vérifier ». Le déploiement se fait dans ce mode.
 

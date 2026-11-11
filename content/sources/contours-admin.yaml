@@ -1,14 +1,16 @@
 id: contours-admin
 titre: "Contours administratifs (départements, régions), jeu publié sur data.gouv.fr, dérivé d'ADMIN EXPRESS (IGN)"
-libelle_court: "Contours administratifs"
+libelle_court: "Contours administratifs 2026"
 type: jeu_de_donnees
 autorite: donnees_publiques
+editeur: "data.gouv.fr"
+reference: "Ressource « Départements 2026 1000m (format GeoJSON) », datée du 4 mai 2026."
+date_publication: "2026-05"
 statut: a_verifier
 url: "https://www.data.gouv.fr/datasets/contours-administratifs"
 url_archive: null
-sha256: null
-consulte_le: null
-reutilisation: null
+sha256: "2a766d5c163988e7851447406eda266dd9edbc58754199b3dffc62832eba3b19"
+consulte_le: "2026-11-11"
+reutilisation: licence_odbl
 a_relever:
-  - "licence"
-  - "millésime"
+  - "licence à confirmer sur la page du jeu (ODbL d'après les métadonnées)"

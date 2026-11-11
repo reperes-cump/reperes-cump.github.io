@@ -5,7 +5,7 @@ const LICENCE = {
   licence: 'CC BY 4.0',
   licence_url: 'https://creativecommons.org/licenses/by/4.0/deed.fr',
   reserve:
-    'Les extraits de sources restent soumis aux droits de leurs auteurs et éditeurs. Les textes officiels peuvent être cités.',
+    'Les extraits de sources restent soumis aux droits de leurs auteurs et éditeurs. Les textes officiels peuvent être cités. Les contours des départements (carte) sont sous licence ODbL.',
 };
 
 /** Échappe une valeur pour un CSV (RFC 4180). */

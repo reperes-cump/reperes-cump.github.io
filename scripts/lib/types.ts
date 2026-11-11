@@ -3,8 +3,10 @@ import type {
   Designations,
   Glossaire,
   InfosContenu,
+  Referentiel,
   Source,
   Visuel,
+  Zones,
 } from '../../schemas/index.ts';
 
 export interface Contenu {
@@ -17,6 +19,10 @@ export interface Contenu {
   designations: Designations | null;
   /** Codes de département du COG, quand la liste est présente. */
   departements: Set<string> | null;
+  /** Départements et régions du COG. */
+  referentiel: Referentiel | null;
+  /** Composition des zones de défense et de sécurité. */
+  zones: Zones | null;
 }
 
 export interface Probleme {
@@ -29,3 +35,5 @@ export const cheminAffirmation = (id: string) => `content/affirmations/${id}.yam
 export const cheminVisuel = (nom: string) => `content/visuels/${nom}.yaml`;
 export const CHEMIN_DESIGNATIONS = 'content/territoires/designations.yaml';
 export const CHEMIN_INFOS = 'content/contenu.yaml';
+export const CHEMIN_DEPARTEMENTS = 'content/territoires/departements.yaml';
+export const CHEMIN_ZONES = 'content/territoires/zones.yaml';

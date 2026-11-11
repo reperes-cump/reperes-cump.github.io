@@ -57,6 +57,8 @@ export const libellesReutilisation: Record<NonNullable<Source['reutilisation']>,
   texte_officiel: 'Texte officiel : il peut être cité.',
   courte_citation: 'Courtes citations seulement, avec auteur et source.',
   licence_ouverte: 'Licence ouverte.',
+  licence_odbl:
+    'Licence ODbL : citer la source et rediffuser les données dérivées sous la même licence.',
 };
 
 /** Groupes de la page Sources, dans l'ordre d'affichage. */
@@ -103,3 +105,10 @@ export const ordreTypes: Source['type'][] = [
   'guide',
   'jeu_de_donnees',
 ];
+
+/** Désignations de CUMP dans l'arrêté. */
+export const libellesDesignation = {
+  regionale: 'CUMP régionale',
+  renforcee: 'CUMP départementale renforcée',
+  zonale: 'CUMP zonale',
+} as const;

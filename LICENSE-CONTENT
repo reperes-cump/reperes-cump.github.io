@@ -22,4 +22,12 @@ cités. Les recommandations publiées dans une revue sont reformulées ; les
 extraits littéraux en sont limités à de courtes citations, avec leur auteur
 et leur source (article L122-5 du code de la propriété intellectuelle).
 
+Exception : contours des départements
+
+Les contours des départements (dossier content/geo/) sont dérivés du jeu
+« Contours administratifs » publié sur data.gouv.fr, d'après ADMIN EXPRESS
+(IGN). Ils sont diffusés sous la licence Open Database License (ODbL), comme
+le jeu d'origine : toute réutilisation doit citer la source et rediffuser les
+données dérivées sous la même licence. Voir content/geo/SOURCE.md.
+
 Le code du site est sous licence MIT (fichier LICENSE).
