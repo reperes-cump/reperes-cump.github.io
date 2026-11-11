@@ -3,11 +3,10 @@ titre: "Code de la santé publique, articles R6311-25 à R6311-32 (CUMP)"
 libelle_court: "Code de la santé publique"
 type: code
 autorite: reglementaire
-statut: a_verifier
-url: null
+statut: en_vigueur
+url: "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072665/LEGISCTA000026916960/"
 url_archive: null
 sha256: null
-consulte_le: null
+consulte_le: "2026-11-11"
 reutilisation: texte_officiel
-a_relever:
-  - "URL Légifrance de chaque article (identifiant LEGIARTI)"
+a_relever: []

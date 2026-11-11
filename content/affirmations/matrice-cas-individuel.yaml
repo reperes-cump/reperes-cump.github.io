@@ -14,8 +14,8 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Alerte de la CUMP"
+      page: 6
     lien_profond: null
     extrait: null
   - source_id: sfmu-2017
@@ -23,13 +23,12 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Non-indications d’activation de la CUMP"
+      page: 6
     lien_profond: null
-    extrait: null
+    extrait: "pour des cas individuels"
 critere_explorateur: cas-individuel
-note_publique: null
-a_relever:
-  - "note publique"
-verifie_le: null
-verifie_par: null
+note_publique: "La recommandation ne parle des cas individuels que pour l'activation, pas pour l'alerte."
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

@@ -15,21 +15,21 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Alerte de la CUMP"
+      page: 6
     lien_profond: null
-    extrait: null
+    extrait: "dans les événements potentiellement traumatiques entraînant une situation de chaos (confusion générale)"
   - source_id: sfmu-2017
     porte_sur: activation
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Activation de la CUMP"
+      page: 6
     lien_profond: null
-    extrait: null
+    extrait: "dans les événements potentiellement traumatiques entraînant une situation de chaos (confusion générale)"
 critere_explorateur: chaos
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

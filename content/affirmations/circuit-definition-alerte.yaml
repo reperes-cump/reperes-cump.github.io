@@ -9,11 +9,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Indications du recours à la CUMP"
+      page: 5
     lien_profond: null
-    extrait: null
+    extrait: "l’alerte : information de l’événement donnée au référent CUMP sans préjuger de sa réponse"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

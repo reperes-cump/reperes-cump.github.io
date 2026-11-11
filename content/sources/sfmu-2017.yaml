@@ -8,10 +8,10 @@ revue: "Annales françaises de médecine d'urgence"
 reference: "Ann Fr Med Urgence 2017;7:410-424"
 doi: "10.1007/s13341-017-0804-7"
 date_publication: "2017"
-statut: a_verifier
+statut: en_vigueur
 url: "https://www.sfmu.org/upload/consensus/reco_cump2017.pdf"
 url_archive: null
-sha256: null
-consulte_le: null
+sha256: "70539c6a5156c6a9bdfb31448c2461e62663914cfd15529638faf927653b1cca"
+consulte_le: "2026-11-11"
 reutilisation: courte_citation
 note_publique: "Aucune version plus récente identifiée à la date de vérification."

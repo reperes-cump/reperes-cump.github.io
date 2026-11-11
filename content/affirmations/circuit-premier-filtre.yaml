@@ -10,12 +10,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "La procédure d’appel de la CUMP"
+      page: 7
     lien_profond: null
     extrait: "que le médecin régulateur assure un rôle de premier filtre et qu’il informe le référent CUMP des différents éléments en sa possession lorsqu’un recours à la CUMP est indiqué"
 note_publique: null
-a_relever:
-  - "formulation exacte (énoncé complété par la condition « lorsqu'un recours à la CUMP est indiqué »)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

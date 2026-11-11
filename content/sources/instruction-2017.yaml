@@ -5,9 +5,9 @@ type: instruction
 autorite: reglementaire
 reference: "BO Santé 2017/2. Abroge l'instruction du 24 février 2014."
 date_publication: "2017-01-06"
-statut: a_verifier
+statut: en_vigueur
 url: "https://sante.gouv.fr/fichiers/bo/2017/17-02/ste_20170002_0000_0055.pdf"
 url_archive: null
-sha256: null
-consulte_le: null
+sha256: "4a57c548e0118bdab9af276e0c240d4d7c651c58d0bc15ad3b634f2bf554dcbd"
+consulte_le: "2026-11-11"
 reutilisation: texte_officiel

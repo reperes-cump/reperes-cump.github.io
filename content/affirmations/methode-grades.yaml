@@ -19,12 +19,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Méthodologie"
+      page: 3
     lien_profond: null
-    extrait: null
+    extrait: "« appropriée avec accord fort », lorsque la valeur de la médiane était supérieure ou égale à sept et que toutes les cotations étaient comprises dans l’intervalle [7–9]"
 note_publique: "« Pas de consensus » et « pas de conclusion » sont aussi des résultats de ce vote, pas des oublis du site."
-a_relever:
-  - "vérification dans la section méthodologie"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

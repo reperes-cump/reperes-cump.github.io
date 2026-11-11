@@ -6,11 +6,10 @@ autorite: donnees_publiques
 editeur: "data.gouv.fr"
 reference: "Ressource « Départements 2026 1000m (format GeoJSON) », datée du 4 mai 2026."
 date_publication: "2026-05"
-statut: a_verifier
+statut: en_vigueur
 url: "https://www.data.gouv.fr/datasets/contours-administratifs"
 url_archive: null
 sha256: "2a766d5c163988e7851447406eda266dd9edbc58754199b3dffc62832eba3b19"
 consulte_le: "2026-11-11"
 reutilisation: licence_odbl
-a_relever:
-  - "licence à confirmer sur la page du jeu (ODbL d'après les métadonnées)"
+a_relever: []

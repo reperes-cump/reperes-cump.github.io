@@ -10,7 +10,7 @@ sources:
       article: null
       annexe: null
       section: null
-      page: null
+      page: 7
     lien_profond: null
     extrait: "L’ARS est systématiquement informée, par le SAMU, de la mobilisation de la CUMP."
   - source_id: csp-r6311
@@ -19,10 +19,9 @@ sources:
       annexe: null
       section: null
       page: null
-    lien_profond: null
-    extrait: null
+    lien_profond: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026916989"
+    extrait: "Le service d'aide médicale urgente informe l'agence régionale de santé de l'activation de la cellule."
 note_publique: null
-a_relever:
-  - "page sur le Bulletin officiel (p. 8 de la copie consultée)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

@@ -9,13 +9,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "La procédure d’appel de la CUMP"
+      page: 7
     lien_profond: null
-    extrait: null
+    extrait: "le référent CUMP se met en relation avec le demandeur (en conférence téléphonique si possible) afin d’évaluer conjointement"
 note_publique: null
-a_relever:
-  - "formulation exacte"
-  - "absence de grade à confirmer (passage descriptif, non coté)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

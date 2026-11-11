@@ -9,12 +9,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Soins post-immédiats collectifs"
+      page: 9
     lien_profond: null
-    extrait: null
+    extrait: "pratiqué à distance de l’événement potentiellement traumatisant. (supérieur à 48 heures)"
 note_publique: null
-a_relever:
-  - "grades"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

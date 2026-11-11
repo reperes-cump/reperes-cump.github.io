@@ -10,10 +10,10 @@ sources:
       article: null
       annexe: null
       section: null
-      page: null
+      page: 3
     lien_profond: null
-    extrait: null
+    extrait: "elle n’a pas vocation à assurer le suivi des patients nécessitant une prise en charge médico-psychologique au-delà des soins immédiats et post-immédiats"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

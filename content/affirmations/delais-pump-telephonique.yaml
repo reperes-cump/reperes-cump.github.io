@@ -10,10 +10,10 @@ sources:
       article: null
       annexe: null
       section: null
-      page: null
+      page: 11
     lien_profond: null
-    extrait: null
+    extrait: "Un PUMP téléphonique peut être mis en œuvre en tant que de besoin et en lien avec le SAMU territorialement compétent"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

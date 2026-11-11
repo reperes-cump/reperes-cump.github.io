@@ -4,12 +4,12 @@ libelle_court: "Santé publique France"
 type: page_institutionnelle
 autorite: information_institutionnelle
 editeur: "Santé publique France"
-statut: a_verifier
+statut: en_vigueur
 url: "https://www.santepubliquefrance.fr/stress-post-traumatique/quels-sont-les-moyens-de-soutien-medico-psychologique-apres-un-attentat"
 url_archive: null
 sha256: null
-consulte_le: null
+consulte_le: "2026-11-11"
 reutilisation: null
 a_relever:
-  - "date de publication"
   - "conditions de réutilisation"
+date_publication: "2020-10-09"

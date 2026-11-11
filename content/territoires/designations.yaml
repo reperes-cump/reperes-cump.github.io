@@ -4,8 +4,8 @@
 # est déduit de la commune de l'établissement (departement_deduit: true) et reste à vérifier.
 source_id: arrete-2016-12-27
 releve_le: "2026-11-10"
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly
 annexes:
   - annexe: "1"
     designation: regionale

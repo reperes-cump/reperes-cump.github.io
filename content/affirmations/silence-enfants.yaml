@@ -10,11 +10,10 @@ sources:
       article: null
       annexe: null
       section: null
-      page: null
+      page: 3
     lien_profond: null
-    extrait: null
+    extrait: "Ces premières recommandations sont d’ordre général et n’abordent pas certaines spécificités des CUMP (enfants, outils psychothérapiques spécifiques individuels ou de groupe)"
 note_publique: null
-a_relever:
-  - "passage exact"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

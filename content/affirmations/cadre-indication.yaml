@@ -10,11 +10,10 @@ sources:
       article: null
       annexe: null
       section: null
-      page: null
+      page: 7
     lien_profond: null
     extrait: "L’intervention de la CUMP constitue une activité médicale dont l’indication doit être posée en fonction d’une analyse de la situation et des référentiels de bonnes pratiques de l’urgence médico-psychologique."
 note_publique: null
-a_relever:
-  - "page sur le Bulletin officiel (p. 8 de la copie consultée)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

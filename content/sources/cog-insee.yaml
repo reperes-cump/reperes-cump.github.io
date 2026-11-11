@@ -6,12 +6,11 @@ autorite: donnees_publiques
 editeur: "INSEE"
 reference: "Code officiel géographique au 1er janvier 2026 : fichiers v_departement_2026.csv et v_region_2026.csv."
 date_publication: "2026"
-statut: a_verifier
+statut: en_vigueur
 url: "https://www.insee.fr/fr/information/8740222"
 url_archive: null
 # Empreinte de v_departement_2026.csv (celle de v_region_2026.csv : d903566d9c0d263389d279baea6761917b7460749a07bec8ba37dd8f2ff7d98a).
 sha256: "513900ca23edc682ef9b912d7bfc317129eac3a7d71ff19bc22b40ea4838e6eb"
 consulte_le: "2026-11-11"
-reutilisation: null
-a_relever:
-  - "conditions de réutilisation"
+reutilisation: licence_ouverte
+a_relever: []

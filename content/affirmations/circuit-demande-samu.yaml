@@ -10,11 +10,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "La procédure d’appel de la CUMP"
+      page: 7
     lien_profond: null
-    extrait: null
+    extrait: "d’adresser au SAMU-Centre 15 toute demande d’intervention de la CUMP"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

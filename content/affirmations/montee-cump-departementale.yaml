@@ -9,11 +9,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "IV. – Organisation et fonctionnement de l’urgence médico-psychologique en situation sanitaire exceptionnelle"
+      page: 8
     lien_profond: null
-    extrait: null
+    extrait: "dans la majorité des situations, le déclenchement de la CUMP départementale concernée va permettre la prise en charge des victimes"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

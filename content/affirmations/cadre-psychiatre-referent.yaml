@@ -11,9 +11,9 @@ sources:
       annexe: null
       section: null
       page: null
-    lien_profond: null
-    extrait: null
+    lien_profond: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033223220"
+    extrait: "le psychiatre référent d'une cellule d'urgence médico-psychologique départementale est chargé"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

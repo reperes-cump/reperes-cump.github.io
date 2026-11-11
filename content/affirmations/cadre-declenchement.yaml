@@ -10,7 +10,7 @@ sources:
       article: null
       annexe: null
       section: null
-      page: null
+      page: 7
     lien_profond: null
     extrait: "Cette intervention est déclenchée par le SAMU après évaluation de la situation et indication d’intervention posée par le référent de la CUMP."
   - source_id: csp-r6311
@@ -19,11 +19,9 @@ sources:
       annexe: null
       section: null
       page: null
-    lien_profond: null
-    extrait: null
+    lien_profond: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026916989"
+    extrait: "L'intervention de la cellule d'urgence médico-psychologique est décidée par le service d'aide médicale urgente, le cas échéant, à la demande du préfet"
 note_publique: null
-a_relever:
-  - "formulation exacte (l'extrait relevé dit « référent de la CUMP »)"
-  - "page sur le Bulletin officiel (p. 8 de la copie consultée)"
-verifie_le: null
-verifie_par: null
+a_relever: []
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

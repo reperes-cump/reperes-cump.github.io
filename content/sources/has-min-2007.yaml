@@ -5,11 +5,10 @@ type: recommandation
 autorite: recommandation_pro
 editeur: "Haute Autorité de santé"
 date_publication: "2007-02"
-statut: a_verifier
+statut: en_vigueur
 url: "https://has-sante.fr/upload/docs/application/pdf/recommandations_mort_inattendue_nourrisson.pdf"
 url_archive: null
-sha256: null
-consulte_le: null
+sha256: "c4ee49bf574ccc7f182b0b05bef2fa83f2fb6aec9bdced9cbee18cd44f88a9e6"
+consulte_le: "2026-11-11"
 reutilisation: courte_citation
-a_relever:
-  - "statut actuel sur le site de la HAS"
+a_relever: []

@@ -4,8 +4,8 @@
 # Les zones de Nouvelle-Calédonie et de Polynésie française ne comptent aucun département :
 # elles ne sont pas reprises dans cette version de la carte.
 source_id: code-defense-zones
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly
 zones:
   - id: paris
     nom: "Paris"

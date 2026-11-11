@@ -10,11 +10,11 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "En cas d’intervention post-immédiate"
+      page: 8
     lien_profond: null
-    extrait: null
+    extrait: "de qualifier l’intervention de post-immédiate si elle est débutée au-delà des 48 heures et dans le premier mois suivant l’événement"
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly

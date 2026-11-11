@@ -10,13 +10,13 @@ sources:
     localisation:
       article: null
       annexe: null
-      section: null
-      page: null
+      section: "Le plan ORSEC NOVI"
+      page: 5
     lien_profond: null
-    extrait: null
+    extrait: "En cas de déclenchement d’un plan ORSEC NOVI (nombreuses victimes), l’intervention immédiate de la CUMP est recommandée systématiquement"
 voir_aussi:
   - montee-orsan-medico-psy
 note_publique: null
 a_relever: []
-verifie_le: null
-verifie_par: null
+verifie_le: "2026-11-11"
+verifie_par: arthurwelly
