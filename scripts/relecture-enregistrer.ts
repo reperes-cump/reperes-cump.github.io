@@ -107,8 +107,16 @@ if (bilan.aRevoir.length) {
   );
 }
 if (bilan.perimees.length) {
+  const heure = (await stat(fichier)).mtime.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  console.log('');
   console.log(
-    `Modifiées depuis ton choix, à refaire sur la page : ${bilan.perimees.map((f) => f.titre).join(' ; ')}.`,
+    `Attention : ${bilan.perimees.length} fiche(s) n'ont pas été enregistrées, car le fichier lu date de ${heure} et ces fiches ont changé depuis.`,
+  );
+  console.log(
+    'Recharge la page, refais ces fiches si besoin, clique sur « Enregistrer mes vérifications », puis relance cette commande.',
   );
 }
 for (const lot of bilan.lotsIncomplets) {
