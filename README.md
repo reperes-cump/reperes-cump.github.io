@@ -1,6 +1,6 @@
 # Repères CUMP
 
-**En connaissance de textes.** Déclencher la CUMP, textes à l'appui.
+**En connaissance de textes.** Déclenchement de la CUMP : ce que disent les textes officiels et la recommandation de la SFMU, avec leurs sources.
 
 Repères CUMP rassemble ce que disent les textes officiels et les recommandations en libre accès sur le déclenchement de la cellule d'urgence médico-psychologique (CUMP). Il montre aussi, tout aussi clairement, ce que ces textes ne disent pas et ce sur quoi il n'y a pas de consensus. Chaque information renvoie à sa source exacte : article, section ou page.
 

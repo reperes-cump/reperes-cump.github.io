@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Déclencher la CUMP, textes à l'appui.",
+  "description": "Déclenchement de la CUMP : ce que disent les textes officiels et la recommandation de la SFMU, avec leurs sources.",
   "license": "MIT",
   "engines": {
     "node": ">=22.23.4"

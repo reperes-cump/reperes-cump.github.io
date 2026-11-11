@@ -22,6 +22,13 @@ const { courante, titre, description, brouillon, infos } = Astro.props;
 const titreComplet = titre
   ? `${titre} | Repères CUMP`
   : 'Repères CUMP | En connaissance de textes.';
+// Aperçu d'un lien partagé (LinkedIn, messageries) : titre court, sans l'accroche.
+const titrePartage = titre ? `${titre} | Repères CUMP` : 'Repères CUMP';
+// Description sobre, reprise par les moteurs de recherche et les aperçus de lien.
+const descriptionSite =
+  'Déclenchement de la CUMP : ce que disent les textes officiels et la recommandation de la SFMU, avec leurs sources.';
+const descriptionPartage = description ?? descriptionSite;
+const adresse = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -30,8 +37,15 @@ const titreComplet = titre
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content={description ?? "Déclencher la CUMP, textes à l'appui."} />
+    <meta name="description" content={descriptionPartage} />
     <title>{titreComplet}</title>
+    <link rel="canonical" href={adresse} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Repères CUMP" />
+    <meta property="og:title" content={titrePartage} />
+    <meta property="og:description" content={descriptionPartage} />
+    <meta property="og:url" content={adresse} />
+    <meta property="og:locale" content="fr_FR" />
     <!-- Icône vide : sans elle, le navigateur demande /favicon.ico hors du site (erreur 404). -->
     <link rel="icon" href="data:," />
     <Font cssVariable="--police-texte" preload />

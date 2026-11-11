@@ -122,3 +122,16 @@ test.describe('animations', () => {
     expect(duree.split(',').every((d) => Number.parseFloat(d) === 0)).toBe(true);
   });
 });
+
+test('le lien partagé affiche « Repères CUMP » comme titre', async ({ page }) => {
+  await ouvrir(page, '');
+  const meta = (propriete: string) =>
+    page.locator(`meta[property="${propriete}"]`).getAttribute('content');
+  expect(await meta('og:title')).toBe('Repères CUMP');
+  expect(await meta('og:url')).toBe('https://reperes-cump.github.io/');
+  expect(await meta('og:description')).toBe(
+    'Déclenchement de la CUMP : ce que disent les textes officiels et la recommandation de la SFMU, avec leurs sources.',
+  );
+  await ouvrir(page, 'carte/');
+  expect(await meta('og:title')).toBe('Carte des CUMP | Repères CUMP');
+});
