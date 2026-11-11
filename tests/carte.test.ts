@@ -1,10 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import type { Topology } from 'topojson-specification';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { departementsSchema, designationsSchema, zonesSchema } from '../schemas/index.ts';
 import { lireYaml } from '../scripts/lib/lecture.ts';
-import { calculerCarte, DROM, LARGEUR } from '../src/lib/carte.ts';
+import { type CarteCalculee, calculerCarte, DROM, LARGEUR } from '../src/lib/carte.ts';
 
 const racine = fileURLToPath(new URL('..', import.meta.url));
 const charger = async () => {
@@ -23,8 +23,11 @@ const charger = async () => {
   return calculerCarte(topologie, referentiel, zones, designations);
 };
 
-describe('carte des CUMP', async () => {
-  const carte = await charger();
+describe('carte des CUMP', () => {
+  let carte: CarteCalculee;
+  beforeAll(async () => {
+    carte = await charger();
+  });
 
   it('dessine les 101 départements du COG', () => {
     expect(carte.departements).toHaveLength(101);

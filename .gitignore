@@ -148,3 +148,11 @@ vite.config.ts.timestamp-*
 # Turbo Repo
 .turbo
 sources-local/
+
+# Tests dans le navigateur (Playwright)
+test-results/
+playwright-report/
+blob-report/
+
+# macOS
+.DS_Store

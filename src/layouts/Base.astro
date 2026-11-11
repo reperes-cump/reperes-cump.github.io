@@ -32,6 +32,8 @@ const titreComplet = titre
     <meta name="color-scheme" content="light dark" />
     <meta name="description" content={description ?? "Déclencher la CUMP, textes à l'appui."} />
     <title>{titreComplet}</title>
+    <!-- Icône vide : sans elle, le navigateur demande /favicon.ico hors du site (erreur 404). -->
+    <link rel="icon" href="data:," />
     <Font cssVariable="--police-texte" preload />
   </head>
   <body>
