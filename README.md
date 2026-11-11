@@ -78,11 +78,14 @@ npm run dev
 | `npm run lint`                             | Lint et format (Biome). `npm run format` corrige.                                                      |
 | `npm run validate`                         | Valide le contenu.                                                                                     |
 | `npm run a-relever`                        | Liste ce qui reste à relever ou à vérifier.                                                            |
-| `npm test`                                 | Tests des données (Vitest).                                                                            |
+| `npm run relecture`                        | Page de vérification du mainteneur, dans `sources-local/relecture.html`.                               |
+| `npm run relecture:enregistrer`            | Reporte dans `content/` les fiches jugées conformes sur cette page.                                    |
+| `npm test`                                 | Tests des données et de l'affichage (Vitest).                                                          |
+| `npm run test:e2e`                         | Construit le site et le teste dans Google Chrome : parcours, accessibilité (axe), requêtes, liens.     |
 | `npm run source:hash -- <fichier>`         | Empreinte SHA-256 d'un PDF de source.                                                                  |
 | `npm run geo:preparer -- <COG> <contours>` | Prépare départements et contours de la carte depuis `sources-local/`.                                  |
 
-**Mode publication.** Avec `PUBLISH=1`, le build exige que tout soit vérifié : chaque information doit avoir une date de vérification et une localisation précise, et aucune source citée ne doit rester « à vérifier ». Le déploiement se fait dans ce mode.
+**Mode publication.** Avec `PUBLISH=1`, le build exige que tout soit vérifié : chaque information doit avoir une date de vérification et une localisation précise, et aucune source citée ne doit rester « à vérifier ». Le déploiement se fait dans ce mode, après les mêmes contrôles que pour une pull request, tests dans le navigateur compris. La marche à suivre pour tout vérifier est dans [CONTRIBUTING.md](CONTRIBUTING.md#vérifier-avant-publication-mainteneur).
 
 Les PDF des sources ne sont jamais versionnés. Pour la vérification, ils restent dans `sources-local/`, exclu du dépôt.
 

@@ -46,6 +46,37 @@ Avant la pull request :
 ```bash
 npm run validate
 npm test
+npm run test:e2e
 ```
 
+`npm run test:e2e` construit le site puis le teste dans Google Chrome (installé sur le poste) : parcours, accessibilité, absence de requête vers un autre site.
+
 Toute modification de `content/` est relue par le mainteneur avant fusion.
+
+## Vérifier avant publication (mainteneur)
+
+Le site n'est mis en ligne que lorsque tout est vérifié : le build en mode publication échoue tant qu'il reste un élément non vérifié. La vérification se fait fiche par fiche, sur une page locale.
+
+1. Enregistrez les textes en PDF dans `sources-local/` (par exemple `sources-local/textes/sfmu-2017.pdf`, du nom de la fiche du texte). Les textes de Légifrance n'en ont pas besoin : leur lien mène à la version lue.
+2. Préparez la page de vérification (il faut `pdftotext`, du paquet poppler) :
+
+   ```bash
+   npm run relecture
+   ```
+
+3. Ouvrez `sources-local/relecture.html`. Chaque fiche montre ce que dit le site et le passage du texte, surligné, avec ce qui sera enregistré. Répondez **Conforme** ou **À revoir** (avec une phrase). La progression reste dans le navigateur.
+4. Cliquez sur **Enregistrer mes vérifications**, puis :
+
+   ```bash
+   npm run relecture:enregistrer
+   ```
+
+   La commande reporte dans `content/` les fiches conformes (localisation, extrait, lien, `verifie_le`, `verifie_par`) et note les fiches à revoir dans `sources-local/verification/a-revoir.md`. Si le résultat était invalide, rien n'est écrit.
+5. Contrôlez ce qui reste :
+
+   ```bash
+   npm run a-relever
+   PUBLISH=1 npm run build
+   ```
+
+Les propositions de relevé (page, article, extrait, lien) affichées sur les fiches se notent dans `sources-local/verification/propositions.yaml`, qui reste hors du dépôt. Elles n'entrent dans `content/` qu'une fois la fiche jugée conforme.

@@ -1,4 +1,4 @@
-import type { Affirmation, Verdict } from '../../schemas/index.ts';
+import type { Affirmation, Source, Verdict } from '../../schemas/index.ts';
 import { signale } from '../../schemas/index.ts';
 import {
   CHEMIN_DEPARTEMENTS,
@@ -270,6 +270,24 @@ function verifierTerritoires(contenu: Contenu): Probleme[] {
 }
 
 /** Contrôles supplémentaires du mode publication : tout doit être vérifié. */
+/** Adresse sur Légifrance : chaque version d'un texte y garde sa propre adresse. */
+export function estLegifrance(url: string): boolean {
+  return /(^|\.)legifrance\.gouv\.fr$/.test(new URL(url).hostname);
+}
+
+/**
+ * Localisation assez précise pour publier : une page ou un article ; pour une page web, qui
+ * n'a ni l'un ni l'autre, sa rubrique.
+ */
+export function localisationPrecise(
+  reference: Affirmation['sources'][number],
+  source: Source | undefined,
+): boolean {
+  const { page, article, section } = reference.localisation;
+  if (page !== null || article !== null) return true;
+  return source?.type === 'page_institutionnelle' && section !== null;
+}
+
 export function verifierPublication(contenu: Contenu): Probleme[] {
   const problemes: Probleme[] = [];
   const signaler = (fichier: string, message: string) => problemes.push({ fichier, message });
@@ -290,8 +308,7 @@ export function verifierPublication(contenu: Contenu): Probleme[] {
     if (a.a_relever.length) signaler(fichier, `reste à relever : ${a.a_relever.join(', ')}`);
     for (const reference of a.sources) {
       citees.add(reference.source_id);
-      const { page, article } = reference.localisation;
-      if (page === null && article === null) {
+      if (!localisationPrecise(reference, contenu.sources.get(reference.source_id))) {
         signaler(
           fichier,
           `${reference.source_id} : localisation imprécise (page ou article attendu)`,
@@ -330,14 +347,9 @@ export function verifierPublication(contenu: Contenu): Probleme[] {
     }
   }
 
-  for (const terme of contenu.glossaire?.termes ?? []) {
-    if (terme.a_relever.length) {
-      signaler(
-        cheminVisuel('glossaire'),
-        `${terme.id} : reste à relever : ${terme.a_relever.join(', ')}`,
-      );
-    }
-  }
+  // Le glossaire n'est affiché sur aucune page publiée : ses manques ne bloquent pas la
+  // publication. Ils restent listés par `npm run a-relever`. À contrôler ici de nouveau quand une
+  // page l'affichera.
 
   return problemes;
 }
@@ -361,7 +373,11 @@ export function listerARelever(contenu: Contenu): Probleme[] {
       ...(s.statut === 'a_verifier' ? ['statut'] : []),
       ...(s.url ? [] : ['URL']),
       ...(s.url_archive ? [] : ['archive']),
-      ...(s.sha256 ? [] : ['empreinte']),
+      // Légifrance garde chaque version à sa propre adresse, et une page web n'est pas un
+      // fichier : le lien suffit, sans empreinte.
+      ...(s.sha256 || s.type === 'page_institutionnelle' || (s.url && estLegifrance(s.url))
+        ? []
+        : ['empreinte']),
       ...(s.consulte_le ? [] : ['date de consultation']),
       ...s.a_relever,
     ]);
@@ -369,7 +385,7 @@ export function listerARelever(contenu: Contenu): Probleme[] {
 
   for (const a of contenu.affirmations.values()) {
     const sansLocalisation = a.sources
-      .filter((r) => r.localisation.page === null && r.localisation.article === null)
+      .filter((r) => !localisationPrecise(r, contenu.sources.get(r.source_id)))
       .map((r) => (r.porte_sur ? `${r.source_id} (${r.porte_sur})` : r.source_id));
     noter(cheminAffirmation(a.id), [
       ...(sansLocalisation.length
@@ -393,10 +409,13 @@ export function listerARelever(contenu: Contenu): Probleme[] {
     const deduits = contenu.designations.annexes
       .flatMap((annexe) => annexe.entrees)
       .filter((entree) => entree.departement_deduit).length;
-    noter(CHEMIN_DESIGNATIONS, [
-      ...(deduits ? [`${deduits} départements déduits de la commune`] : []),
-      ...(contenu.designations.verifie_le ? [] : ['vérification']),
-    ]);
+    // Une fois les désignations vérifiées, les départements déduits l'ont été aussi.
+    noter(
+      CHEMIN_DESIGNATIONS,
+      contenu.designations.verifie_le
+        ? []
+        : [...(deduits ? [`${deduits} départements déduits de la commune`] : []), 'vérification'],
+    );
   }
 
   return liste;

@@ -6,6 +6,7 @@ import {
   zonesSchema,
 } from '../../schemas/index.ts';
 import {
+  listerARelever,
   verifierCoherence,
   verifierPublication,
   zoneParDepartement,
@@ -130,6 +131,15 @@ describe('mode publication', () => {
     const sources = new Map([['reco', source({ statut: 'a_verifier' })]]);
     const problemes = verifierPublication(contenu({ sources, affirmations: new Map([[a.id, a]]) }));
     expect(messages(problemes)).toContain('statut « à vérifier »');
+  });
+
+  it('ne bloque pas sur le glossaire, qu’aucune page n’affiche, mais le garde à relever', () => {
+    const glossaire = {
+      termes: [{ id: 'pma', terme: 'PMA', definition: null, a_relever: ['définition'] }],
+    };
+    const c = contenu({ glossaire });
+    expect(verifierPublication(c).some((p) => p.fichier.includes('glossaire'))).toBe(false);
+    expect(listerARelever(c).some((p) => p.fichier.includes('glossaire'))).toBe(true);
   });
 });
 
